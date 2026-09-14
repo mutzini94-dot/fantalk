@@ -50,80 +50,50 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:radial-gradient(120% 90% at 50% -10%,color-mix(in srgb,var(--accent) 10%,var(--bg)) 0%,var(--bg) 55%);
-  color:var(--ink);font-family:"IBM Plex Sans KR",system-ui,-apple-system,sans-serif;
-  -webkit-font-smoothing:antialiased;line-height:1.5;overflow:hidden}
+  color:var(--ink);font-family:"IBM Plex Sans KR",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5;overflow:hidden}
 .mono{font-family:"IBM Plex Mono","IBM Plex Sans KR",monospace;font-variant-numeric:tabular-nums}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-
-/* stage + phone */
 .stage{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px}
-.phone{width:100%;max-width:412px;height:min(884px,calc(100vh - 36px));background:var(--surface);
-  border-radius:44px;box-shadow:var(--shadow-lg),0 0 0 10px #14101f,0 0 0 12px #2a2340;
-  display:flex;flex-direction:column;overflow:hidden;position:relative}
+.phone{width:100%;max-width:412px;height:min(884px,calc(100vh - 36px));background:var(--surface);border-radius:44px;
+  box-shadow:var(--shadow-lg),0 0 0 10px #14101f,0 0 0 12px #2a2340;display:flex;flex-direction:column;overflow:hidden;position:relative}
 .stage .cap{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);letter-spacing:.04em;text-align:center;max-width:412px}
-@media (max-width:480px){
-  .stage{padding:0;gap:0}
-  .phone{max-width:none;height:100vh;height:100dvh;border-radius:0;box-shadow:none}
-  .stage .cap{display:none}
-}
-
-/* iOS status */
-.ios{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:9px 24px 3px;
-  font-size:13px;font-weight:600;background:var(--surface);color:var(--ink)}
-.ios .r{display:flex;align-items:center;gap:6px}
-.ios svg{display:block}
-
-/* app top bar */
-.statusbar{flex:0 0 auto;padding:6px 16px 10px;display:flex;align-items:center;gap:9px;
-  background:var(--surface);border-bottom:1px solid var(--line-2)}
+@media (max-width:480px){.stage{padding:0;gap:0}.phone{max-width:none;height:100vh;height:100dvh;border-radius:0;box-shadow:none}.stage .cap{display:none}}
+.ios{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:9px 24px 3px;font-size:13px;font-weight:600;background:var(--surface);color:var(--ink)}
+.ios .r{display:flex;align-items:center;gap:6px}.ios svg{display:block}
+.statusbar{flex:0 0 auto;padding:6px 16px 10px;display:flex;align-items:center;gap:9px;background:var(--surface);border-bottom:1px solid var(--line-2)}
 .brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;letter-spacing:-.02em}
-.brand .logo{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  display:grid;place-items:center;font-size:14px;box-shadow:0 3px 8px color-mix(in srgb,var(--accent) 40%,transparent)}
+.brand .logo{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-size:14px;box-shadow:0 3px 8px color-mix(in srgb,var(--accent) 40%,transparent)}
 .roleseg{margin-left:auto;display:flex;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:2px}
 .roleseg button{font-size:11px;font-weight:600;padding:5px 9px;border-radius:7px;color:var(--ink-3);white-space:nowrap}
 .roleseg button.on{background:var(--accent);color:var(--on-accent)}
-.livebtn{flex:0 0 auto;display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
-  font-weight:600;padding:6px 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)}
+.livebtn{flex:0 0 auto;display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;padding:6px 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)}
 .livebtn.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .livebtn .d{width:7px;height:7px;border-radius:50%;background:var(--ink-3)}
 .livebtn.on .d{background:var(--accent);animation:pulse 1.6s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
-
-/* appbar */
-.appbar{flex:0 0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px;min-height:54px;
-  background:var(--surface);border-bottom:1px solid var(--line-2)}
+.appbar{flex:0 0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px;min-height:54px;background:var(--surface);border-bottom:1px solid var(--line-2)}
 .appbar .back{font-size:22px;color:var(--ink-2);margin:-4px 0 -4px -4px;width:30px;height:30px;border-radius:8px}
+.appbar .hav{width:36px;height:36px;border-radius:11px;background:var(--surface-2);display:grid;place-items:center;font-size:19px;position:relative;flex:0 0 auto;border:1px solid var(--line)}
+.appbar .hav .on-dot{position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:var(--keep);border:2px solid var(--surface)}
 .appbar h1{font-size:19px;font-weight:700;margin:0;letter-spacing:-.02em;line-height:1.15}
-.appbar .sub{font-size:11.5px;color:var(--ink-3);font-weight:400}
+.appbar .sub{font-size:11.5px;color:var(--ink-3);font-weight:400;display:flex;align-items:center;gap:5px}
 .appbar .sp{margin-left:auto}
 .appbar .act{width:34px;height:34px;border-radius:10px;background:var(--surface-2);display:grid;place-items:center;font-size:16px;color:var(--ink-2)}
-
-/* view */
 .view{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:var(--bg)}
 .view::-webkit-scrollbar{width:0}
 .pad{padding:16px}
-
-/* tabbar */
-.tabbar{flex:0 0 auto;display:flex;background:var(--surface);border-top:1px solid var(--line);
-  padding:7px 6px calc(7px + env(safe-area-inset-bottom))}
+.tabbar{flex:0 0 auto;display:flex;background:var(--surface);border-top:1px solid var(--line);padding:7px 6px calc(7px + env(safe-area-inset-bottom))}
 .tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;border-radius:12px;color:var(--ink-3)}
 .tabbar button .ti{font-size:20px;line-height:1;position:relative}
 .tabbar button .tl{font-size:10px;font-weight:600}
 .tabbar button.on{color:var(--accent)}
-.tabbar .badge{position:absolute;top:-4px;right:-9px;min-width:15px;height:15px;padding:0 4px;border-radius:8px;
-  background:var(--accent);color:var(--on-accent);font-size:9px;font-weight:700;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace}
-
-/* generic */
-.sechd{font-size:12px;font-weight:600;font-family:"IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--ink-3);margin:4px 2px 10px;display:flex;align-items:center;gap:8px}
+.tabbar .badge{position:absolute;top:-4px;right:-9px;min-width:15px;height:15px;padding:0 4px;border-radius:8px;background:var(--accent);color:var(--on-accent);font-size:9px;font-weight:700;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace}
+.sechd{font-size:12px;font-weight:600;font-family:"IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:4px 2px 10px;display:flex;align-items:center;gap:8px}
 .sechd .r{margin-left:auto;text-transform:none;letter-spacing:0;font-family:"IBM Plex Sans KR";color:var(--accent);font-size:12px;font-weight:600}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-
-/* dark hero */
-.dhero{position:relative;overflow:hidden;background:linear-gradient(140deg,var(--hero-a) 0%,var(--hero-b) 55%,var(--hero-c) 100%);
-  color:#fff;border-radius:18px;padding:18px;box-shadow:var(--shadow-lg)}
+.dhero{position:relative;overflow:hidden;background:linear-gradient(140deg,var(--hero-a) 0%,var(--hero-b) 55%,var(--hero-c) 100%);color:#fff;border-radius:18px;padding:18px;box-shadow:var(--shadow-lg)}
 .dhero .cw{position:absolute;right:-6px;bottom:-24px;font-size:106px;opacity:.14;line-height:1}
 .dhero .dh-k{font-size:12px;opacity:.85;position:relative}
 .dhero .dh-v{font-size:34px;font-weight:700;margin-top:2px;position:relative;letter-spacing:-.02em}
@@ -135,60 +105,45 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .dstats .k{font-size:9.5px;opacity:.82;display:flex;align-items:center;gap:3px}
 .dstats .v{font-size:14px;font-weight:700;margin-top:5px}
 .wpill{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.22);color:#fff}
-
-/* list rows */
 .rows{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
 .row{display:flex;align-items:center;gap:12px;padding:13px 15px;border-bottom:1px solid var(--line-2);width:100%;text-align:left}
 .row:last-child{border-bottom:none}
 .row:active{background:var(--surface-2)}
-.av{width:44px;height:44px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;font-size:22px;flex:0 0 auto;position:relative;border:1px solid var(--line)}
+.av{width:46px;height:46px;border-radius:14px;background:var(--surface-2);display:grid;place-items:center;font-size:23px;flex:0 0 auto;position:relative;border:1px solid var(--line)}
 .av .on-dot{position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:var(--keep);border:2px solid var(--surface)}
 .row .main{flex:1;min-width:0}
 .row .tt{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14.5px}
 .row .pv{color:var(--ink-2);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
 .row .meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex:0 0 auto}
 .row .tm{font-size:10.5px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
-.gp{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:20px;
-  background:color-mix(in srgb,var(--gc,var(--accent)) 15%,transparent);color:var(--gc,var(--accent));white-space:nowrap}
-
-/* chat */
+.gp{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:20px;background:color-mix(in srgb,var(--gc,var(--accent)) 15%,transparent);color:var(--gc,var(--accent));white-space:nowrap}
+.cnt{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:var(--on-accent);font-size:10px;font-weight:700;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace}
+.follow{font-size:12px;font-weight:700;padding:8px 15px;border-radius:20px;background:var(--accent);color:var(--on-accent);flex:0 0 auto}
+.follow.on{background:var(--surface-2);color:var(--ink-3);border:1px solid var(--line)}
+.cat{font-size:10.5px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
 .chatwrap{display:flex;flex-direction:column;min-height:100%}
 .msgs{flex:1;padding:14px;display:flex;flex-direction:column;gap:9px}
-.day{align-self:center;font-size:10.5px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;background:var(--surface);
-  border:1px solid var(--line);border-radius:20px;padding:3px 12px;margin:4px 0}
+.day{align-self:center;font-size:10.5px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:3px 12px;margin:4px 0}
 .sysmsg{align-self:center;font-size:11px;color:var(--ink-2);text-align:center;background:var(--surface-2);border-radius:10px;padding:5px 12px;max-width:85%}
 .b{max-width:80%;padding:8px 12px;border-radius:14px;font-size:13.5px;line-height:1.42;box-shadow:var(--shadow);word-break:break-word}
 .b.in{background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:4px;align-self:flex-start}
 .b.out{background:var(--accent);color:var(--on-accent);border-bottom-right-radius:4px;align-self:flex-end}
-.b .who{font-size:10px;font-family:"IBM Plex Mono",monospace;color:var(--ink-3);margin-bottom:3px;display:flex;align-items:center;gap:5px}
 .b .tm{font-size:9px;opacity:.6;margin-top:3px;font-family:"IBM Plex Mono",monospace}
-.dono{align-self:stretch;background:linear-gradient(105deg,var(--accent) 0%,var(--accent-2) 100%);color:#fff;
-  border-radius:15px;padding:12px 14px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.dono{align-self:flex-end;max-width:88%;background:linear-gradient(105deg,var(--accent) 0%,var(--accent-2) 100%);color:#fff;border-radius:15px;padding:12px 14px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.dono.inc{align-self:flex-start}
 .dono::after{content:"";position:absolute;right:-20px;top:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.12)}
-.dono .top{display:flex;justify-content:space-between;align-items:center;position:relative}
+.dono .top{display:flex;justify-content:space-between;align-items:center;position:relative;gap:12px}
 .dono .amt{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:18px}
 .dono .bg{font-size:9px;background:rgba(255,255,255,.22);padding:2px 8px;border-radius:20px;letter-spacing:.06em;font-weight:600}
-.dono .nm{font-size:11.5px;opacity:.9;margin-top:3px;position:relative}
 .dono .tx{font-size:13.5px;margin-top:7px;position:relative;line-height:1.4}
-.composer{position:sticky;bottom:0;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-  background:var(--surface);border-top:1px solid var(--line);align-items:flex-end}
+.composer{position:sticky;bottom:0;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line);align-items:center}
 .composer input{flex:1;border:1px solid var(--line);background:var(--surface-2);border-radius:22px;padding:10px 14px;font-size:14px;font-family:inherit;color:var(--ink);min-width:0}
 .composer .send{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-size:17px;flex:0 0 auto}
-
-/* tray */
-.tray{margin:14px 14px 0;background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);border-radius:14px;padding:12px 14px}
-.tray .th{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--warn)}
-.tray .ti{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px;font-size:12.5px}
-.tray .ti b{color:var(--ink)}
-.tray .rep{font-size:11px;font-weight:600;color:var(--accent);border:1px solid var(--accent);border-radius:20px;padding:3px 10px;flex:0 0 auto}
-
-/* fan filters */
+.composer .dbtn{width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:19px;flex:0 0 auto;border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
 .chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 12px;-webkit-overflow-scrolling:touch}
 .chips::-webkit-scrollbar{height:0}
 .chip{flex:0 0 auto;font-size:12px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);white-space:nowrap}
 .chip.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
-
-/* fan profile */
 .field{margin-top:14px}
 .field label{font-size:11px;font-weight:600;font-family:"IBM Plex Mono",monospace;letter-spacing:.06em;color:var(--ink-3);text-transform:uppercase}
 .field textarea{width:100%;margin-top:6px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;font-size:13.5px;font-family:inherit;color:var(--ink);resize:none;min-height:60px}
@@ -199,36 +154,27 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .histrow:last-child{border-bottom:none}
 .histrow .a{font-weight:600;color:var(--keep);font-family:"IBM Plex Mono",monospace}
 .achrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line-2);font-size:13px}
-.achrow:last-child{border-bottom:none}
-.achrow .ad{margin-left:auto;font-size:10.5px;color:var(--ink-3);font-family:"IBM Plex Mono"}
+.achrow:last-child{border-bottom:none}.achrow .ad{margin-left:auto;font-size:10.5px;color:var(--ink-3);font-family:"IBM Plex Mono"}
 .nextbar{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px;box-shadow:var(--shadow)}
 .nextbar .top{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-2)}
 .ptrack{height:12px;background:var(--surface-2);border-radius:7px;overflow:hidden;margin-top:8px;border:1px solid var(--line)}
 .pfill{height:100%;border-radius:7px}
-
-/* notifications */
 .nrow{display:flex;gap:12px;padding:13px 15px;border-bottom:1px solid var(--line-2);align-items:flex-start}
-.nrow:last-child{border-bottom:none}
-.nrow.unread{background:var(--accent-soft)}
+.nrow:last-child{border-bottom:none}.nrow.unread{background:var(--accent-soft)}
 .nic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:17px;flex:0 0 auto}
 .nic.presence{background:var(--keep-soft)}.nic.dono{background:var(--accent-soft)}.nic.grade{background:var(--warn-soft)}.nic.system{background:var(--info-soft)}
 .nrow .nt{font-size:13.5px}.nrow .nt b{font-weight:600}
 .nrow .ntm{font-size:10.5px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;margin-top:3px}
-
-/* insights */
 .metgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .metcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
 .metcard .k{font-size:11px;color:var(--ink-2);display:flex;align-items:center;gap:5px;font-weight:600}
-.metcard .v{font-size:23px;font-weight:700;margin-top:6px}
-.metcard .v small{font-size:12px;color:var(--ink-3);font-weight:600}
-.mbar{height:8px;border-radius:5px;background:var(--surface-2);overflow:hidden;margin-top:10px}
-.mbar .f{height:100%;border-radius:5px}
+.metcard .v{font-size:23px;font-weight:700;margin-top:6px}.metcard .v small{font-size:12px;color:var(--ink-3);font-weight:600}
+.mbar{height:8px;border-radius:5px;background:var(--surface-2);overflow:hidden;margin-top:10px}.mbar .f{height:100%;border-radius:5px}
 .chartcard{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
 .chartcard .ctop{display:flex;justify-content:space-between;align-items:flex-start}
 .chartcard h3{margin:0 0 2px;font-size:14.5px;font-weight:600}
 .chartcard .cs{font-size:11.5px;color:var(--ink-3);margin-bottom:8px}
-.chartcard .cbig{font-size:18px;font-weight:700;text-align:right}
-.chartcard .cbig .dl{font-size:11px;font-weight:600;color:var(--keep)}
+.chartcard .cbig{font-size:18px;font-weight:700;text-align:right}.chartcard .cbig .dl{font-size:11px;font-weight:600;color:var(--keep)}
 .chartcard svg{display:block;width:100%;height:auto;overflow:visible}
 .tierbar{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:12.5px}
 .tierbar .lb{width:66px;flex:0 0 auto;display:flex;align-items:center;gap:4px;font-weight:600}
@@ -237,28 +183,18 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .tierbar .vv{width:26px;text-align:right;font-family:"IBM Plex Mono",monospace;color:var(--ink-2);flex:0 0 auto}
 .perf3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-radius:12px;overflow:hidden;border:1px solid var(--line);margin-top:2px}
 .perf3>div{background:var(--surface);padding:12px 6px;text-align:center}
-.perf3 .k{font-size:10px;color:var(--ink-3)}
-.perf3 .v{font-size:16px;font-weight:700;margin:5px 0 2px}
-.perf3 .dl{font-size:10.5px;color:var(--keep);font-weight:600}
+.perf3 .k{font-size:10px;color:var(--ink-3)}.perf3 .v{font-size:16px;font-weight:700;margin:5px 0 2px}.perf3 .dl{font-size:10.5px;color:var(--keep);font-weight:600}
 .evrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line-2);font-size:13px}
-.evrow:last-child{border-bottom:none}
-.evrow .dd{margin-left:auto;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:20px;padding:3px 9px;font-family:"IBM Plex Mono"}
+.evrow:last-child{border-bottom:none}.evrow .dd{margin-left:auto;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:20px;padding:3px 9px;font-family:"IBM Plex Mono"}
 .goalbar{height:20px;background:var(--surface-2);border-radius:11px;overflow:hidden;margin-top:8px;position:relative;border:1px solid var(--line)}
 .goalfill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:11px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px}
 .goalfill span{font-size:10px;font-weight:700;color:#fff;font-family:"IBM Plex Mono",monospace}
-
-/* tier cards */
 .tiercards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .tcard{border:1px solid var(--line);border-radius:13px;padding:11px 5px;text-align:center;background:var(--surface)}
 .tcard.cur{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent)}
-.tcard .c{font-size:20px}
-.tcard .n{font-size:12px;font-weight:700;margin-top:4px}
-.tcard .m{font-size:9px;color:var(--ink-3);margin-top:3px;font-family:"IBM Plex Mono"}
-
-/* settings */
+.tcard .c{font-size:20px}.tcard .n{font-size:12px;font-weight:700;margin-top:4px}.tcard .m{font-size:9px;color:var(--ink-3);margin-top:3px;font-family:"IBM Plex Mono"}
 .setrow{display:flex;align-items:center;gap:12px;padding:13px 15px;border-bottom:1px solid var(--line-2)}
-.setrow:last-child{border-bottom:none}
-.setrow.sub{padding-left:24px}
+.setrow:last-child{border-bottom:none}.setrow.sub{padding-left:24px}
 .setrow .sl{flex:1}.setrow .sl b{font-size:14px;font-weight:600}.setrow .sl p{margin:2px 0 0;font-size:11.5px;color:var(--ink-3)}
 .setrow .sv{font-size:12.5px;color:var(--ink-2);font-family:"IBM Plex Mono",monospace}
 .tgl{width:44px;height:26px;border-radius:14px;background:var(--surface-3);position:relative;flex:0 0 auto;transition:.2s}
@@ -266,47 +202,26 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .tgl::after{content:"";position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .tgl.on::after{transform:translateX(18px)}
 .tieredit{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line-2)}
-.tieredit:last-child{border-bottom:none}
-.tieredit .tn{display:flex;align-items:center;gap:7px;font-weight:600;font-size:13.5px}
+.tieredit:last-child{border-bottom:none}.tieredit .tn{display:flex;align-items:center;gap:7px;font-weight:600;font-size:13.5px}
 .tieredit input{width:120px;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:7px 9px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;text-align:right;color:var(--ink)}
-.permrole{display:flex;gap:6px}
-.permrole .pr{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--surface-2);color:var(--ink-3);border:1px solid var(--line)}
+.permrole{display:flex;gap:6px}.permrole .pr{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--surface-2);color:var(--ink-3);border:1px solid var(--line)}
 .permrole .pr.on{background:var(--accent-soft);color:var(--accent);border-color:transparent}
-.kakao{width:26px;height:26px;border-radius:8px;background:#FEE500;color:#3c1e1e;display:grid;place-items:center;font-size:13px;font-weight:800;flex:0 0 auto}
-
-/* donator */
-.hero{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-2) 100%);border-radius:var(--radius);padding:20px;color:#fff;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
-.hero::after{content:"";position:absolute;right:-30px;bottom:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.12)}
-.hero .cn{display:flex;align-items:center;gap:12px;position:relative}
-.hero .cav{width:52px;height:52px;border-radius:15px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:26px}
-.hero .cnm{font-size:18px;font-weight:700}
-.hero .cst{font-size:12px;opacity:.9;display:flex;align-items:center;gap:5px;margin-top:2px}
-.hero .cst .d{width:8px;height:8px;border-radius:50%;background:#8affc0}
-.hero .qa{display:flex;gap:8px;margin-top:16px;position:relative}
-.hero .qa button{flex:1;background:rgba(255,255,255,.2);border-radius:11px;padding:10px;font-size:12.5px;font-weight:600;color:#fff}
+.kakao{width:26px;height:26px;border-radius:8px;background:#FEE500;color:#3c1e1e;display:grid;place-items:center;font-size:9px;font-weight:800;flex:0 0 auto}
 .mygradehero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 20px;box-shadow:var(--shadow)}
-.mygradehero .big{font-size:44px}
-.mygradehero .gn{font-size:22px;font-weight:700;margin-top:6px}
-.mygradehero .prog{margin-top:18px}
-.mygradehero .ptrack{height:14px;background:var(--surface-2);border-radius:8px;overflow:hidden;margin:8px 0;border:1px solid var(--line)}
-.mygradehero .pfill{height:100%;border-radius:8px}
-.mygradehero .pt{font-size:12px;color:var(--ink-2)}
+.mygradehero .big{font-size:44px}.mygradehero .gn{font-size:22px;font-weight:700;margin-top:6px}
+.mygradehero .prog{margin-top:18px}.mygradehero .ptrack{height:14px;background:var(--surface-2);border-radius:8px;overflow:hidden;margin:8px 0;border:1px solid var(--line)}
+.mygradehero .pfill{height:100%;border-radius:8px}.mygradehero .pt{font-size:12px;color:var(--ink-2)}
 .donpad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:8px}
 .donpad button{padding:16px 4px;border-radius:13px;border:1px solid var(--line);background:var(--surface);font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px}
 .donpad button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .benefit{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line-2);font-size:13px;align-items:flex-start}
-.benefit:last-child{border-bottom:none}
-.benefit .bi{color:var(--keep);font-weight:700}
-
-/* onboarding & login */
+.benefit:last-child{border-bottom:none}.benefit .bi{color:var(--keep);font-weight:700}
 .ob{height:100%;display:flex;flex-direction:column;background:radial-gradient(120% 68% at 50% -5%,var(--accent-soft) 0%,var(--surface) 58%)}
 .ob .top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 30px;min-height:0;overflow-y:auto}
 .logo-lg{width:74px;height:74px;border-radius:22px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-size:38px;box-shadow:0 14px 32px color-mix(in srgb,var(--accent) 42%,transparent);flex:0 0 auto}
 .ob h1{font-size:29px;font-weight:700;letter-spacing:-.03em;margin:22px 0 0}
 .ob .desc{font-size:15px;color:var(--ink-2);margin:14px 0 0;line-height:1.6;max-width:28ch}
-.ob .illus{margin-top:32px;width:150px;height:150px;border-radius:34px;display:grid;place-items:center;font-size:66px;position:relative;flex:0 0 auto;
-  background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 24%,var(--surface)),color-mix(in srgb,var(--accent-2) 12%,var(--surface)));
-  border:1px solid var(--line);box-shadow:var(--shadow-lg),inset 0 2px 22px rgba(255,255,255,.28)}
+.ob .illus{margin-top:32px;width:150px;height:150px;border-radius:34px;display:grid;place-items:center;font-size:66px;position:relative;flex:0 0 auto;background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 24%,var(--surface)),color-mix(in srgb,var(--accent-2) 12%,var(--surface)));border:1px solid var(--line);box-shadow:var(--shadow-lg),inset 0 2px 22px rgba(255,255,255,.28)}
 .ob .illus::after{content:"✨";position:absolute;top:15px;right:18px;font-size:22px}
 .ob .dots{display:flex;gap:7px;justify-content:center;margin-top:28px}
 .ob .dot{width:7px;height:7px;border-radius:4px;background:var(--line);cursor:pointer;transition:.25s}
@@ -315,57 +230,41 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .cta{width:100%;padding:15px;border-radius:14px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:15.5px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 34%,transparent)}
 .ob .link{font-size:14px;color:var(--ink-2);font-weight:600}
 .login{height:100%;display:flex;flex-direction:column;justify-content:center;padding:24px 30px calc(28px + env(safe-area-inset-bottom));background:var(--surface);overflow-y:auto}
-.login .lh{text-align:center}
-.login h1{font-size:24px;font-weight:700;margin:18px 0 4px;letter-spacing:-.02em}
-.login .sub{font-size:13.5px;color:var(--ink-3)}
+.login .lh{text-align:center}.login h1{font-size:24px;font-weight:700;margin:18px 0 4px;letter-spacing:-.02em}.login .sub{font-size:13.5px;color:var(--ink-3)}
 .sso{display:flex;flex-direction:column;gap:10px;margin-top:24px}
 .ssobtn{display:flex;align-items:center;justify-content:center;gap:9px;padding:14px;border-radius:13px;font-weight:700;font-size:14.5px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
-.ssobtn.tn{background:var(--accent);color:#fff;border-color:transparent}
-.ssobtn.kk{background:#FEE500;color:#3c1e1e;border-color:transparent}
+.ssobtn.tn{background:var(--accent);color:#fff;border-color:transparent}.ssobtn.kk{background:#FEE500;color:#3c1e1e;border-color:transparent}
 .ssobtn .lo{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:800}
 .divider{display:flex;align-items:center;gap:12px;color:var(--ink-3);font-size:11px;margin:20px 0;font-family:"IBM Plex Mono"}
 .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
 .login .fields{display:flex;flex-direction:column;gap:10px}
 .login .fields input{border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:13px 14px;font-size:14px;font-family:inherit;color:var(--ink)}
-.login .foot{text-align:center;margin-top:18px;font-size:12.5px;color:var(--ink-3)}
-.login .foot a{color:var(--accent);font-weight:600;cursor:pointer}
-
-/* sheet */
+.login .foot{text-align:center;margin-top:18px;font-size:12.5px;color:var(--ink-3)}.login .foot a{color:var(--accent);font-weight:600;cursor:pointer}
 .sheet-bg{position:absolute;inset:0;background:rgba(20,12,40,.5);opacity:0;pointer-events:none;transition:.2s;z-index:40}
 .sheet-bg.on{opacity:1;pointer-events:auto}
-.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:22px 22px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom));
-  transform:translateY(100%);transition:.25s cubic-bezier(.2,.8,.2,1);z-index:41;box-shadow:0 -10px 40px rgba(0,0,0,.25);max-height:82%;overflow-y:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:22px 22px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom));transform:translateY(100%);transition:.25s cubic-bezier(.2,.8,.2,1);z-index:41;box-shadow:0 -10px 40px rgba(0,0,0,.25);max-height:82%;overflow-y:auto}
 .sheet.on{transform:translateY(0)}
-.sheet .sh{font-size:17px;font-weight:700;margin:0 0 4px}
-.sheet .sd{font-size:12.5px;color:var(--ink-3);margin:0 0 16px}
+.sheet .sh{font-size:17px;font-weight:700;margin:0 0 4px}.sheet .sd{font-size:12.5px;color:var(--ink-3);margin:0 0 16px}
 .sheet textarea,.sheet input{width:100%;border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:11px 13px;font-size:14px;font-family:inherit;color:var(--ink);resize:none}
 .btn{display:block;width:100%;padding:13px;border-radius:13px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:14.5px;margin-top:14px;text-align:center}
 .btn.ghost{background:var(--surface-2);color:var(--ink)}
 .grip{width:38px;height:4px;border-radius:2px;background:var(--line);margin:-8px auto 14px}
-
-/* toast */
 .toast{position:absolute;left:50%;bottom:88px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);z-index:60;opacity:0;transition:.25s;max-width:86%;text-align:center;pointer-events:none}
 .toast.on{opacity:1;transform:translate(-50%,0)}
-.empty{text-align:center;color:var(--ink-3);font-size:13px;padding:40px 20px}
+.empty{text-align:center;color:var(--ink-3);font-size:13px;padding:40px 20px;line-height:1.6}
 .hint{font-size:11.5px;color:var(--ink-3);text-align:center;padding:10px;line-height:1.5}
 </style>
 
 <div class="stage">
   <div class="phone" id="phone">
-    <div class="ios">
-      <span class="t">9:41</span>
-      <span class="r">
-        <svg width="17" height="11" viewBox="0 0 17 11"><rect x="0" y="7" width="3" height="4" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="6" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="11" rx="1" fill="currentColor"/></svg>
-        <svg width="16" height="11" viewBox="0 0 16 11" fill="none"><path d="M8 9.5a1.2 1.2 0 100 .01M3.4 6.1a6.5 6.5 0 019.2 0M1 3.7a10 10 0 0114 0M5.7 8.5a3.3 3.3 0 014.6 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        <svg width="26" height="12" viewBox="0 0 26 12"><rect x="1" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/><rect x="23" y="4" width="2" height="4" rx="1" fill="currentColor" fill-opacity=".4"/></svg>
-      </span>
-    </div>
+    <div class="ios"><span class="t">9:41</span><span class="r">
+      <svg width="17" height="11" viewBox="0 0 17 11"><rect x="0" y="7" width="3" height="4" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="6" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="11" rx="1" fill="currentColor"/></svg>
+      <svg width="16" height="11" viewBox="0 0 16 11" fill="none"><path d="M8 9.5a1.2 1.2 0 100 .01M3.4 6.1a6.5 6.5 0 019.2 0M1 3.7a10 10 0 0114 0M5.7 8.5a3.3 3.3 0 014.6 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <svg width="26" height="12" viewBox="0 0 26 12"><rect x="1" y="1" width="21" height="10" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/><rect x="23" y="4" width="2" height="4" rx="1" fill="currentColor" fill-opacity=".4"/></svg>
+    </span></div>
     <div class="statusbar" id="topbar">
       <div class="brand"><span class="logo">👑</span> 열혈톡</div>
-      <div class="roleseg" id="roleseg">
-        <button data-act="role" data-v="creator">크리에이터</button>
-        <button data-act="role" data-v="donator">도네이터</button>
-      </div>
+      <div class="roleseg" id="roleseg"><button data-act="role" data-v="creator">크리에이터</button><button data-act="role" data-v="donator">도네이터</button></div>
       <button class="livebtn" data-act="live"><span class="d"></span><span id="liveLabel">LIVE</span></button>
     </div>
     <div id="appbar"></div>
@@ -375,7 +274,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <div class="sheet" id="sheet"></div>
     <div class="toast" id="toast"></div>
   </div>
-  <div class="cap">열혈톡 · iOS · Android 하이브리드 앱 프로토타입 (Capacitor 래핑 기준) · 열혈네이션 등급 연동 · 상단에서 역할 전환, LIVE로 실시간 시뮬레이션</div>
+  <div class="cap">열혈톡 · iOS · Android 하이브리드 앱 프로토타입 · 크리에이터↔도네이터 1:1 쪽지 · 상단에서 역할 전환, LIVE로 실시간 시뮬레이션</div>
 </div>
 
 <script>
@@ -386,223 +285,181 @@ const wonK=n=>n>=10000?(n/10000).toFixed(n%10000?1:0)+"만":n.toLocaleString("ko
 function ago(min){min=Math.round(min);if(min<1)return"방금";if(min<60)return min+"분 전";const h=Math.floor(min/60);if(h<24)return h+"시간 전";return Math.floor(h/24)+"일 전";}
 function nowT(){const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
 
-/* ---------- grade model (열혈네이션: 일반 / VIP / VVIP / SVIP) ---------- */
 let TIERS=[
   {key:"basic",name:"일반",emoji:"👤",color:"#9d97b5",min:0},
   {key:"vip", name:"VIP", emoji:"👑",color:"#a78bfa",min:100000},
   {key:"vvip",name:"VVIP",emoji:"👑",color:"#6d47d9",min:500000},
   {key:"svip",name:"SVIP",emoji:"👑",color:"#a9832a",min:1000000},
 ];
-function tierOf(amt){let t=TIERS[0];for(const x of TIERS)if(amt>=x.min)t=x;return t;}
+function tierOf(a){let t=TIERS[0];for(const x of TIERS)if(a>=x.min)t=x;return t;}
 function tierIdx(k){return TIERS.findIndex(t=>t.key===k);}
-function tinfo(k){return TIERS.find(t=>t.key===k)||TIERS[0];}
-function nextTier(amt){const i=tierIdx(tierOf(amt).key);return TIERS[i+1]||null;}
-function gpill(amt){const t=tierOf(amt);return `<span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span>`;}
-const isVIP=amt=>tierIdx(tierOf(amt).key)>=tierIdx("vip");
+function nextTier(a){const i=tierIdx(tierOf(a).key);return TIERS[i+1]||null;}
+function gpill(a){const t=tierOf(a);return `<span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span>`;}
+const isVIP=a=>tierIdx(tierOf(a).key)>=tierIdx("vip");
 
-/* ---------- seed ---------- */
-const names=["별하늘","별밤","라온","두부왕","해피","코코","도현","나비","장군","소라","핫식스","달toon"];
-const emos=["🌙","⭐","🦊","🐰","🐻","🐱","🐺","🦋","🐶","🐬","🌶️","🧸"];
-let uid=1;
-function mk(i,cum,seenMin,online,temp,count,memo,tags){return{id:i==="me"?"me":"f"+(uid++),name:names[i==="me"?0:i],emoji:emos[i==="me"?0:i],
-  cum,seenMin,online:!!online,temp,count,memo:memo||"",tags:tags||[],
+/* ---------- seed: creator side (내 팬들과의 1:1 쪽지) ---------- */
+const fnames=["별하늘","밤톨","라온","두부왕","해피","코코","도현","나비","장군","소라","핫식스","달toon"];
+const femos=["🌙","🌰","🦊","🐰","🐻","🐱","🐺","🦋","🐶","🐬","🌶️","🧸"];
+let u=1;
+function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u++),name:fnames[i],emoji:femos[i],cum,seenMin:seen,online:!!on,temp,count:cnt,unread:unread||0,memo:memo||"",tags:tags||[],
+  thread:thread||[{t:"day",text:"오늘"},{from:"in",text:"안녕하세요! 오늘도 응원할게요 😊",tm:"18:10"}],
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"onboarding",slide:0,
-  ctab:"chat",dtab:"lounge",sub:null,param:null,filter:"all",donPreset:50000,drafts:{},
-  crewOnline:true,
+  ctab:"msg",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,drafts:{},
   fans:[
-    mk("me",620000,2,true,92,48,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"]),
-    mk(1,1150000,25,false,95,52,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"]),
-    mk(2,180000,180,true,72,16,"이모티콘 마스터, 분위기메이커",["분위기"]),
-    mk(3,95000,60,true,54,8,"",["신규성장"]),
-    mk(4,540000,15,true,88,30,"주말 집중 후원형, 리액션 좋음",["주말러"]),
-    mk(5,28000,60*24*16,false,30,4,"한동안 안 보임. 복귀 유도 대상.",["휴면위험"]),
-    mk(6,320000,60*24*9,false,78,20,"최근 접속 뜸해짐 — 이탈 주의",["이탈주의"]),
-    mk(7,12000,240,false,40,3,"",[]),
-    mk(8,72000,60*24*3,false,48,6,"",[]),
-    mk(9,5000,30,true,35,2,"신규 유입, 온보딩 관심",["신규"]),
-    mk(10,155000,60*24*15,false,66,12,"매운맛 리액션 담당 ㅋㅋ 요즘 잠잠",["이탈주의"]),
-    mk(11,8000,60*24*20,false,25,2,"",["휴면위험"]),
+    mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
+    mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
+    mkFan(2,180000,180,true,72,16,0,"이모티콘 마스터, 분위기메이커",["분위기"]),
+    mkFan(3,95000,60,true,54,8,1,"",["신규성장"],[{t:"day",text:"오늘"},{from:"in",text:"곧 VIP 될 수 있을까요? 😆",tm:"17:40"}]),
+    mkFan(4,540000,15,true,88,30,1,"주말 집중 후원형, 리액션 좋음",["주말러"],[{t:"day",text:"오늘"},{from:"dono",amt:30000,text:"오늘도 화이팅! 💪",tm:"18:20"}]),
+    mkFan(5,28000,60*24*16,false,30,4,0,"한동안 안 보임. 복귀 유도 대상.",["휴면위험"]),
+    mkFan(6,320000,60*24*9,false,78,20,0,"최근 접속 뜸해짐 — 이탈 주의",["이탈주의"]),
+    mkFan(7,12000,240,false,40,3,0,"",[]),
+    mkFan(8,72000,60*24*3,false,48,6,0,"",[]),
+    mkFan(9,5000,30,true,35,2,0,"신규 유입, 온보딩 관심",["신규"]),
+    mkFan(10,155000,60*24*15,false,66,12,0,"매운맛 리액션 담당 ㅋㅋ 요즘 잠잠",["이탈주의"]),
+    mkFan(11,8000,60*24*20,false,25,2,0,"",["휴면위험"]),
   ],
-  channels:[
-    {id:"official",kind:"open",emoji:"📣",name:"크루 공식방",desc:"전체 공지 · 잡담",minTier:null},
-    {id:"free",kind:"open",emoji:"💬",name:"자유 수다방",desc:"아무 얘기 환영",minTier:null},
-    {id:"vvip",kind:"tier",emoji:"💜",name:"VVIP 전용방",desc:"VVIP 이상 입장",minTier:"vvip"},
-    {id:"svip",kind:"tier",emoji:"👑",name:"SVIP 라운지",desc:"SVIP 전용",minTier:"svip"},
-  ],
-  msgs:{
-    official:[
-      {t:"day",text:"오늘"},
-      {from:"out",text:"오늘 저녁 9시 엑셀방송 시작합니다! 🔥 다들 화력 준비 ㄱㄱ",tm:"18:02"},
-      {from:"in",fid:"f2",text:"오늘도 달릴 준비 완료 ㅋㅋㅋ",tm:"18:05"},
-      {from:"dono",fid:"me",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},
-      {from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갑니다 🎉",tm:"18:08"},
-      {from:"in",fid:"f4",text:"저도 곧 쏩니다 대기타는중",tm:"18:10"},
-    ],
-    free:[{t:"day",text:"오늘"},{from:"in",fid:"f2",text:"밥 뭐 드셨어요?",tm:"17:20"},{from:"out",text:"방송 전이라 가볍게 김밥 먹었어요 ㅎㅎ",tm:"17:22"}],
-    vvip:[{t:"day",text:"오늘"},{from:"out",text:"VVIP 여러분만 아는 다음주 콘텐츠 스포... 👀",tm:"16:00"},{from:"in",fid:"f4",text:"오 기대되네요",tm:"16:30"}],
-    svip:[{t:"day",text:"오늘"},{from:"out",text:"SVIP 라운지 오신 거 환영합니다 🙌 여긴 진짜 찐팬방이에요",tm:"15:00"}],
-  },
-  tray:[{fid:"me",amt:50000,text:"크루 1주년 축하해요!"}],
   notifs:[
-    {type:"dono",title:"<b>👑 VVIP '별하늘'</b>님이 ₩50,000 후원",sub:"크루 공식방 · 후원톡 도착",min:7,unread:true},
+    {type:"dono",title:"<b>👑 VVIP '별하늘'</b>님이 ₩50,000 후원",sub:"1:1 쪽지 · 후원톡 도착",min:7,unread:true},
     {type:"presence",title:"<b>👑 VVIP '해피'</b>님이 접속했어요",sub:"최근 후원 ₩540,000 · 15분 만의 접속",min:15,unread:true},
     {type:"grade",title:"<b>'도현'</b>님이 👑 VIP로 등급 상승",sub:"누적 ₩100,000 달성 · 카카오 알림톡 자동 발송됨",min:120,unread:false},
-    {type:"system",title:"후원 목표 <b>82%</b> 달성",sub:"₩4,100,000 / ₩5,000,000",min:200,unread:false},
+    {type:"system",title:"이번 달 후원 목표 <b>82%</b> 달성",sub:"₩4,100,000 / ₩5,000,000",min:200,unread:false},
   ],
   goal:{cur:4100000,target:5000000},
-  crew:[
-    {name:"나 (오너)",emoji:"🎙️",role:"owner",perms:["정책","응대","발송","모더"]},
-    {name:"매니저 · 진",emoji:"🧑‍💼",role:"manager",perms:["응대","발송","모더"]},
-    {name:"매니저 · 유",emoji:"🧑‍💻",role:"manager",perms:["응대","모더"]},
-  ],
+  crew:[{name:"나 (오너)",emoji:"🎙️",role:"owner",perms:["정책","응대","발송","모더"]},{name:"매니저 · 진",emoji:"🧑‍💼",role:"manager",perms:["응대","발송","모더"]},{name:"매니저 · 유",emoji:"🧑‍💻",role:"manager",perms:["응대","모더"]}],
   alertRules:{presence:true,dono:true,grade:true,broadcast:true,dnd:false},
   kakao:{on:true,grade:true,bday:true,anniv:true},
   don:{trend:[420,380,510,470,620,560,880],days:["9.3","9.4","9.5","9.6","9.7","9.8","9.9"]},
   retention:{d30:43,trend:[31,34,33,38,40,41,43]},
   autoperf:{sent:142,open:72,conv:8.5},
   events:[{name:"별하늘",emoji:"🌙",label:"후원 1주년",d:11},{name:"해피",emoji:"🐻",label:"생일",d:5},{name:"코코",emoji:"🐱",label:"생일",d:12}],
-  myDonHist:[{d:"오늘",a:50000},{d:"2025.09.09",a:186000},{d:"2025.09.02",a:155000},{d:"2025.08.20",a:124000}],
+  /* ---------- donator side (내가 팔로우한 크리에이터들과의 1:1) ---------- */
+  me:{name:"별하늘",emoji:"🌙"},
+  creators:[
+    {id:"c1",name:"열혈크루",emoji:"🎙️",cat:"게임 · 토크",followers:12800,followed:true,online:true,myCum:620000,myTemp:92,unread:0,
+      thread:[{t:"day",text:"오늘"},{from:"in",text:"별하늘님 오늘도 와주셨네요! 😊",tm:"18:00"},{from:"out",text:"당연하죠 ㅎㅎ 오늘 방송 기대돼요",tm:"18:02"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"in",text:"헉 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]},
+    {id:"c2",name:"소이",emoji:"🎨",cat:"그림 · 감성",followers:5400,followed:true,online:true,myCum:180000,myTemp:70,unread:1,
+      thread:[{t:"day",text:"오늘"},{from:"in",text:"오늘 그림 방송 보러 오실거죠? 🎨",tm:"16:30"}]},
+    {id:"c3",name:"지노",emoji:"🎮",cat:"FPS 게임",followers:23100,followed:true,online:false,myCum:45000,myTemp:52,unread:0,
+      thread:[{t:"day",text:"어제"},{from:"out",text:"어제 클러치 미쳤어요 ㅋㅋㅋ",tm:"23:10"},{from:"in",text:"ㅋㅋㅋ 감사합니다 다음판도 기대하세요",tm:"23:12"}]},
+    {id:"c4",name:"미미",emoji:"🍳",cat:"쿠킹 · 먹방",followers:9800,followed:true,online:true,myCum:720000,myTemp:85,unread:0,
+      thread:[{t:"day",text:"오늘"},{from:"in",text:"오늘 야식 방송 각인데 오실래요? 🍜",tm:"20:00"}]},
+    {id:"c5",name:"하루",emoji:"🎵",cat:"음악 · 힐링",followers:15200,followed:false,online:true,myCum:0,myTemp:0,unread:0,thread:[]},
+    {id:"c6",name:"밤비",emoji:"💄",cat:"뷰티 · 토크",followers:31000,followed:false,online:false,myCum:0,myTemp:0,unread:0,thread:[]},
+    {id:"c7",name:"킹콩",emoji:"🏋️",cat:"운동 · 챌린지",followers:7600,followed:false,online:true,myCum:0,myTemp:0,unread:0,thread:[]},
+  ],
+  dnotifs:[
+    {type:"presence",title:"<b>🎙️ 열혈크루</b>님이 방송을 시작했어요",sub:"지금 라이브 · 놓치지 마세요",min:3,unread:true},
+    {type:"dono",title:"<b>🎨 소이</b>님이 쪽지를 보냈어요",sub:"오늘 그림 방송 보러 오실거죠?",min:20,unread:true},
+    {type:"grade",title:"<b>🍳 미미</b>님과 👑 VVIP 등급 유지 중",sub:"누적 ₩720,000",min:300,unread:false},
+  ],
+  myDonHist:[{d:"오늘",a:50000,c:"열혈크루"},{d:"2025.09.09",a:186000,c:"미미"},{d:"2025.09.02",a:155000,c:"열혈크루"},{d:"2025.08.20",a:124000,c:"소이"}],
 };
 const fanById=id=>state.fans.find(f=>f.id===id);
-const me=()=>fanById("me");
-const atRiskFans=()=>state.fans.filter(f=>isVIP(f.cum)&&f.seenMin>=7*1440);
+const creById=id=>state.creators.find(c=>c.id===id);
+const atRisk=()=>state.fans.filter(f=>isVIP(f.cum)&&f.seenMin>=7*1440);
 
-/* ---------- toast / sheet ---------- */
 let toastT;
-function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1900);}
-function openSheet(html){$("#sheet").innerHTML='<div class="grip"></div>'+html;$("#sheet").classList.add("on");$("#sheetBg").classList.add("on");}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1900);}
+function openSheet(h){$("#sheet").innerHTML='<div class="grip"></div>'+h;$("#sheet").classList.add("on");$("#sheetBg").classList.add("on");}
 function closeSheet(){$("#sheet").classList.remove("on");$("#sheetBg").classList.remove("on");}
 
-/* ================= RENDER ================= */
-const CTABS=[["chat","💬","채팅"],["fans","👥","팬 관리"],["notif","🔔","알림"],["insights","📊","인사이트"],["settings","⚙️","설정"]];
-const DTABS=[["lounge","🏠","라운지"],["dchat","💬","채팅"],["donate","💝","후원"],["mygrade","🏅","내 등급"]];
+const CTABS=[["msg","✉️","쪽지"],["fans","👥","팬 관리"],["notif","🔔","알림"],["insights","📊","인사이트"],["settings","⚙️","설정"]];
+const DTABS=[["following","💜","팔로잉"],["discover","🔍","탐색"],["dnotif","🔔","알림"],["me","🏅","내 정보"]];
+
 function render(){
   const chrome=state.screen==="app";
   $("#topbar").style.display=chrome?"":"none";$("#appbar").style.display=chrome?"":"none";$("#tabbar").style.display=chrome?"":"none";
   if(state.screen==="onboarding"){$("#view").innerHTML=viewOnboarding();return;}
   if(state.screen==="login"){$("#view").innerHTML=viewLogin();return;}
   document.querySelectorAll("#roleseg button").forEach(b=>b.classList.toggle("on",b.dataset.v===state.role));
-  $("#liveLabel").textContent=state.live?"LIVE ●":"LIVE";
-  document.querySelector(".livebtn").classList.toggle("on",state.live);
+  $("#liveLabel").textContent=state.live?"LIVE ●":"LIVE";document.querySelector(".livebtn").classList.toggle("on",state.live);
   renderTabbar();renderAppbar();renderView();
 }
-function viewOnboarding(){
-  const slides=[
-    {ic:"👑",h:"열혈톡",d:"당신의 열혈팬을 더 특별하게,\n지금 바로 관리해보세요.",il:"👑"},
-    {ic:"💬",h:"실시간 채팅 & 후원톡",d:"팬과 방송 밖에서도 이어지고,\n후원톡으로 특별한 순간을 놓치지 마세요.",il:"💬"},
-    {ic:"📊",h:"등급 관리 & 자동 알림",d:"일반부터 SVIP까지 자동 분류하고,\n접속·등급·기념일을 실시간으로 챙기세요.",il:"📊"},
-  ];
-  const s=slides[state.slide],last=state.slide===slides.length-1;
-  const dots=slides.map((_,i)=>`<span class="dot ${i===state.slide?"on":""}" data-act="obdot" data-v="${i}"></span>`).join("");
-  return `<div class="ob"><div class="top">
-    <div class="logo-lg">${s.ic}</div>
-    <h1>${esc(s.h)}</h1><div class="desc">${esc(s.d).replace(/\n/g,"<br>")}</div>
-    <div class="illus">${s.il}</div>
-    <div class="dots">${dots}</div></div>
-    <div class="bottom"><button class="cta" data-act="obnext">${last?"시작하기":"다음"} →</button>
-    <button class="link" data-act="gologin">이미 계정이 있어요 · 로그인</button></div></div>`;
-}
-function viewLogin(){
-  return `<div class="login">
-    <div class="lh"><div class="logo-lg" style="margin:0 auto">👑</div><h1>열혈톡 시작하기</h1><div class="sub">투네이션 계정으로 간편하게 로그인하세요</div></div>
-    <div class="sso">
-      <button class="ssobtn tn" data-act="dologin"><span class="lo" style="background:rgba(255,255,255,.25)">T</span>투네이션 계정으로 로그인</button>
-      <button class="ssobtn kk" data-act="dologin"><span class="lo" style="background:rgba(0,0,0,.12)">K</span>카카오로 로그인</button>
-    </div>
-    <div class="divider">또는 이메일로 로그인</div>
-    <div class="fields">
-      <input type="email" id="lemail" placeholder="이메일" autocomplete="username">
-      <input type="password" id="lpw" placeholder="비밀번호" autocomplete="current-password">
-      <button class="cta" data-act="dologin" style="margin-top:2px">로그인</button>
-    </div>
-    <div class="foot"><a data-act="dologin">게스트로 둘러보기</a> · <a data-act="dologin">회원가입</a></div>
-  </div>`;
-}
 function renderTabbar(){
-  const tabs=state.role==="creator"?CTABS:DTABS, cur=state.role==="creator"?state.ctab:state.dtab;
-  const unreadN=state.notifs.filter(n=>n.unread).length, trayN=state.tray.length;
+  const tabs=state.role==="creator"?CTABS:DTABS,cur=state.role==="creator"?state.ctab:state.dtab;
+  const cUnread=state.fans.reduce((a,f)=>a+f.unread,0),cNotif=state.notifs.filter(n=>n.unread).length;
+  const dUnread=state.creators.filter(c=>c.followed).reduce((a,c)=>a+c.unread,0),dNotif=state.dnotifs.filter(n=>n.unread).length;
   $("#tabbar").innerHTML=tabs.map(([k,ic,l])=>{
-    let badge="";
-    if(k==="notif"&&unreadN)badge=`<span class="badge">${unreadN}</span>`;
-    if(k==="chat"&&trayN)badge=`<span class="badge">${trayN}</span>`;
-    return `<button data-act="tab" data-v="${k}" class="${cur===k?"on":""}"><span class="ti">${ic}${badge}</span><span class="tl">${l}</span></button>`;
+    let b="";
+    if(k==="msg"&&cUnread)b=`<span class="badge">${cUnread}</span>`;
+    if(k==="notif"&&cNotif)b=`<span class="badge">${cNotif}</span>`;
+    if(k==="following"&&dUnread)b=`<span class="badge">${dUnread}</span>`;
+    if(k==="dnotif"&&dNotif)b=`<span class="badge">${dNotif}</span>`;
+    return `<button data-act="tab" data-v="${k}" class="${cur===k?"on":""}"><span class="ti">${ic}${b}</span><span class="tl">${l}</span></button>`;
   }).join("");
 }
 function renderAppbar(){
   let h="";const back=`<button class="back" data-act="back">‹</button>`;
-  if(state.sub==="room"){const c=chanOrDm(state.param);h=`${back}<div><h1>${c.emoji} ${esc(c.name)}</h1><div class="sub">${c.sub||""}</div></div>`;}
-  else if(state.sub==="fan"){h=`${back}<div><h1>VIP 후원자 정보</h1><div class="sub">${esc(fanById(state.param).name)}</div></div>`;}
+  if(state.sub==="thread"){
+    const p=state.role==="creator"?fanById(state.param):creById(state.param);
+    const grade=state.role==="creator"?tierOf(p.cum):tierOf(p.myCum);
+    const status=p.online?'<span style="color:var(--keep)">● 온라인</span>':ago(p.seenMin||60)+" 전 접속";
+    h=`${back}<div class="hav">${p.emoji}${p.online?'<span class="on-dot"></span>':""}</div><div><h1 style="font-size:17px">${esc(p.name)}</h1><div class="sub"><span class="gp" style="--gc:${grade.color}">${grade.emoji} ${grade.name}</span> ${status}</div></div>`;
+  }else if(state.sub==="fan"){h=`${back}<div><h1>VIP 후원자 정보</h1><div class="sub">${esc(fanById(state.param).name)}</div></div>`;}
   else{
-    const map={chat:["채팅","크루 채널 · 1:1 · 후원톡"],fans:["팬 관리","등급별 CRM"],notif:["알림","접속 · 후원 · 등급"],insights:["인사이트","크루 대시보드"],settings:["설정","등급 · 권한 · 자동화"],
-      lounge:["팬 라운지","응원하는 크루"],dchat:["채팅","크루와 소통"],donate:["후원하기","후원톡 보내기"],mygrade:["내 등급","티어 & 혜택"]};
-    const cur=state.role==="creator"?state.ctab:state.dtab, m=map[cur];
-    let act="";
+    const map={msg:["쪽지","팬과의 1:1 대화"],fans:["팬 관리","등급별 CRM"],notif:["알림","접속 · 후원 · 등급"],insights:["인사이트","크루 대시보드"],settings:["설정","등급 · 권한 · 자동화"],
+      following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
+    const cur=state.role==="creator"?state.ctab:state.dtab,m=map[cur];let act="";
     if(cur==="fans")act=`<button class="act" data-act="segsheet" title="세그먼트 발송">✈️</button>`;
     if(cur==="notif")act=`<button class="act" data-act="winback" title="복귀 유도">💌</button>`;
     h=`<div><h1>${m[0]}</h1><div class="sub">${m[1]}</div></div><div class="sp"></div>${act}`;
   }
   $("#appbar").className="appbar";$("#appbar").innerHTML=h;
 }
-function chanOrDm(id){
-  if(id&&id.startsWith("dm:")){const f=fanById(id.slice(3));return{emoji:f.emoji,name:f.name,sub:tierOf(f.cum).name+" · 누적 "+won(f.cum),dm:true,fid:f.id};}
-  const c=state.channels.find(c=>c.id===id);return{...c,sub:c.kind==="tier"?tinfo(c.minTier).name+" 이상 전용":"공개 채널"};
-}
 function renderView(){
   const v=$("#view");
-  if(state.sub==="room"){v.innerHTML=viewRoom(state.param);v.scrollTop=v.scrollHeight;bindComposer();return;}
+  if(state.sub==="thread"){v.innerHTML=viewThread(state.param);v.scrollTop=v.scrollHeight;bindComposer();return;}
   if(state.sub==="fan"){v.innerHTML=viewFan(state.param);return;}
-  if(state.role==="creator")v.innerHTML={chat:viewChat,fans:viewFans,notif:viewNotif,insights:viewInsights,settings:viewSettings}[state.ctab]();
-  else{v.innerHTML={lounge:viewLounge,dchat:viewDChat,donate:viewDonate,mygrade:viewMyGrade}[state.dtab]();if(state.dtab==="donate")bindDonate();}
+  if(state.role==="creator")v.innerHTML={msg:viewMsg,fans:viewFans,notif:viewNotif,insights:viewInsights,settings:viewSettings}[state.ctab]();
+  else v.innerHTML={following:viewFollowing,discover:viewDiscover,dnotif:viewDNotif,me:viewMe}[state.dtab]();
 }
 
-/* ---------- chat ---------- */
-function row(o){return `<button class="row" data-act="${o.act}" data-v="${o.v}"><div class="av">${o.emoji}${o.online?'<span class="on-dot"></span>':""}</div><div class="main"><div class="tt">${o.title}</div>${o.preview?`<div class="pv">${o.preview}</div>`:""}</div><div class="meta">${o.right||""}</div></button>`;}
-function viewChat(){
-  const dms=state.fans.filter(f=>["me","f1","f4"].includes(f.id));
-  let tray="";
-  if(state.tray.length){
-    tray=`<div class="tray"><div class="th">🎁 후원톡 트레이 · ${state.tray.length}건 대기</div>`+
-      state.tray.map((t,i)=>{const f=fanById(t.fid);return `<div class="ti"><span>${f.emoji} <b>${esc(f.name)}</b> · <span class="mono">${won(t.amt)}</span> "${esc(t.text.slice(0,12))}${t.text.length>12?"…":""}"</span><button class="rep" data-act="replytray" data-v="${i}">답장</button></div>`;}).join("")+`</div>`;
-  }
-  const ch=state.channels.map(c=>{const m=state.msgs[c.id],last=[...m].reverse().find(x=>x.from);const lastTx=last?(last.from==="dono"?"🎁 후원톡 "+won(last.amt):last.from==="out"?"나: "+last.text:(fanById(last.fid)||{name:"팬"}).name+": "+last.text):"";
-    return row({emoji:c.emoji,title:esc(c.name)+(c.minTier?` <span class="gp" style="--gc:${tinfo(c.minTier).color}">전용</span>`:""),preview:esc(lastTx),act:`open`,v:c.id,right:last?`<div class="tm">${last.tm||""}</div>`:""});}).join("");
-  const dm=dms.map(f=>row({emoji:f.emoji,online:f.online,title:esc(f.name)+" "+gpill(f.cum),preview:"1:1 다이렉트 · 누적 "+won(f.cum),act:"open",v:"dm:"+f.id,right:`<div class="tm">${ago(f.seenMin)}</div>`})).join("");
-  return `<div class="pad">${tray}
-    <div class="sechd" style="margin-top:${state.tray.length?14:4}px">크루 채널</div><div class="rows">${ch}</div>
-    <div class="sechd" style="margin-top:18px">1:1 다이렉트</div><div class="rows">${dm}</div>
-    <div class="hint">💡 상단 <b>LIVE</b>를 켜면 팬들의 채팅·후원톡이 실시간으로 들어옵니다.</div></div>`;
-}
-function viewRoom(id){
-  const c=chanOrDm(id), msgs=id.startsWith("dm:")?(state.msgs[id]||[{t:"day",text:"오늘"}]):state.msgs[id];
-  if(state.role==="donator"&&c.minTier&&tierIdx(tierOf(me().cum).key)<tierIdx(c.minTier)){
-    return `<div class="chatwrap"><div class="msgs"><div class="empty">🔒 ${tinfo(c.minTier).emoji} ${tinfo(c.minTier).name} 등급부터 입장할 수 있어요.<br><br>지금 등급: ${tierOf(me().cum).emoji} ${tierOf(me().cum).name}</div></div></div>`;
-  }
-  const body=(msgs||[]).map(m=>{
+/* ---------- shared thread ---------- */
+function threadPreview(msgs){const last=[...msgs].reverse().find(x=>x.from);if(!last)return"대화를 시작해보세요";return last.from==="dono"?"🎁 후원톡 "+won(last.amt):(last.from==="out"?"나: ":"")+last.text;}
+function threadTime(msgs){const last=[...msgs].reverse().find(x=>x.from);return last?last.tm||"":"";}
+function viewThread(id){
+  const p=state.role==="creator"?fanById(id):creById(id);
+  p.unread=0;
+  const msgs=p.thread&&p.thread.length?p.thread:[{t:"day",text:"오늘"}];
+  const body=msgs.map(m=>{
     if(m.t==="day")return `<div class="day">${esc(m.text)}</div>`;
     if(m.from==="sys")return `<div class="sysmsg">${m.text}</div>`;
-    if(m.from==="dono"){const f=fanById(m.fid);return `<div class="dono"><div class="top"><div class="amt">${won(m.amt)}</div><div class="bg">${tierOf(f.cum).emoji} 후원톡</div></div><div class="nm">${f.emoji} ${esc(f.name)}</div><div class="tx">${esc(m.text)}</div></div>`;}
+    if(m.from==="dono"){const inc=state.role==="creator";const g=state.role==="creator"?tierOf(p.cum):tierOf(p.myCum);
+      return `<div class="dono ${inc?"inc":""}"><div class="top"><div class="amt">${won(m.amt)}</div><div class="bg">${g.emoji} 후원톡</div></div><div class="tx">${esc(m.text)}</div></div>`;}
     if(m.from==="out")return `<div class="b out">${esc(m.text)}<div class="tm">${m.tm||nowT()}</div></div>`;
-    const f=fanById(m.fid)||{emoji:"👤",name:"팬",cum:0};
-    return `<div class="b in"><div class="who">${f.emoji} ${esc(f.name)} ${gpill(f.cum)}</div>${esc(m.text)}<div class="tm">${m.tm||nowT()}</div></div>`;
+    return `<div class="b in">${esc(m.text)}<div class="tm">${m.tm||nowT()}</div></div>`;
   }).join("");
   const draft=state.drafts[id]||"";
-  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="composer"><input id="ci" placeholder="${state.role==="creator"?"메시지 보내기…":"메시지…"}" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="send" data-v="${id}">➤</button></div></div>`;
+  const dbtn=state.role==="donator"?`<button class="dbtn" data-act="donsheet" data-v="${id}" title="후원톡">🎁</button>`:"";
+  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="composer">${dbtn}<input id="ci" placeholder="${state.role==="creator"?"답장 보내기…":"쪽지 보내기…"}" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="send" data-v="${id}">➤</button></div></div>`;
 }
 function bindComposer(){const ci=$("#ci");if(ci){ci.oninput=e=>{state.drafts[state.param]=e.target.value;};ci.onkeydown=e=>{if(e.key==="Enter")sendMsg(state.param);};}}
 
-/* ---------- fans ---------- */
+/* ---------- creator: 쪽지 inbox ---------- */
+function viewMsg(){
+  const list=[...state.fans].sort((a,b)=>(b.unread-a.unread)||(a.seenMin-b.seenMin));
+  const rows=list.map(f=>`<button class="row" data-act="thread" data-v="${f.id}">
+    <div class="av">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div>
+    <div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}</div><div class="pv">${esc(threadPreview(f.thread))}</div></div>
+    <div class="meta"><div class="tm">${threadTime(f.thread)||ago(f.seenMin)}</div>${f.unread?`<span class="cnt">${f.unread}</span>`:""}</div></button>`).join("");
+  const totalUnread=state.fans.reduce((a,f)=>a+f.unread,0);
+  return `<div class="pad"><div class="sechd">받은 쪽지 ${totalUnread?`· 안읽음 ${totalUnread}`:""}<span class="r" data-act="tab" data-v="fans">팬 관리 ›</span></div>
+    <div class="rows">${rows}</div>
+    <div class="hint">💡 팬 한 명 한 명과 1:1로 소통해요. 상단 <b>LIVE</b>를 켜면 실시간으로 쪽지·후원톡이 들어옵니다.</div></div>`;
+}
+
+/* ---------- creator: fans CRM ---------- */
 const FILTERS=[["all","전체"],["svip","👑 SVIP"],["vvipp","💜 VVIP+"],["risk","⚠️ 이탈 위험"],["online","🔥 온라인"],["dormant","💤 휴면"]];
-function filterFans(){
-  let f=[...state.fans];
+function filterFans(){let f=[...state.fans];
   if(state.filter==="svip")f=f.filter(x=>tierOf(x.cum).key==="svip");
   else if(state.filter==="vvipp")f=f.filter(x=>tierIdx(tierOf(x.cum).key)>=tierIdx("vvip"));
   else if(state.filter==="risk")f=f.filter(x=>isVIP(x.cum)&&x.seenMin>=7*1440);
   else if(state.filter==="online")f=f.filter(x=>x.online);
   else if(state.filter==="dormant")f=f.filter(x=>x.seenMin>=14*1440);
-  return f.sort((a,b)=>b.cum-a.cum);
-}
+  return f.sort((a,b)=>b.cum-a.cum);}
 function viewFans(){
   const chips=FILTERS.map(([k,l])=>`<button class="chip ${state.filter===k?"on":""}" data-act="filter" data-v="${k}">${l}</button>`).join("");
   const list=filterFans();
@@ -610,237 +467,210 @@ function viewFans(){
     return `<button class="row" data-act="fan" data-v="${f.id}"><div class="av">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div>
     <div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}${risk?' <span class="gp" style="--gc:var(--crit)">⚠️ 이탈위험</span>':""}</div><div class="pv">누적 ${won(f.cum)} · ${f.online?"<span style='color:var(--keep)'>● 온라인</span>":ago(f.seenMin)+" 접속"}</div></div>
     <div class="meta"><div class="tm">›</div></div></button>`;}).join("")||`<div class="empty">조건에 맞는 팬이 없어요.</div>`;
-  return `<div class="pad">
-    <div class="chips">${chips}</div>
+  return `<div class="pad"><div class="chips">${chips}</div>
     <div class="sechd">${list.length}명 표시 · 총 ${state.fans.length}명 · 온라인 ${state.fans.filter(f=>f.online).length}<span class="r" data-act="segsheet">세그먼트 발송 ✈️</span></div>
     <div class="rows">${rows}</div>
-    <div class="hint">💡 필터로 세그먼트를 만들고 ✈️로 해당 그룹에게만 메시지를 보낼 수 있어요.</div></div>`;
+    <div class="hint">💡 필터로 세그먼트를 만들고 ✈️로 해당 그룹에게 단체 쪽지를 보낼 수 있어요.</div></div>`;
 }
 function viewFan(id){
   const f=fanById(id),t=tierOf(f.cum),nt=nextTier(f.cum);
   const prog=nt?Math.min(100,Math.round((f.cum-t.min)/(nt.min-t.min)*100)):100;
   const tags=f.tags.map(tg=>`<span class="tag">#${esc(tg)}</span>`).join("")+`<span class="tag add" data-act="addtag" data-v="${id}">+ 태그</span>`;
   const hist=f.hist.map(h=>`<div class="histrow"><span>${h.d}</span><span class="a">+${won(h.a)}</span></div>`).join("");
-  const ach=[];
-  if(f.cum>=1000000)ach.push(["🏆","누적 후원 100만원 달성","2025.04.12"]);
-  else if(f.cum>=500000)ach.push(["🏆","누적 후원 50만원 달성","2025.06.20"]);
-  ach.push(["⭐","첫 후원톡 후원","2024.11.03"]);
-  if(f.count>=30)ach.push(["🔥","후원 "+f.count+"회 돌파","2025.08.01"]);
+  const ach=[];if(f.cum>=1000000)ach.push(["🏆","누적 후원 100만원 달성","2025.04.12"]);else if(f.cum>=500000)ach.push(["🏆","누적 후원 50만원 달성","2025.06.20"]);
+  ach.push(["⭐","첫 후원톡 후원","2024.11.03"]);if(f.count>=30)ach.push(["🔥","후원 "+f.count+"회 돌파","2025.08.01"]);
   const desc=f.temp>=85?"언제나 응원해주는 최고의 팬이에요!":f.temp>=60?"꾸준히 함께해주는 소중한 팬이에요.":"관계를 더 다져볼 팬이에요.";
   return `<div class="pad">
-    <div class="dhero">
-      <div style="display:flex;align-items:center;gap:13px;position:relative">
-        <div class="dcav">${f.emoji}</div>
-        <div><div style="display:flex;align-items:center;gap:7px;font-size:18px;font-weight:700">${esc(f.name)} <span class="wpill">${t.emoji} ${t.name}</span></div>
-        <div style="font-size:12px;opacity:.88;margin-top:2px">${desc}</div></div>
-      </div>
-      <div class="dstats">
-        <div><div class="k">💰 누적 후원금액</div><div class="v">${won(f.cum)}</div></div>
-        <div><div class="k">🎁 후원 횟수</div><div class="v">${f.count}회</div></div>
-        <div><div class="k">🌡️ 관계 온도</div><div class="v">${f.temp}점</div></div>
-      </div>
-      <span class="cw">👑</span>
-    </div>
+    <div class="dhero"><div style="display:flex;align-items:center;gap:13px;position:relative"><div class="dcav">${f.emoji}</div>
+      <div><div style="display:flex;align-items:center;gap:7px;font-size:18px;font-weight:700">${esc(f.name)} <span class="wpill">${t.emoji} ${t.name}</span></div><div style="font-size:12px;opacity:.88;margin-top:2px">${desc}</div></div></div>
+      <div class="dstats"><div><div class="k">💰 누적 후원금액</div><div class="v">${won(f.cum)}</div></div><div><div class="k">🎁 후원 횟수</div><div class="v">${f.count}회</div></div><div><div class="k">🌡️ 관계 온도</div><div class="v">${f.temp}점</div></div></div>
+      <span class="cw">👑</span></div>
     ${nt?`<div class="nextbar"><div class="top"><span>${nt.emoji} ${nt.name}까지</span><span class="mono">${won(f.cum)} / ${won(nt.min)}</span></div><div class="ptrack"><div class="pfill" style="width:${prog}%;background:${nt.color}"></div></div></div>`:`<div class="nextbar"><div class="top"><span>🏆 최고 등급 SVIP 달성</span></div></div>`}
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn ghost" style="margin-top:0" data-act="open" data-v="dm:${id}">✉️ 쪽지 보내기</button>
-      <button class="btn" style="margin-top:0" data-act="benefit">🎁 맞춤 혜택 설정</button>
-    </div>
-    <div class="card pad" style="margin-top:12px">
-      <div class="sechd" style="margin:0 0 6px">등 등급 및 태그</div><div class="taglist">${gpill(f.cum)} ${tags}</div>
-      <div class="field"><label>📝 크루 메모</label><textarea id="memo" placeholder="생일, 취향, 특이사항을 남겨보세요">${esc(f.memo)}</textarea></div>
-      <button class="btn ghost" data-act="savememo" data-v="${id}">메모 저장</button>
-    </div>
+    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn" style="margin-top:0" data-act="thread" data-v="${id}">✉️ 1:1 쪽지 보내기</button><button class="btn ghost" style="margin-top:0;flex:0 0 auto;width:auto;padding:13px 18px" data-act="benefit">🎁</button></div>
+    <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 6px">등급 및 태그</div><div class="taglist">${gpill(f.cum)} ${tags}</div>
+      <div class="field"><label>📝 크루 메모</label><textarea id="memo" placeholder="생일, 취향, 특이사항을 남겨보세요">${esc(f.memo)}</textarea></div><button class="btn ghost" data-act="savememo" data-v="${id}">메모 저장</button></div>
     <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 4px">🏆 주요 업적</div>${ach.map(a=>`<div class="achrow"><span>${a[0]}</span><span>${a[1]}</span><span class="ad">${a[2]}</span></div>`).join("")}</div>
-    <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 4px">🕘 최근 후원 이력</div>${hist}</div>
-  </div>`;
+    <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 4px">🕘 최근 후원 이력</div>${hist}</div></div>`;
 }
 
-/* ---------- notifications ---------- */
+/* ---------- creator: notif / insights / settings ---------- */
 function viewNotif(){
   const ic={presence:"🟢",dono:"🎁",grade:"⬆️",system:"🎯"};
   const rows=state.notifs.map(n=>`<div class="nrow ${n.unread?"unread":""}"><div class="nic ${n.type}">${ic[n.type]}</div><div style="flex:1"><div class="nt">${n.title}</div><div class="ntm">${esc(n.sub)} · ${ago(n.min)}</div></div></div>`).join("")||`<div class="empty">알림이 없어요.</div>`;
-  return `<div class="pad">
-    <div class="sechd">알림 <span class="r" data-act="readall">모두 읽음</span></div>
-    <div class="rows">${rows}</div>
-    <div class="card pad" style="margin-top:14px"><div style="font-weight:700;font-size:14px">💌 복귀 유도 발송</div>
-      <p style="font-size:12.5px;color:var(--ink-3);margin:6px 0 0">14일 이상 미접속한 팬 <b>${state.fans.filter(f=>f.seenMin>=14*1440).length}명</b>에게 복귀 리마인드를 보낼 수 있어요.</p>
-      <button class="btn" data-act="winback">복귀 유도 메시지 작성</button></div></div>`;
+  return `<div class="pad"><div class="sechd">알림 <span class="r" data-act="readall">모두 읽음</span></div><div class="rows">${rows}</div>
+    <div class="card pad" style="margin-top:14px"><div style="font-weight:700;font-size:14px">💌 복귀 유도 발송</div><p style="font-size:12.5px;color:var(--ink-3);margin:6px 0 0">14일 이상 미접속한 팬 <b>${state.fans.filter(f=>f.seenMin>=14*1440).length}명</b>에게 복귀 리마인드 쪽지를 보낼 수 있어요.</p><button class="btn" data-act="winback">복귀 유도 메시지 작성</button></div></div>`;
 }
-
-/* ---------- charts ---------- */
-function lineChart(vals,labels){
-  const W=320,H=140,pl=6,pr=10,pt=14,pb=20,iw=W-pl-pr,ih=H-pt-pb,max=Math.max(...vals)*1.14||1;
-  const X=i=>pl+iw/(vals.length-1)*i,Y=v=>pt+ih-(v/max)*ih;
-  const pts=vals.map((v,i)=>[X(i),Y(v)]);
+function lineChart(vals,labels){const W=320,H=140,pl=6,pr=10,pt=14,pb=20,iw=W-pl-pr,ih=H-pt-pb,max=Math.max(...vals)*1.14||1;
+  const X=i=>pl+iw/(vals.length-1)*i,Y=v=>pt+ih-(v/max)*ih,pts=vals.map((v,i)=>[X(i),Y(v)]);
   const line=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
   const area=`M${pl} ${pt+ih} `+pts.map(p=>"L"+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ")+` L${X(vals.length-1).toFixed(1)} ${pt+ih} Z`;
   const grid=[.5,1].map(g=>`<line x1="${pl}" y1="${(pt+ih-g*ih).toFixed(1)}" x2="${W-pr}" y2="${(pt+ih-g*ih).toFixed(1)}" stroke="var(--grid)" stroke-dasharray="2 4"/>`).join("");
   const dots=pts.map((p,i)=>i===pts.length-1?`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4.5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2.5"/>`:`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.3" fill="var(--accent)"/>`).join("");
   const lbls=labels.map((l,i)=>`<text x="${X(i).toFixed(1)}" y="${H-5}" text-anchor="middle" font-size="9.5" fill="var(--ink-3)">${l}</text>`).join("");
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="일별 후원 추이"><defs><linearGradient id="don" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".28"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${area}" fill="url(#don)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>${dots}${lbls}</svg>`;
-}
-function sparkline(vals){
-  const W=320,H=70,pl=4,pr=26,pt=8,ih=54,max=Math.max(...vals),min=Math.min(...vals),rng=max-min||1;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img"><defs><linearGradient id="don" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".28"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${area}" fill="url(#don)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>${dots}${lbls}</svg>`;}
+function sparkline(vals){const W=320,H=70,pl=4,pr=26,pt=8,ih=54,max=Math.max(...vals),min=Math.min(...vals),rng=max-min||1;
   const pts=vals.map((v,i)=>[pl+(W-pl-pr)/(vals.length-1)*i,pt+ih-(v-min)/rng*ih]);
   const d=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
-  const area=`M${pl} ${pt+ih} `+pts.map(p=>"L"+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ")+` L${pts[pts.length-1][0].toFixed(1)} ${pt+ih} Z`;
-  const end=pts[pts.length-1];
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="리텐션 추이"><defs><linearGradient id="ret" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".24"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs><path d="${area}" fill="url(#ret)"/><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${end[0].toFixed(1)}" cy="${end[1].toFixed(1)}" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/><text x="${(end[0]-2).toFixed(1)}" y="${(end[1]-8).toFixed(1)}" text-anchor="end" font-size="10" font-family="IBM Plex Mono" font-weight="600" fill="var(--accent)">${vals[vals.length-1]}%</text></svg>`;
-}
+  const area=`M${pl} ${pt+ih} `+pts.map(p=>"L"+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ")+` L${pts[pts.length-1][0].toFixed(1)} ${pt+ih} Z`,end=pts[pts.length-1];
+  return `<svg viewBox="0 0 ${W} ${H}" role="img"><defs><linearGradient id="ret" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".24"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs><path d="${area}" fill="url(#ret)"/><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${end[0].toFixed(1)}" cy="${end[1].toFixed(1)}" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/><text x="${(end[0]-2).toFixed(1)}" y="${(end[1]-8).toFixed(1)}" text-anchor="end" font-size="10" font-family="IBM Plex Mono" font-weight="600" fill="var(--accent)">${vals[vals.length-1]}%</text></svg>`;}
 function viewInsights(){
-  const dist={};TIERS.forEach(t=>dist[t.key]=0);state.fans.forEach(f=>dist[tierOf(f.cum).key]++);
-  const maxD=Math.max(...Object.values(dist))||1;
+  const dist={};TIERS.forEach(t=>dist[t.key]=0);state.fans.forEach(f=>dist[tierOf(f.cum).key]++);const maxD=Math.max(...Object.values(dist))||1;
   const distBars=[...TIERS].reverse().map(t=>`<div class="tierbar"><div class="lb">${t.emoji} ${t.name}</div><div class="track"><div class="fill" style="width:${dist[t.key]/maxD*100}%;background:${t.color}"></div></div><div class="vv">${dist[t.key]}</div></div>`).join("");
-  const gp=Math.round(state.goal.cur/state.goal.target*100);
-  const vipCnt=state.fans.filter(f=>isVIP(f.cum)).length;
-  const avgTemp=Math.round(state.fans.reduce((a,f)=>a+f.temp,0)/state.fans.length);
-  const risk=atRiskFans().length;
-  const total7=state.don.trend.reduce((a,b)=>a+b,0)*1000;
+  const gp=Math.round(state.goal.cur/state.goal.target*100),vipCnt=state.fans.filter(f=>isVIP(f.cum)).length,avgTemp=Math.round(state.fans.reduce((a,f)=>a+f.temp,0)/state.fans.length),risk=atRisk().length,total7=state.don.trend.reduce((a,b)=>a+b,0)*1000;
   return `<div class="pad">
     <div class="dhero"><div class="dh-k">VIP 후원자 수 (VIP 이상)</div><div class="dh-v">${vipCnt}명</div><div class="dh-d">▲ 2명 (전주 대비)</div><span class="cw">👑</span></div>
-    <div class="metgrid">
-      <div class="metcard"><div class="k">🌡️ 팬 관계 온도</div><div class="v">${avgTemp}<small>점</small></div><div class="mbar"><div class="f" style="width:${avgTemp}%;background:linear-gradient(90deg,var(--accent-2),var(--accent))"></div></div></div>
-      <div class="metcard"><div class="k">⚠️ 이탈 위험 VIP</div><div class="v">${risk}<small>명</small></div><div class="mbar"><div class="f" style="width:${Math.min(100,risk/Math.max(vipCnt,1)*100)}%;background:linear-gradient(90deg,#ff9b6b,var(--crit))"></div></div></div>
-    </div>
+    <div class="metgrid"><div class="metcard"><div class="k">🌡️ 팬 관계 온도</div><div class="v">${avgTemp}<small>점</small></div><div class="mbar"><div class="f" style="width:${avgTemp}%;background:linear-gradient(90deg,var(--accent-2),var(--accent))"></div></div></div>
+      <div class="metcard"><div class="k">⚠️ 이탈 위험 VIP</div><div class="v">${risk}<small>명</small></div><div class="mbar"><div class="f" style="width:${Math.min(100,risk/Math.max(vipCnt,1)*100)}%;background:linear-gradient(90deg,#ff9b6b,var(--crit))"></div></div></div></div>
     <div class="chartcard"><div class="ctop"><div><h3>최근 후원 추이</h3><div class="cs">최근 7일</div></div><div class="cbig">${won(total7)}<div class="dl">▲ 18%</div></div></div>${lineChart(state.don.trend,state.don.days)}</div>
-    <div class="chartcard"><h3>등급 분포</h3><div class="cs">크루 팬 ${state.fans.length}명 · 등급별 인원</div>${distBars}</div>
+    <div class="chartcard"><h3>등급 분포</h3><div class="cs">내 팬 ${state.fans.length}명 · 등급별 인원</div>${distBars}</div>
     <div class="chartcard"><h3>D30 리텐션 추이</h3><div class="cs">최근 7주 · 열혈시청자 30일 잔존율</div>${sparkline(state.retention.trend)}</div>
-    <div class="chartcard"><h3>⚡ 자동화 성과</h3><div class="cs">지난 30일 · 카카오 알림톡</div>
-      <div class="perf3"><div><div class="k">발송 알림톡</div><div class="v">${state.autoperf.sent}건</div><div class="dl">▲ 18%</div></div><div><div class="k">열람률</div><div class="v">${state.autoperf.open}%</div><div class="dl">▲ 12%</div></div><div><div class="k">후원 전환율</div><div class="v">${state.autoperf.conv}%</div><div class="dl">▲ 2.3%</div></div></div></div>
+    <div class="chartcard"><h3>⚡ 자동화 성과</h3><div class="cs">지난 30일 · 카카오 알림톡</div><div class="perf3"><div><div class="k">발송 알림톡</div><div class="v">${state.autoperf.sent}건</div><div class="dl">▲ 18%</div></div><div><div class="k">열람률</div><div class="v">${state.autoperf.open}%</div><div class="dl">▲ 12%</div></div><div><div class="k">후원 전환율</div><div class="v">${state.autoperf.conv}%</div><div class="dl">▲ 2.3%</div></div></div></div>
     <div class="chartcard"><h3>📅 다가오는 기념일</h3><div class="cs">자동 혜택·알림톡 예약됨</div>${state.events.map(e=>`<div class="evrow"><span>${e.emoji}</span><span><b>${e.name}</b> · ${e.label}</span><span class="dd">D-${e.d}</span></div>`).join("")}</div>
-    <div class="chartcard"><h3>🎯 후원 목표</h3><div class="cs">이번 달 크루 목표</div><div style="display:flex;justify-content:space-between;font-size:13px"><b>${won(state.goal.cur)}</b><span class="mono" style="color:var(--ink-3)">/ ${won(state.goal.target)}</span></div><div class="goalbar"><div class="goalfill" style="width:${gp}%"><span>${gp}%</span></div></div></div>
-  </div>`;
+    <div class="chartcard"><h3>🎯 후원 목표</h3><div class="cs">이번 달 크루 목표</div><div style="display:flex;justify-content:space-between;font-size:13px"><b>${won(state.goal.cur)}</b><span class="mono" style="color:var(--ink-3)">/ ${won(state.goal.target)}</span></div><div class="goalbar"><div class="goalfill" style="width:${gp}%"><span>${gp}%</span></div></div></div></div>`;
 }
-
-/* ---------- settings ---------- */
 function viewSettings(){
-  const cur=tierOf(me().cum).key;
   const cards=TIERS.map(t=>`<div class="tcard"><div class="c">${t.emoji}</div><div class="n" style="color:${t.color}">${t.name}</div><div class="m">${t.min?wonK(t.min)+"+":"0~"}</div></div>`).join("");
   const tiers=[...TIERS].reverse().map(t=>`<div class="tieredit"><div class="tn">${t.emoji} ${t.name}</div><input class="mono" data-tier="${t.key}" value="${t.min}" inputmode="numeric"></div>`).join("");
   const crew=state.crew.map(c=>`<div class="setrow"><div class="av" style="width:38px;height:38px;font-size:18px;border-radius:11px">${c.emoji}</div><div class="sl"><b>${esc(c.name)}</b><div class="permrole" style="margin-top:5px">${["정책","응대","발송","모더"].map(p=>`<span class="pr ${c.perms.includes(p)?"on":""}">${p}</span>`).join("")}</div></div></div>`).join("");
   const rules=[["presence","도네이터 접속 알림","단골·상위 등급 접속 시"],["dono","후원톡 알림","후원 도착 시 즉시"],["grade","등급 변동 알림","팬 등급 상승/강등"],["broadcast","방송 시작 알림","팬에게 발송"],["dnd","방해금지 (00–08시)","야간 푸시 묶음"]].map(([k,l,d])=>`<div class="setrow"><div class="sl"><b>${l}</b><p>${d}</p></div><div class="tgl ${state.alertRules[k]?"on":""}" data-act="rule" data-v="${k}"></div></div>`).join("");
   const kk=state.kakao;
-  return `<div class="pad">
-    <div class="sechd">VIP 등급 안내</div>
-    <div class="tiercards">${cards}</div>
-    <div class="sechd" style="margin-top:18px">등급 정책 커스터마이즈</div>
-    <div class="card pad"><p style="font-size:12px;color:var(--ink-3);margin:0 0 6px">등급별 누적 후원 임계값(원). 크루 브랜딩에 맞게 조정하세요.</p>${tiers}<button class="btn" data-act="savetiers">임계값 저장 & 재산정</button></div>
-    <div class="sechd" style="margin-top:18px">자동화 · 카카오 알림톡</div>
-    <div class="rows">
+  return `<div class="pad"><div class="sechd">VIP 등급 안내</div><div class="tiercards">${cards}</div>
+    <div class="sechd" style="margin-top:18px">등급 정책 커스터마이즈</div><div class="card pad"><p style="font-size:12px;color:var(--ink-3);margin:0 0 6px">등급별 누적 후원 임계값(원). 크루 브랜딩에 맞게 조정하세요.</p>${tiers}<button class="btn" data-act="savetiers">임계값 저장 & 재산정</button></div>
+    <div class="sechd" style="margin-top:18px">자동화 · 카카오 알림톡</div><div class="rows">
       <div class="setrow"><div class="kakao">TALK</div><div class="sl"><b>카카오 알림톡 자동 발송</b><p>등급 달성·생일·기념일에 자동 발송</p></div><div class="tgl ${kk.on?"on":""}" data-act="kakao" data-v="on"></div></div>
       <div class="setrow sub"><div class="sl"><b>등급 달성 축하</b><p>VIP/VVIP/SVIP 승급 시</p></div><div class="tgl ${kk.grade?"on":""}" data-act="kakao" data-v="grade"></div></div>
       <div class="setrow sub"><div class="sl"><b>생일 축하</b><p>팬 생일 당일 자동</p></div><div class="tgl ${kk.bday?"on":""}" data-act="kakao" data-v="bday"></div></div>
-      <div class="setrow sub"><div class="sl"><b>후원 기념일</b><p>첫 후원·N주년 자동</p></div><div class="tgl ${kk.anniv?"on":""}" data-act="kakao" data-v="anniv"></div></div>
-    </div>
-    <div class="sechd" style="margin-top:18px">크루원 권한</div>
-    <div class="rows">${crew}</div>
-    <div class="sechd" style="margin-top:18px">알림 규칙</div>
-    <div class="rows">${rules}</div>
-    <div class="sechd" style="margin-top:18px">투네이션 연동</div>
-    <div class="rows"><div class="setrow"><div class="sl"><b>후원 Webhook</b><p>실시간 후원 이벤트 수신</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div>
-      <div class="setrow"><div class="sl"><b>계정 SSO</b><p>투네이션 계정 연동</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div></div>
+      <div class="setrow sub"><div class="sl"><b>후원 기념일</b><p>첫 후원·N주년 자동</p></div><div class="tgl ${kk.anniv?"on":""}" data-act="kakao" data-v="anniv"></div></div></div>
+    <div class="sechd" style="margin-top:18px">크루원 권한</div><div class="rows">${crew}</div>
+    <div class="sechd" style="margin-top:18px">알림 규칙</div><div class="rows">${rules}</div>
+    <div class="sechd" style="margin-top:18px">투네이션 연동</div><div class="rows"><div class="setrow"><div class="sl"><b>후원 Webhook</b><p>실시간 후원 이벤트 수신</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div><div class="setrow"><div class="sl"><b>계정 SSO</b><p>투네이션 계정 연동</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div></div>
     <button class="btn ghost" data-act="logout" style="color:var(--crit)">로그아웃</button>
-    <div class="hint">열혈톡 v0.3 프로토타입 · 온보딩·로그인 · Phase 1–2 · 열혈네이션 등급 연동</div></div>`;
+    <div class="hint">열혈톡 v0.4 프로토타입 · 1:1 쪽지 · Phase 1–2 · 열혈네이션 등급 연동</div></div>`;
 }
 
 /* ---------- donator ---------- */
-function viewLounge(){
-  const f=me();
+function viewFollowing(){
+  const list=state.creators.filter(c=>c.followed).sort((a,b)=>(b.unread-a.unread)||(b.online-a.online));
+  if(!list.length)return `<div class="empty">아직 팔로우한 크리에이터가 없어요.<br><br><button class="btn" style="max-width:200px;margin:0 auto" data-act="dtab" data-v="discover">🔍 크리에이터 탐색하기</button></div>`;
+  const rows=list.map(c=>`<button class="row" data-act="thread" data-v="${c.id}">
+    <div class="av">${c.emoji}${c.online?'<span class="on-dot"></span>':""}</div>
+    <div class="main"><div class="tt">${esc(c.name)} ${gpill(c.myCum)}</div><div class="pv">${c.online?"<span style='color:var(--keep)'>● 방송중 · </span>":""}${esc(threadPreview(c.thread))}</div></div>
+    <div class="meta"><div class="tm">${threadTime(c.thread)}</div>${c.unread?`<span class="cnt">${c.unread}</span>`:""}</div></button>`).join("");
   return `<div class="pad">
-    <div class="hero"><div class="cn"><div class="cav">🎙️</div><div><div class="cnm">열혈크루</div><div class="cst">${state.crewOnline?'<span class="d"></span> 지금 방송 준비중':"오프라인"}</div></div></div>
-      <div class="qa"><button data-act="dtab" data-v="donate">💝 후원톡</button><button data-act="dtab" data-v="dchat">💬 채팅</button><button data-act="dtab" data-v="mygrade">🏅 내 등급</button></div></div>
-    <div class="card pad" style="margin-top:14px"><div class="sechd" style="margin:0 0 8px">📣 크루 공지</div><p style="font-size:13.5px;margin:0">오늘 저녁 9시 엑셀방송 시작합니다! 🔥 다들 화력 준비 ㄱㄱ</p><div style="font-size:11px;color:var(--ink-3);margin-top:8px" class="mono">2시간 전</div></div>
-    <div class="sechd" style="margin-top:18px">내 상태</div>
-    <div class="rows"><div class="row"><div class="av">${f.emoji}</div><div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}</div><div class="pv">누적 후원 ${won(f.cum)} · 관계 온도 ${f.temp}점</div></div></div></div>
-    <div class="hint">💡 크리에이터 화면에선 당신의 접속·후원이 실시간 알림으로 뜹니다. 상단에서 <b>크리에이터</b>로 전환해 보세요.</div></div>`;
+    <div class="sechd">응원하는 크리에이터 ${list.length}<span class="r" data-act="dtab" data-v="discover">더 찾기 🔍</span></div>
+    <div class="rows">${rows}</div>
+    <div class="hint">💡 크리에이터를 선택하면 1:1 쪽지로 소통하고, 🎁 후원톡을 보낼 수 있어요.</div></div>`;
 }
-function viewDChat(){
-  const my=tierOf(me().cum);
-  const ch=state.channels.map(c=>{const locked=c.minTier&&tierIdx(my.key)<tierIdx(c.minTier);
-    return `<button class="row" data-act="open" data-v="${c.id}"><div class="av">${c.emoji}</div><div class="main"><div class="tt">${esc(c.name)} ${c.minTier?(locked?'🔒':'<span class="gp" style="--gc:var(--keep)">입장가능</span>'):""}</div><div class="pv">${locked?tinfo(c.minTier).name+" 이상 전용":esc(c.desc)}</div></div><div class="meta"><div class="tm">›</div></div></button>`;}).join("");
-  return `<div class="pad"><div class="sechd">크루 채널</div><div class="rows">${ch}</div><div class="sechd" style="margin-top:18px">1:1</div><div class="rows">${row({emoji:"🎙️",title:"열혈크루",preview:"크루와 1:1 다이렉트",act:"open",v:"dm:me",right:'<div class="tm">›</div>'})}</div></div>`;
+function viewDiscover(){
+  const cats=["all","게임","그림","음악","뷰티","운동","쿠킹","토크"];
+  const chips=cats.map(c=>`<button class="chip ${state.dfilter===c?"on":""}" data-act="dfilter" data-v="${c}">${c==="all"?"전체":c}</button>`).join("");
+  let list=state.creators;
+  if(state.dfilter!=="all")list=list.filter(c=>c.cat.includes(state.dfilter));
+  const rows=list.map(c=>`<div class="row">
+    <div class="av">${c.emoji}${c.online?'<span class="on-dot"></span>':""}</div>
+    <div class="main"><div class="tt">${esc(c.name)}${c.online?' <span class="gp" style="--gc:var(--keep)">LIVE</span>':""}</div><div class="pv"><span class="cat">${esc(c.cat)} · 팔로워 ${wonK(c.followers)}</span></div></div>
+    <button class="follow ${c.followed?"on":""}" data-act="follow" data-v="${c.id}">${c.followed?"팔로잉":"+ 팔로우"}</button></div>`).join("")||`<div class="empty">해당 카테고리 크리에이터가 없어요.</div>`;
+  return `<div class="pad"><div class="chips">${chips}</div>
+    <div class="sechd">크리에이터 탐색</div><div class="rows">${rows}</div>
+    <div class="hint">💡 관심 크리에이터를 팔로우하면 <b>팔로잉</b> 탭에서 1:1로 소통할 수 있어요.</div></div>`;
 }
-function viewDonate(){
-  const presets=[5000,10000,30000,50000,100000,500000];
-  const pad=presets.map(p=>`<button class="${state.donPreset===p?"on":""}" data-act="preset" data-v="${p}">${wonK(p)}</button>`).join("");
-  const nt=nextTier(me().cum),toNext=nt?nt.min-me().cum:0;
+function viewDNotif(){
+  const ic={presence:"🔴",dono:"✉️",grade:"👑",system:"🎯"};
+  const rows=state.dnotifs.map(n=>`<div class="nrow ${n.unread?"unread":""}"><div class="nic ${n.type}">${ic[n.type]}</div><div style="flex:1"><div class="nt">${n.title}</div><div class="ntm">${esc(n.sub)} · ${ago(n.min)}</div></div></div>`).join("")||`<div class="empty">알림이 없어요.</div>`;
+  return `<div class="pad"><div class="sechd">크리에이터 소식 <span class="r" data-act="dreadall">모두 읽음</span></div><div class="rows">${rows}</div>
+    <div class="hint">💡 팔로우한 크리에이터의 방송 시작·쪽지·등급 소식을 실시간으로 받아요.</div></div>`;
+}
+function viewMe(){
+  const followed=state.creators.filter(c=>c.followed);
+  const totalCum=followed.reduce((a,c)=>a+c.myCum,0);
+  const rows=followed.sort((a,b)=>b.myCum-a.myCum).map(c=>{const t=tierOf(c.myCum),nt=nextTier(c.myCum),prog=nt?Math.min(100,Math.round((c.myCum-t.min)/(nt.min-t.min)*100)):100;
+    return `<button class="row" data-act="thread" data-v="${c.id}"><div class="av">${c.emoji}</div>
+      <div class="main"><div class="tt">${esc(c.name)} ${gpill(c.myCum)}</div>
+        <div class="pv">누적 ${won(c.myCum)}${nt?` · ${nt.name}까지 ${prog}%`:" · 최고 등급"}</div>
+        <div class="ptrack" style="margin-top:7px"><div class="pfill" style="width:${prog}%;background:${(nt||t).color}"></div></div></div></button>`;}).join("");
   return `<div class="pad">
-    <div class="card pad"><div class="sechd" style="margin:0 0 4px">후원 금액</div><div class="donpad">${pad}</div>
-      <div class="field" style="margin-top:16px"><label>후원톡 메시지</label><textarea id="donmsg" placeholder="크루에게 전할 메시지를 남겨보세요">항상 응원해요! 오늘도 화이팅 💪</textarea></div>
-      <button class="btn" data-act="donate">${won(state.donPreset)} 후원톡 보내기 🎁</button>
-      ${nt?`<p style="font-size:12px;color:var(--ink-3);text-align:center;margin:10px 0 0">${won(toNext)} 더 후원하면 ${nt.emoji} ${nt.name} 등급! ${state.donPreset>=toNext?"<b style='color:var(--accent)'>이번 후원으로 등급 상승 🎉</b>":""}</p>`:""}</div>
-    <div class="sechd" style="margin-top:18px">내 후원 이력</div>
-    <div class="card pad">${state.myDonHist.map(h=>`<div class="histrow"><span>${h.d}</span><span class="a">+${won(h.a)}</span></div>`).join("")}</div>
-    <div class="hint">💡 후원톡을 보내면 크루 채팅에 강조 카드로 뜨고, 누적 후원이 등급에 자동 반영됩니다.</div></div>`;
+    <div class="dhero"><div style="display:flex;align-items:center;gap:13px;position:relative"><div class="dcav">${state.me.emoji}</div>
+      <div><div style="font-size:19px;font-weight:700">${esc(state.me.name)}</div><div style="font-size:12px;opacity:.88;margin-top:2px">${followed.length}명의 크리에이터를 응원 중</div></div></div>
+      <div class="dstats"><div><div class="k">💜 팔로잉</div><div class="v">${followed.length}명</div></div><div><div class="k">💰 총 후원</div><div class="v">${won(totalCum)}</div></div><div><div class="k">🎁 후원 횟수</div><div class="v">${state.myDonHist.length}회</div></div></div><span class="cw">👑</span></div>
+    <div class="sechd" style="margin-top:18px">크리에이터별 내 등급</div><div class="rows">${rows}</div>
+    <div class="sechd" style="margin-top:18px">최근 후원 이력</div><div class="card pad">${state.myDonHist.map(h=>`<div class="histrow"><span>${esc(h.c)} · ${h.d}</span><span class="a">+${won(h.a)}</span></div>`).join("")}</div>
+    <button class="btn ghost" data-act="logout" style="color:var(--crit)">로그아웃</button>
+    <div class="hint">열혈톡 v0.4 · 도네이터</div></div>`;
 }
-function bindDonate(){const m=$("#donmsg");if(m)m.oninput=e=>state.drafts.donmsg=e.target.value;}
-function viewMyGrade(){
-  const f=me(),t=tierOf(f.cum),nt=nextTier(f.cum),cur=t.key;
-  const prog=nt?Math.min(100,Math.round((f.cum-t.min)/(nt.min-t.min)*100)):100;
-  const benefits={basic:["기본 채팅·팔로우"],vip:["VIP 배지 👑","이벤트 우선 알림","크루 채널 참여"],vvip:["VVIP 전용방 입장","후원톡 상단 고정 우대","VVIP 배지 👑"],svip:["최상위 SVIP 라운지 입장","크루 최우선 답장","전용 배지 👑","오프라인 이벤트 초대","생일·기념일 자동 혜택"]}[cur];
-  const cards=TIERS.map(x=>`<div class="tcard ${x.key===cur?"cur":""}"><div class="c">${x.emoji}</div><div class="n" style="color:${x.color}">${x.name}</div><div class="m">${x.min?wonK(x.min)+"+":"0~"}</div></div>`).join("");
-  return `<div class="pad">
-    <div class="mygradehero"><div class="big">${t.emoji}</div><div class="gn" style="color:${t.color}">${t.name}</div>
-      <div style="font-size:13px;color:var(--ink-2);margin-top:4px">누적 후원 ${won(f.cum)} · 관계 온도 ${f.temp}점</div>
-      <div class="prog">${nt?`<div class="pt">${nt.emoji} ${nt.name}까지 ${won(nt.min-f.cum)}</div><div class="ptrack"><div class="pfill" style="width:${prog}%;background:${nt.color}"></div></div><div class="pt mono">${prog}%</div>`:`<div class="pt">🏆 최고 등급 SVIP 달성!</div>`}</div></div>
-    <div class="sechd" style="margin-top:18px">VIP 등급 안내</div><div class="tiercards">${cards}</div>
-    <div class="sechd" style="margin-top:18px">${t.emoji} ${t.name} 혜택</div>
-    <div class="card pad">${benefits.map(b=>`<div class="benefit"><span class="bi">✓</span><span>${b}</span></div>`).join("")}</div>
-  </div>`;
+
+/* ---------- onboarding & login ---------- */
+function viewOnboarding(){
+  const slides=[
+    {ic:"👑",h:"열혈톡",d:"최애 크리에이터와\n1:1로 특별하게 소통하세요.",il:"👑"},
+    {ic:"✉️",h:"1:1 쪽지 & 후원톡",d:"응원하는 마음을 쪽지와 후원톡으로\n직접 전할 수 있어요.",il:"✉️"},
+    {ic:"🏅",h:"나만의 등급",d:"후원할수록 크리에이터별로\n특별해지는 나만의 등급.",il:"🏅"},
+  ];
+  const s=slides[state.slide],last=state.slide===slides.length-1;
+  const dots=slides.map((_,i)=>`<span class="dot ${i===state.slide?"on":""}" data-act="obdot" data-v="${i}"></span>`).join("");
+  return `<div class="ob"><div class="top"><div class="logo-lg">${s.ic}</div><h1>${esc(s.h)}</h1><div class="desc">${esc(s.d).replace(/\n/g,"<br>")}</div><div class="illus">${s.il}</div><div class="dots">${dots}</div></div>
+    <div class="bottom"><button class="cta" data-act="obnext">${last?"시작하기":"다음"} →</button><button class="link" data-act="gologin">이미 계정이 있어요 · 로그인</button></div></div>`;
+}
+function viewLogin(){
+  return `<div class="login"><div class="lh"><div class="logo-lg" style="margin:0 auto">👑</div><h1>열혈톡 시작하기</h1><div class="sub">투네이션 계정으로 간편하게 로그인하세요</div></div>
+    <div class="sso"><button class="ssobtn tn" data-act="dologin"><span class="lo" style="background:rgba(255,255,255,.25)">T</span>투네이션 계정으로 로그인</button><button class="ssobtn kk" data-act="dologin"><span class="lo" style="background:rgba(0,0,0,.12)">K</span>카카오로 로그인</button></div>
+    <div class="divider">또는 이메일로 로그인</div>
+    <div class="fields"><input type="email" id="lemail" placeholder="이메일" autocomplete="username"><input type="password" id="lpw" placeholder="비밀번호" autocomplete="current-password"><button class="cta" data-act="dologin" style="margin-top:2px">로그인</button></div>
+    <div class="foot"><a data-act="dologin">게스트로 둘러보기</a> · <a data-act="dologin">회원가입</a></div></div>`;
 }
 
 /* ================= ACTIONS ================= */
-function sendMsg(id){
-  const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if(!tx)return;state.drafts[id]="";
-  if(!state.msgs[id])state.msgs[id]=[{t:"day",text:"오늘"}];
-  if(state.role==="creator")state.msgs[id].push({from:"out",text:tx,tm:nowT()});
-  else state.msgs[id].push({from:"in",fid:"me",text:tx,tm:nowT()});
-  renderView();renderTabbar();
-}
-function doDonate(){
-  const amt=state.donPreset,msg=($("#donmsg")?$("#donmsg").value.trim():"")||"응원합니다!",f=me(),before=tierOf(f.cum).key;
-  f.cum+=amt;f.seenMin=0;f.online=true;f.count=(f.count||0)+1;f.temp=Math.min(100,f.temp+1);
-  state.msgs.official.push({from:"dono",fid:"me",amt,text:msg,tm:nowT()});
-  state.tray.push({fid:"me",amt,text:msg});state.myDonHist.unshift({d:"오늘",a:amt});state.goal.cur+=amt;
-  state.notifs.unshift({type:"dono",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 ${won(amt)} 후원`,sub:"크루 공식방 · 후원톡 도착",min:0,unread:true});
-  const after=tierOf(f.cum).key;
-  if(tierIdx(after)>tierIdx(before)){const t=tierOf(f.cum);
-    state.msgs.official.push({from:"sys",text:`🎉 ${f.name}님이 ${t.emoji} ${t.name} 등급으로 올라섰어요!`});
-    state.notifs.unshift({type:"grade",title:`<b>'${f.name}'</b>님이 ${t.emoji}${t.name}로 등급 상승`,sub:`누적 ${won(f.cum)} 달성 · 카카오 알림톡 자동 발송됨`,min:0,unread:true});
-    toast(`🎉 ${t.emoji} ${t.name} 등급으로 상승!`);
-  }else toast(`🎁 ${won(amt)} 후원 완료!`);
+function sendMsg(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if(!tx)return;state.drafts[id]="";
+  const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];
+  p.thread.push({from:"out",text:tx,tm:nowT()});renderView();renderTabbar();}
+function doDonate(id){
+  const amt=state.donPreset,msg=($("#donmsg")?$("#donmsg").value.trim():"")||"응원합니다!",c=creById(id),before=tierOf(c.myCum).key;
+  c.myCum+=amt;c.myTemp=Math.min(100,(c.myTemp||0)+1);if(!c.thread)c.thread=[{t:"day",text:"오늘"}];
+  c.thread.push({from:"dono",amt,text:msg,tm:nowT()});
+  state.myDonHist.unshift({d:"오늘",a:amt,c:c.name});
+  const after=tierOf(c.myCum).key;closeSheet();
+  if(tierIdx(after)>tierIdx(before)){const t=tierOf(c.myCum);c.thread.push({from:"sys",text:`🎉 ${c.name}님과 ${t.emoji} ${t.name} 등급이 되었어요!`});toast(`🎉 ${c.name}님과 ${t.emoji} ${t.name} 등급 달성!`);}
+  else toast(`🎁 ${c.name}님께 ${won(amt)} 후원 완료!`);
+  setTimeout(()=>{c.thread.push({from:"in",text:"와 감사합니다 별하늘님!! 💜 항상 힘이 돼요",tm:nowT()});if(state.sub==="thread"&&state.param===id&&state.role==="donator")renderView();},900);
   render();
 }
 function liveTick(){
-  const pool=state.fans.filter(f=>f.id!=="me"),f=pool[Math.floor(Math.random()*pool.length)],r=Math.random();
-  if(r<0.4){
-    const amt=[3000,5000,10000,30000,50000][Math.floor(Math.random()*5)],before=tierOf(f.cum).key;
-    f.cum+=amt;f.online=true;f.seenMin=0;f.count=(f.count||0)+1;
-    const t2=["대박이에요 🔥","오늘도 최고!","힘내세요 💪","콘텐츠 미쳤다ㅋㅋ","항상 응원합니다","이거 실화?"];
-    const tx=t2[Math.floor(Math.random()*t2.length)];
-    state.msgs.official.push({from:"dono",fid:f.id,amt,text:tx,tm:nowT()});state.tray.push({fid:f.id,amt,text:tx});state.goal.cur+=amt;
-    state.notifs.unshift({type:"dono",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 ${won(amt)} 후원`,sub:"후원톡 도착",min:0,unread:true});
-    const after=tierOf(f.cum).key;
-    if(tierIdx(after)>tierIdx(before)){const t=tierOf(f.cum);state.msgs.official.push({from:"sys",text:`🎉 ${f.name}님이 ${t.emoji} ${t.name} 등급으로 올라섰어요!`});state.notifs.unshift({type:"grade",title:`<b>'${f.name}'</b>님이 ${t.emoji}${t.name}로 등급 상승`,sub:`누적 ${won(f.cum)} 달성 · 알림톡 자동 발송`,min:0,unread:true});}
-  }else if(r<0.72){
-    const t2=["ㅋㅋㅋㅋㅋ","오늘 방송 언제해요?","저 왔어요~","화이팅!!","다들 안녕하세요","이번 콘텐츠 기대됨"];
-    const ch=Math.random()<0.7?"official":"free";state.msgs[ch].push({from:"in",fid:f.id,text:t2[Math.floor(Math.random()*t2.length)],tm:nowT()});
-  }else if(r<0.9){
-    if(!f.online){f.online=true;f.seenMin=0;if(isVIP(f.cum))state.notifs.unshift({type:"presence",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 접속했어요`,sub:`누적 ${won(f.cum)} · 단골 접속`,min:0,unread:true});}
-  }else{if(f.online&&Math.random()<0.5){f.online=false;f.seenMin=1;}}
-  if(state.notifs.length>40)state.notifs.length=40;
-  ["official","free","vvip","svip"].forEach(k=>{if(state.msgs[k]&&state.msgs[k].length>60)state.msgs[k].splice(1,state.msgs[k].length-60);});
+  if(state.role==="creator"){
+    const pool=state.fans,f=pool[Math.floor(Math.random()*pool.length)],r=Math.random(),open=state.sub==="thread"&&state.param===f.id;
+    if(r<0.4){const amt=[3000,5000,10000,30000,50000][Math.floor(Math.random()*5)],before=tierOf(f.cum).key;f.cum+=amt;f.online=true;f.seenMin=0;f.count++;
+      const t2=["대박이에요 🔥","오늘도 최고!","힘내세요 💪","콘텐츠 미쳤다ㅋㅋ","항상 응원합니다"];const tx=t2[Math.floor(Math.random()*t2.length)];
+      f.thread.push({from:"dono",amt,text:tx,tm:nowT()});if(!open)f.unread++;state.goal.cur+=amt;
+      state.notifs.unshift({type:"dono",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 ${won(amt)} 후원`,sub:"1:1 쪽지 · 후원톡 도착",min:0,unread:true});
+      const after=tierOf(f.cum).key;if(tierIdx(after)>tierIdx(before)){const t=tierOf(f.cum);f.thread.push({from:"sys",text:`🎉 ${f.name}님이 ${t.emoji} ${t.name} 등급으로 올라섰어요!`});state.notifs.unshift({type:"grade",title:`<b>'${f.name}'</b>님이 ${t.emoji}${t.name}로 등급 상승`,sub:`누적 ${won(f.cum)} · 알림톡 자동 발송`,min:0,unread:true});}
+    }else if(r<0.72){const t2=["안녕하세요~","오늘 방송 언제해요?","저 왔어요!","화이팅!!","이번 콘텐츠 기대돼요","답장 기다릴게요 ㅎㅎ"];f.thread.push({from:"in",text:t2[Math.floor(Math.random()*t2.length)],tm:nowT()});if(!open)f.unread++;
+    }else if(r<0.9){if(!f.online){f.online=true;f.seenMin=0;if(isVIP(f.cum))state.notifs.unshift({type:"presence",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 접속했어요`,sub:`누적 ${won(f.cum)} · 단골 접속`,min:0,unread:true});}
+    }else{if(f.online&&Math.random()<0.5){f.online=false;f.seenMin=1;}}
+    if(state.notifs.length>40)state.notifs.length=40;state.fans.forEach(x=>{if(x.thread.length>50)x.thread.splice(1,x.thread.length-50);});
+  }else{
+    const pool=state.creators.filter(c=>c.followed),c=pool[Math.floor(Math.random()*pool.length)];if(!c)return;const open=state.sub==="thread"&&state.param===c.id;
+    const r=Math.random();
+    if(r<0.5){const t2=["지금 방송 시작했어요! 🔴","오늘도 와주셔서 감사해요 😊","다음 콘텐츠 기대해주세요!","별하늘님 덕분에 힘나요 💜","곧 이벤트 있어요 놓치지 마세요"];c.thread.push({from:"in",text:t2[Math.floor(Math.random()*t2.length)],tm:nowT()});if(!open)c.unread++;
+      state.dnotifs.unshift({type:"dono",title:`<b>${c.emoji} ${c.name}</b>님이 쪽지를 보냈어요`,sub:c.thread[c.thread.length-1].text,min:0,unread:true});}
+    else if(r<0.75){if(!c.online){c.online=true;state.dnotifs.unshift({type:"presence",title:`<b>${c.emoji} ${c.name}</b>님이 방송을 시작했어요`,sub:"지금 라이브 · 놓치지 마세요",min:0,unread:true});}}
+    else{if(c.online&&Math.random()<0.4)c.online=false;}
+    if(state.dnotifs.length>40)state.dnotifs.length=40;
+  }
   const typing=document.activeElement&&["ci","donmsg","memo"].includes(document.activeElement.id);
   if(!typing)renderView();renderTabbar();
 }
 let liveTimer;
 function toggleLive(){state.live=!state.live;if(state.live){liveTimer=setInterval(liveTick,3200);toast("⚡ 실시간 시뮬레이션 시작");}else{clearInterval(liveTimer);toast("실시간 시뮬레이션 정지");}render();}
 function segSheet(){const list=filterFans(),fl=FILTERS.find(f=>f[0]===state.filter)[1];
-  openSheet(`<h3 class="sh">✈️ 세그먼트 발송</h3><p class="sd">현재 세그먼트 <b>「${fl}」 ${list.length}명</b>에게만 메시지를 보냅니다.</p><textarea id="segmsg" rows="3" placeholder="예: VVIP 여러분만을 위한 깜짝 이벤트 안내드려요! 🎉"></textarea><button class="btn" data-act="dosegsend">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
+  openSheet(`<h3 class="sh">✈️ 세그먼트 발송</h3><p class="sd">현재 세그먼트 <b>「${fl}」 ${list.length}명</b>에게 단체 쪽지를 보냅니다.</p><textarea id="segmsg" rows="3" placeholder="예: VVIP 여러분만을 위한 깜짝 이벤트 안내드려요! 🎉"></textarea><button class="btn" data-act="dosegsend">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 function winbackSheet(){const list=state.fans.filter(f=>f.seenMin>=14*1440);
   openSheet(`<h3 class="sh">💌 복귀 유도 발송</h3><p class="sd">14일 이상 미접속한 팬 <b>${list.length}명</b>에게 복귀 리마인드를 보냅니다. (카카오 알림톡 연동)</p><textarea id="wbmsg" rows="3">보고 싶어요! 오랜만에 방송에서 만나요 💜 복귀하시면 특별 혜택이 기다려요.</textarea><button class="btn" data-act="dowinback">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
-function addTagSheet(id){openSheet(`<h3 class="sh"># 태그 추가</h3><p class="sd">${esc(fanById(id).name)}님에게 태그를 붙입니다.</p><input id="taginput" placeholder="예: VIP, 생일3월, 큰손" autocomplete="off"><button class="btn" data-act="doaddtag" data-v="${id}">추가</button>`);}
+function addTagSheet(id){openSheet(`<h3 class="sh"># 태그 추가</h3><p class="sd">${esc(fanById(id).name)}님에게 태그를 붙입니다.</p><input id="taginput" placeholder="예: 큰손, 생일3월" autocomplete="off"><button class="btn" data-act="doaddtag" data-v="${id}">추가</button>`);}
+function donSheet(id){const c=creById(id),presets=[5000,10000,30000,50000,100000,500000],nt=nextTier(c.myCum),toNext=nt?nt.min-c.myCum:0;
+  const pad=presets.map(p=>`<button class="${state.donPreset===p?"on":""}" data-act="preset" data-v="${p}">${wonK(p)}</button>`).join("");
+  openSheet(`<h3 class="sh">🎁 ${esc(c.name)}님께 후원톡</h3><p class="sd">현재 ${tierOf(c.myCum).emoji} ${tierOf(c.myCum).name} · 누적 ${won(c.myCum)}</p>
+    <div class="donpad">${pad}</div>
+    <textarea id="donmsg" rows="2" style="margin-top:14px" placeholder="후원과 함께 전할 메시지">항상 응원해요! 오늘도 화이팅 💪</textarea>
+    <button class="btn" data-act="dodonate" data-v="${id}">${won(state.donPreset)} 후원톡 보내기</button>
+    ${nt&&toNext>0?`<p style="font-size:12px;color:var(--ink-3);text-align:center;margin:10px 0 0">${won(toNext)} 더 후원하면 ${nt.emoji} ${nt.name}! ${state.donPreset>=toNext?"<b style='color:var(--accent)'>이번 후원으로 승급 🎉</b>":""}</p>`:""}`);}
 
 $("#phone").addEventListener("click",e=>{
   const el=e.target.closest("[data-act]");if(!el)return;const act=el.dataset.act,v=el.dataset.v;
@@ -848,18 +678,21 @@ $("#phone").addEventListener("click",e=>{
     case"obnext":if(state.slide<2)state.slide++;else state.screen="login";render();break;
     case"obdot":state.slide=parseInt(v);render();break;
     case"gologin":state.screen="login";render();break;
-    case"dologin":state.screen="app";state.role="creator";render();toast("환영합니다! 🎉 열혈톡에 로그인했어요");break;
+    case"dologin":state.screen="app";render();toast("환영합니다! 🎉 열혈톡에 로그인했어요");break;
     case"logout":if(state.live){clearInterval(liveTimer);state.live=false;}state.screen="onboarding";state.slide=0;state.sub=null;render();break;
-    case"role":state.role=v;state.sub=null;state.param=null;if(v==="donator")state.dtab="lounge";render();break;
+    case"role":state.role=v;state.sub=null;state.param=null;if(v==="donator")state.dtab="following";else state.ctab="msg";render();break;
     case"live":toggleLive();break;
     case"tab":if(state.role==="creator")state.ctab=v;else state.dtab=v;state.sub=null;state.param=null;render();break;
     case"dtab":state.dtab=v;state.sub=null;render();break;
     case"back":state.sub=null;state.param=null;render();break;
-    case"open":state.sub="room";state.param=v;render();break;
+    case"thread":state.sub="thread";state.param=v;render();break;
     case"fan":state.sub="fan";state.param=v;render();break;
     case"send":sendMsg(v);break;
     case"filter":state.filter=v;renderView();break;
+    case"dfilter":state.dfilter=v;renderView();break;
+    case"follow":{const c=creById(v);c.followed=!c.followed;if(c.followed&&!c.thread.length)c.thread=[{t:"day",text:"오늘"},{from:"in",text:`안녕하세요! 팔로우 감사해요 😊`,tm:nowT()}];toast(c.followed?`💜 ${c.name}님을 팔로우했어요`:`${c.name}님 팔로우를 취소했어요`);renderView();renderTabbar();break;}
     case"readall":state.notifs.forEach(n=>n.unread=false);render();toast("모든 알림을 읽음 처리했어요");break;
+    case"dreadall":state.dnotifs.forEach(n=>n.unread=false);render();toast("모든 알림을 읽음 처리했어요");break;
     case"segsheet":segSheet();break;
     case"dosegsend":closeSheet();toast(`✈️ ${filterFans().length}명에게 발송 완료`);break;
     case"winback":winbackSheet();break;
@@ -867,13 +700,13 @@ $("#phone").addEventListener("click",e=>{
     case"addtag":addTagSheet(v);break;
     case"doaddtag":{const t=$("#taginput").value.trim();if(t)fanById(v).tags.push(t);closeSheet();renderView();break;}
     case"savememo":fanById(v).memo=$("#memo").value;toast("메모를 저장했어요");break;
-    case"benefit":toast("🎁 맞춤 혜택 설정 열림 (프로토타입)");break;
+    case"benefit":toast("🎁 맞춤 혜택 설정 (프로토타입)");break;
     case"savetiers":document.querySelectorAll("[data-tier]").forEach(inp=>{const t=TIERS.find(x=>x.key===inp.dataset.tier);t.min=parseInt(inp.value.replace(/\D/g,""))||0;});toast("임계값 저장 · 전체 등급 재산정 완료");render();break;
     case"rule":state.alertRules[v]=!state.alertRules[v];renderView();break;
     case"kakao":state.kakao[v]=!state.kakao[v];renderView();break;
-    case"preset":state.donPreset=parseInt(v);renderView();break;
-    case"donate":doDonate();break;
-    case"replytray":state.tray.splice(parseInt(v),1);state.sub="room";state.param="official";state.ctab="chat";render();toast("후원톡에 답장하러 이동");break;
+    case"donsheet":donSheet(v);break;
+    case"preset":state.donPreset=parseInt(v);if($("#sheet").classList.contains("on")&&state.sub==="thread")donSheet(state.param);break;
+    case"dodonate":doDonate(v);break;
     case"closesheet":closeSheet();break;
   }
 });
