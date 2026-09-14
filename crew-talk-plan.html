@@ -1,0 +1,721 @@
+<title>열혈톡 기획서</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+
+<style>
+:root{
+  --bg:#faf7f5; --surface:#ffffff; --surface-2:#f4eeec; --surface-3:#ece3e0;
+  --ink:#231a1a; --ink-2:#6b5b58; --ink-3:#9a8a86;
+  --line:#ece2df; --line-2:#f2ebe8;
+  --accent:#e8434b; --accent-2:#ff5b62; --accent-soft:#fdeceb;
+  --crit:#cf2c1f; --crit-soft:#fbe9e7;
+  --warn:#b06a08; --warn-soft:#faf0dd;
+  --keep:#1f8a5b; --keep-soft:#e0f3ea;
+  --info:#2f6ad0; --info-soft:#e7effc;
+  --gold:#b8860b; --gold-soft:#faf1d8;
+  --shadow:0 1px 2px rgba(45,25,22,.05),0 8px 24px rgba(45,25,22,.06);
+  --shadow-lg:0 2px 6px rgba(45,25,22,.06),0 20px 48px rgba(45,25,22,.10);
+  --radius:14px; --radius-sm:9px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161211; --surface:#1f1918; --surface-2:#271f1e; --surface-3:#302625;
+    --ink:#f3e9e6; --ink-2:#b6a29d; --ink-3:#7d6c68;
+    --line:#312625; --line-2:#241d1c;
+    --accent:#ff6b70; --accent-2:#ff8a8e; --accent-soft:#33191a;
+    --crit:#ff6b5e; --crit-soft:#301715;
+    --warn:#f0ad4e; --warn-soft:#2b2010;
+    --keep:#3ed494; --keep-soft:#0f2a1f;
+    --info:#6ba3ff; --info-soft:#12203a;
+    --gold:#e6b93e; --gold-soft:#2a2410;
+    --shadow:0 1px 2px rgba(0,0,0,.34),0 10px 28px rgba(0,0,0,.4);
+    --shadow-lg:0 2px 8px rgba(0,0,0,.4),0 24px 56px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161211; --surface:#1f1918; --surface-2:#271f1e; --surface-3:#302625;
+  --ink:#f3e9e6; --ink-2:#b6a29d; --ink-3:#7d6c68;
+  --line:#312625; --line-2:#241d1c;
+  --accent:#ff6b70; --accent-2:#ff8a8e; --accent-soft:#33191a;
+  --crit:#ff6b5e; --crit-soft:#301715;
+  --warn:#f0ad4e; --warn-soft:#2b2010;
+  --keep:#3ed494; --keep-soft:#0f2a1f;
+  --info:#6ba3ff; --info-soft:#12203a;
+  --gold:#e6b93e; --gold-soft:#2a2410;
+  --shadow:0 1px 2px rgba(0,0,0,.34),0 10px 28px rgba(0,0,0,.4);
+  --shadow-lg:0 2px 8px rgba(0,0,0,.4),0 24px 56px rgba(0,0,0,.5);
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"IBM Plex Sans KR","IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:400;line-height:1.68;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:940px;margin:0 auto;padding-inline:24px}
+.mono{font-family:"IBM Plex Mono","IBM Plex Sans KR",monospace;font-variant-numeric:tabular-nums}
+b,strong{font-weight:600;color:var(--ink)}
+h2,h3,h4{text-wrap:balance;letter-spacing:-.01em}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* ---------- cover ---------- */
+.cover{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(120% 120% at 88% -25%,var(--accent-soft) 0%,transparent 55%),
+    radial-gradient(90% 90% at -10% 120%,var(--surface-2) 0%,transparent 60%),
+    var(--surface);}
+.cover .wrap{padding-block:60px 48px;position:relative;z-index:2}
+.brandmark{display:inline-flex;align-items:center;gap:10px;font-family:"IBM Plex Mono",monospace;
+  font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2)}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 55%,transparent)}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+@media (prefers-reduced-motion:reduce){.live-dot{animation:none}}
+.cover h1{font-size:clamp(38px,7vw,66px);line-height:1.02;font-weight:700;letter-spacing:-.03em;
+  margin:22px 0 0}
+.cover h1 .accent{color:var(--accent)}
+.cover .sub{font-size:clamp(15px,2.2vw,19px);color:var(--ink-2);max-width:56ch;margin:16px 0 0;line-height:1.55}
+.cover .sub b{color:var(--ink)}
+.defn{display:inline-flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.tagchip{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:500;padding:6px 12px;border-radius:8px;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
+.tagchip .plus{color:var(--accent);font-weight:600}
+.docmeta{display:flex;flex-wrap:wrap;gap:14px 34px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line-2);
+  font-family:"IBM Plex Mono",monospace;font-size:12.5px}
+.docmeta div{display:flex;flex-direction:column;gap:3px}
+.docmeta .k{color:var(--ink-3);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+.docmeta .v{color:var(--ink);font-weight:500}
+.docmeta .v.live{color:var(--accent)}
+
+/* ---------- section scaffold ---------- */
+section{padding-block:52px;border-bottom:1px solid var(--line-2)}
+.eyebrow{display:flex;align-items:center;gap:12px;font-family:"IBM Plex Mono",monospace;font-size:12px;
+  font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.eyebrow .en{color:var(--ink-3);font-weight:500}
+.eyebrow::before{content:"";display:inline-block;width:26px;height:1px;background:var(--accent);opacity:.5}
+.sec-h{font-size:clamp(24px,4vw,32px);font-weight:700;margin:16px 0 0;letter-spacing:-.02em}
+.dek{color:var(--ink-2);max-width:64ch;margin:12px 0 0;font-size:15.5px}
+
+/* ---------- generic building blocks ---------- */
+.grid{display:grid;gap:16px;margin-top:28px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.card h4{margin:0;font-size:16.5px;font-weight:600}
+.card p{margin:8px 0 0;color:var(--ink-2);font-size:14px}
+.card .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);
+  color:var(--accent);font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:15px;margin-bottom:14px}
+
+/* problem list */
+.plist{list-style:none;padding:0;margin:24px 0 0;display:flex;flex-direction:column;gap:1px;
+  border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--line)}
+.plist li{background:var(--surface);padding:16px 20px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
+.plist .no{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--accent);
+  background:var(--accent-soft);border-radius:6px;padding:2px 8px;margin-top:2px}
+.plist b{display:block;font-size:15px}
+.plist span{color:var(--ink-2);font-size:14px}
+
+/* KPI tiles */
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
+@media(max-width:760px){.kpi{grid-template-columns:repeat(2,1fr)}}
+.kpi .t{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px}
+.kpi .lbl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.kpi .big{font-size:30px;font-weight:700;letter-spacing:-.02em;margin:8px 0 2px;color:var(--accent)}
+.kpi .cap{font-size:12.5px;color:var(--ink-2)}
+
+/* persona */
+.persona{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.persona .av{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:24px;
+  background:var(--accent-soft);border:1px solid var(--line)}
+.persona.b .av{background:var(--info-soft)}
+.persona .role{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.persona h4{margin:3px 0 0;font-size:18px}
+.persona .quote{margin:12px 0 0;padding-left:14px;border-left:2px solid var(--accent);color:var(--ink);font-style:italic;font-size:14.5px}
+.persona.b .quote{border-color:var(--info)}
+.needs{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:7px}
+.needs li{position:relative;padding-left:20px;font-size:13.5px;color:var(--ink-2)}
+.needs li::before{content:"→";position:absolute;left:0;color:var(--accent);font-weight:600}
+.persona.b .needs li::before{color:var(--info)}
+
+/* value pillars */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+@media(max-width:760px){.pillars{grid-template-columns:1fr}}
+.pillar{background:linear-gradient(180deg,var(--surface) 0%,var(--surface) 100%);border:1px solid var(--line);
+  border-radius:var(--radius);padding:22px;position:relative;overflow:hidden}
+.pillar::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--accent)}
+.pillar .n{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);letter-spacing:.1em}
+.pillar h4{margin:10px 0 0;font-size:17px}
+.pillar p{margin:8px 0 0;font-size:14px;color:var(--ink-2)}
+
+/* feature deep dive */
+.feature{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);margin-top:20px;overflow:hidden}
+.feature .fhead{display:flex;align-items:center;gap:14px;padding:20px 24px;border-bottom:1px solid var(--line-2);
+  background:var(--surface-2)}
+.feature .fno{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px;color:var(--surface);
+  background:var(--accent);border-radius:7px;padding:5px 10px}
+.feature .ftitle{font-size:18px;font-weight:600}
+.feature .ftag{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-2);
+  border:1px solid var(--line);border-radius:20px;padding:4px 11px;background:var(--surface)}
+.feature .fbody{padding:22px 24px;display:grid;grid-template-columns:1.15fr .85fr;gap:26px}
+@media(max-width:760px){.feature .fbody{grid-template-columns:1fr}}
+.feature .fbody h5{margin:0 0 10px;font-size:12px;font-family:"IBM Plex Mono",monospace;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.flist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px}
+.flist li{display:grid;grid-template-columns:auto 1fr;gap:11px;font-size:14px;color:var(--ink-2)}
+.flist li b{color:var(--ink)}
+.flist .ck{color:var(--keep);font-weight:700;margin-top:1px}
+
+/* chat mock */
+.mock{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;
+  flex-direction:column;gap:9px}
+.mock .m{max-width:88%;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.45;box-shadow:var(--shadow)}
+.mock .in{background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:3px;align-self:flex-start}
+.mock .out{background:var(--accent);color:#fff;border-bottom-right-radius:3px;align-self:flex-end}
+.mock .who{font-size:10px;font-family:"IBM Plex Mono",monospace;letter-spacing:.05em;color:var(--ink-3);margin-bottom:3px}
+.mock .dono{align-self:stretch;background:linear-gradient(100deg,var(--accent) 0%,var(--accent-2) 100%);color:#fff;
+  border-radius:12px;padding:11px 13px;box-shadow:var(--shadow-lg)}
+.mock .dono .amt{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:16px;display:flex;justify-content:space-between;align-items:center}
+.mock .dono .amt .badge{font-size:9px;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:20px;letter-spacing:.08em}
+.mock .dono .txt{font-size:13px;margin-top:5px;opacity:.95}
+.mock .sys{align-self:center;font-size:11px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;
+  background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:3px 12px}
+
+/* grade ladder */
+.ladder{display:flex;flex-direction:column;gap:10px;margin-top:28px}
+.tier{display:grid;grid-template-columns:132px 1fr auto;gap:18px;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px 20px;
+  position:relative;overflow:hidden}
+.tier::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tc,var(--accent))}
+.tier .tname{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15.5px}
+.tier .tdot{width:11px;height:11px;border-radius:50%;background:var(--tc);box-shadow:0 0 0 3px color-mix(in srgb,var(--tc) 22%,transparent)}
+.tier .tdesc{color:var(--ink-2);font-size:13.5px}
+.tier .tthr{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:500;color:var(--ink);text-align:right;white-space:nowrap}
+.tier .tthr small{display:block;color:var(--ink-3);font-size:10.5px;font-weight:400;letter-spacing:.06em}
+@media(max-width:640px){.tier{grid-template-columns:1fr;gap:6px}.tier .tthr{text-align:left}}
+
+/* flow */
+.flow{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;align-items:stretch}
+.step{flex:1 1 150px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);
+  padding:15px;position:relative;min-width:140px}
+.step .sn{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--accent);font-weight:600}
+.step b{display:block;margin:6px 0 4px;font-size:14.5px}
+.step span{font-size:12.5px;color:var(--ink-2)}
+.flow .arw{align-self:center;color:var(--ink-3);font-size:18px;flex:0 0 auto}
+@media(max-width:640px){.flow .arw{transform:rotate(90deg)}}
+
+/* IA tree */
+.ia{margin-top:26px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--line)}
+.ia-row{background:var(--surface);padding:14px 20px;display:grid;grid-template-columns:180px 1fr;gap:18px;align-items:baseline}
+@media(max-width:640px){.ia-row{grid-template-columns:1fr;gap:4px}}
+.ia-row .nav{font-weight:600;font-size:14.5px;display:flex;align-items:center;gap:9px}
+.ia-row .nav .em{font-size:16px}
+.ia-row .desc{color:var(--ink-2);font-size:13.5px}
+
+/* table */
+.tblwrap{margin-top:26px;border:1px solid var(--line);border-radius:var(--radius);overflow-x:auto;box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{background:var(--surface-2);font-size:11px;font-family:"IBM Plex Mono",monospace;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:600}
+td{color:var(--ink-2)}
+td b{color:var(--ink)}
+tr:last-child td{border-bottom:none}
+.sev{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap;display:inline-block}
+.sev.h{background:var(--crit-soft);color:var(--crit)}
+.sev.m{background:var(--warn-soft);color:var(--warn)}
+.sev.l{background:var(--keep-soft);color:var(--keep)}
+
+/* architecture */
+.arch{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+@media(max-width:760px){.arch{grid-template-columns:1fr}}
+.layer{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.layer .lh{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;margin-bottom:12px}
+.layer ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.layer li{font-size:13.5px;color:var(--ink-2);padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.layer li:last-child{border-bottom:none;padding-bottom:0}
+.layer li b{color:var(--ink);display:block;font-size:13px}
+.layer li .mono{font-size:11.5px;color:var(--ink-3)}
+
+/* roadmap */
+.road{margin-top:28px;display:flex;flex-direction:column;gap:14px}
+.phase{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;
+  display:grid;grid-template-columns:auto 1fr;gap:20px;box-shadow:var(--shadow)}
+@media(max-width:640px){.phase{grid-template-columns:1fr;gap:12px}}
+.phase .ptag{display:flex;flex-direction:column;gap:6px;min-width:96px}
+.phase .pn{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px;color:#fff;background:var(--accent);
+  border-radius:7px;padding:5px 10px;text-align:center}
+.phase .pd{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);text-align:center}
+.phase .pgoal{font-size:12.5px;color:var(--ink-2);text-align:center;line-height:1.4}
+.phase h4{margin:0 0 4px;font-size:16px}
+.phase .pscope{color:var(--ink-2);font-size:14px;margin:0}
+.phase .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.phase .chips span{font-family:"IBM Plex Mono",monospace;font-size:11px;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:20px;padding:3px 10px;color:var(--ink-2)}
+.phase.mvp .pn{background:var(--keep)}
+.phase.later .pn{background:var(--ink-3)}
+
+/* callout */
+.callout{margin-top:26px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 22%,transparent);
+  border-radius:var(--radius);padding:20px 22px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
+.callout .ci{font-size:22px}
+.callout h4{margin:0 0 5px;font-size:15.5px}
+.callout p{margin:0;color:var(--ink-2);font-size:14px}
+
+/* outcomes */
+.outcomes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:26px}
+@media(max-width:640px){.outcomes{grid-template-columns:1fr}}
+.oc{display:grid;grid-template-columns:auto 1fr;gap:14px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:18px}
+.oc .oi{width:36px;height:36px;border-radius:10px;background:var(--keep-soft);color:var(--keep);display:grid;
+  place-items:center;font-weight:700}
+.oc b{font-size:14.5px}
+.oc p{margin:5px 0 0;font-size:13.5px;color:var(--ink-2)}
+
+/* footer */
+footer{padding-block:40px 60px}
+footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monospace;text-align:center}
+
+.note{font-size:12.5px;color:var(--ink-3);margin-top:14px;font-family:"IBM Plex Mono",monospace}
+</style>
+
+<header class="cover">
+  <div class="wrap">
+    <div class="brandmark"><span class="live-dot"></span>TOONATION · PRODUCT PLAN</div>
+    <h1><span class="accent">열혈톡</span><br>크리에이터–도네이터 다이렉트 소통 앱</h1>
+    <p class="sub">엑셀방송 크루가 <b>열혈시청자와 폰으로 직접 이어지는</b> 관계 관리 앱. 실시간 채팅, 후원톡, 팬 등급 관리, 접속 알림을 하나로 묶어 방송 밖에서도 팬덤을 유지·성장시킨다.</p>
+    <div class="defn">
+      <span class="tagchip">실시간 채팅</span>
+      <span class="tagchip">후원톡</span>
+      <span class="tagchip">팬 등급 관리 <span class="plus">CRM</span></span>
+      <span class="tagchip">접속 알림</span>
+    </div>
+    <div class="docmeta">
+      <div><span class="k">문서</span><span class="v">기획서 (PRD)</span></div>
+      <div><span class="k">버전</span><span class="v mono">v0.1</span></div>
+      <div><span class="k">작성일</span><span class="v mono">2026.09.14</span></div>
+      <div><span class="k">상태</span><span class="v live">초안 · Draft</span></div>
+      <div><span class="k">플랫폼</span><span class="v">iOS · Android</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- 01 배경 -->
+<section id="s1"><div class="wrap">
+  <div class="eyebrow">01 · 배경 &amp; 문제 <span class="en">Context</span></div>
+  <h2 class="sec-h">왜 지금, 별도의 소통 앱인가</h2>
+  <p class="dek">엑셀방송에서 크루의 매출과 화력은 소수의 <b>열혈시청자</b>가 좌우한다. 하지만 이들과의 관계는 방송 플랫폼 채팅·오픈카톡·DM에 흩어져 있어, 방송이 꺼지면 관계도 끊긴다. 관리할 수 없는 관계는 이탈한다.</p>
+
+  <ul class="plist">
+    <li><span class="no">P1</span><span><b>소통 창구가 파편화되어 있다</b>방송 플랫폼 채팅, 오픈카톡, 인스타 DM에 흩어져 크루가 팬 한 명의 히스토리를 한눈에 볼 수 없다.</span></li>
+    <li><span class="no">P2</span><span><b>후원 이력과 대화가 분리돼 있다</b>누가 얼마를 언제 후원했는지가 소통 맥락과 연결되지 않아, 열혈시청자를 알아보고 대우하기 어렵다.</span></li>
+    <li><span class="no">P3</span><span><b>팬을 등급으로 관리할 도구가 없다</b>기존 열혈네이션의 등급 개념이 크루의 일상 소통 도구로 이어지지 못한다.</span></li>
+    <li><span class="no">P4</span><span><b>접속·복귀 타이밍을 놓친다</b>단골 도네이터가 앱에 들어와도 크루가 알 방법이 없어, 관계를 다질 골든타임을 흘려보낸다.</span></li>
+  </ul>
+  <div class="callout">
+    <div class="ci">🎯</div>
+    <div><h4>한 줄 정의</h4><p><b>열혈톡</b>은 투네이션 후원 데이터를 등에 업은 <b>크리에이터 전용 팬 관계 관리(CRM) + 메신저</b>다. 후원이 곧 관계 맥락이 되고, 관계가 다시 후원으로 이어지는 선순환을 만든다.</p></div>
+  </div>
+</div></section>
+
+<!-- 02 목표 -->
+<section id="s2"><div class="wrap">
+  <div class="eyebrow">02 · 목표 &amp; 성공지표 <span class="en">Goals &amp; KPI</span></div>
+  <h2 class="sec-h">무엇을 성공이라 부를 것인가</h2>
+  <p class="dek">단순 메신저가 아니라 <b>리텐션과 후원 전환</b>을 움직이는 도구를 목표로 한다. 아래 지표를 북극성으로 삼는다.</p>
+  <div class="grid g3">
+    <div class="card"><div class="ic">G1</div><h4>관계 일원화</h4><p>흩어진 팬 소통을 한 곳으로 모아, 크루가 팬 1명의 후원·대화·등급을 하나의 프로필에서 관리한다.</p></div>
+    <div class="card"><div class="ic">G2</div><h4>리텐션 강화</h4><p>방송 외 시간에도 접점을 유지해 열혈시청자의 이탈을 막고 복귀를 유도한다.</p></div>
+    <div class="card"><div class="ic">G3</div><h4>후원 전환</h4><p>후원톡·등급 보상을 통해 소통이 자연스럽게 후원으로 이어지게 한다.</p></div>
+  </div>
+  <div class="kpi">
+    <div class="t"><div class="lbl">Retention</div><div class="big">D30 ≥ 40%</div><div class="cap">열혈시청자(상위 등급) 30일 잔존율</div></div>
+    <div class="t"><div class="lbl">Conversion</div><div class="big">+15%</div><div class="cap">앱 경유 후원 전환 상승폭</div></div>
+    <div class="t"><div class="lbl">Engagement</div><div class="big">DAU/MAU</div><div class="cap">핵심 팬의 일간 접속 밀도</div></div>
+    <div class="t"><div class="lbl">Response</div><div class="big">알림 CTR</div><div class="cap">접속·후원 알림 반응률</div></div>
+  </div>
+  <p class="note">※ 구체 수치는 베타 데이터 확보 후 확정. 위 값은 목표 가이드라인.</p>
+</div></section>
+
+<!-- 03 사용자 -->
+<section id="s3"><div class="wrap">
+  <div class="eyebrow">03 · 타겟 사용자 <span class="en">Personas</span></div>
+  <h2 class="sec-h">두 얼굴을 위한 하나의 앱</h2>
+  <p class="dek">같은 앱이 역할에 따라 전혀 다른 화면을 보여준다. 크리에이터는 <b>관리 콘솔</b>을, 도네이터는 <b>팬 라운지</b>를 경험한다.</p>
+  <div class="grid g2">
+    <div class="card">
+      <div class="persona">
+        <div class="av">🎙️</div>
+        <div>
+          <div class="role">Persona A · 크리에이터 / 크루</div>
+          <h4>엑셀방송 크루 BJ</h4>
+          <div class="quote">"내 열혈시청자가 누구고, 지금 뭘 필요로 하는지 방송 밖에서도 챙기고 싶어요."</div>
+        </div>
+      </div>
+      <ul class="needs">
+        <li>팬 한 명의 후원·대화·등급을 한 화면에서 파악</li>
+        <li>단골이 접속하면 바로 알고 먼저 인사</li>
+        <li>등급별로 공지·이벤트·1:1을 구분해 관리</li>
+        <li>크루원과 팬 관리 업무 분담</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="persona b">
+        <div class="av">💜</div>
+        <div>
+          <div class="role">Persona B · 도네이터 / 열혈시청자</div>
+          <h4>단골 후원자</h4>
+          <div class="quote">"내가 응원하는 크루에게 인정받고, 특별한 사람으로 대우받고 싶어요."</div>
+        </div>
+      </div>
+      <ul class="needs">
+        <li>방송 밖에서도 크루와 가깝게 소통</li>
+        <li>내 후원이 등급·배지로 눈에 보이는 인정</li>
+        <li>크루가 접속했을 때 놓치지 않기</li>
+        <li>후원톡으로 확실히 메시지를 전달</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- 04 컨셉 -->
+<section id="s4"><div class="wrap">
+  <div class="eyebrow">04 · 핵심 컨셉 <span class="en">Value Proposition</span></div>
+  <h2 class="sec-h">후원과 관계를 하나로 잇는 세 개의 기둥</h2>
+  <div class="pillars">
+    <div class="pillar"><div class="n">PILLAR 01</div><h4>맥락 있는 소통</h4><p>모든 대화 옆에 후원 이력과 등급이 붙는다. 크루는 "이 사람이 누구인지" 알고 대화한다.</p></div>
+    <div class="pillar"><div class="n">PILLAR 02</div><h4>보이는 인정</h4><p>후원이 등급·배지·전용방으로 즉시 보상된다. 팬은 자신의 기여가 눈에 보인다.</p></div>
+    <div class="pillar"><div class="n">PILLAR 03</div><h4>놓치지 않는 타이밍</h4><p>접속·후원·복귀 이벤트를 실시간 알림으로. 관계를 다질 순간을 흘리지 않는다.</p></div>
+  </div>
+</div></section>
+
+<!-- 05 핵심 기능 -->
+<section id="s5"><div class="wrap">
+  <div class="eyebrow">05 · 핵심 기능 <span class="en">Features</span></div>
+  <h2 class="sec-h">핵심 기능 상세</h2>
+  <p class="dek">MVP를 구성하는 4대 기능. 각 기능은 투네이션 후원 데이터와 연결될 때 진짜 가치를 낸다.</p>
+
+  <!-- F1 실시간 채팅 -->
+  <div class="feature">
+    <div class="fhead"><span class="fno">F1</span><span class="ftitle">실시간 채팅</span><span class="ftag">MVP · 필수</span></div>
+    <div class="fbody">
+      <div>
+        <h5>주요 요건</h5>
+        <ul class="flist">
+          <li><span class="ck">✓</span><span><b>크루 채널</b> — 크루 공식 소통방. 공지·잡담·이벤트 채널로 분리.</span></li>
+          <li><span class="ck">✓</span><span><b>1:1 다이렉트</b> — 크루↔팬 개인 대화. 상대 프로필에 등급·후원액 상시 노출.</span></li>
+          <li><span class="ck">✓</span><span><b>등급 전용방</b> — 특정 등급 이상만 입장 가능한 프리미엄 채팅방.</span></li>
+          <li><span class="ck">✓</span><span><b>실시간성</b> — 전송·읽음·입력중·온라인 상태 표시.</span></li>
+          <li><span class="ck">✓</span><span><b>모더레이션</b> — 크루/매니저의 강퇴·차단·금칙어·슬로우모드.</span></li>
+        </ul>
+      </div>
+      <div>
+        <h5>미리보기</h5>
+        <div class="mock">
+          <div class="sys">— 오늘 —</div>
+          <div class="m in"><div class="who">열혈팬_민수 · 💎다이아</div>오늘 방송 대박이었어요!! 🔥</div>
+          <div class="m out">민수님 항상 감사해요 ㅎㅎ 다음 콘텐츠도 기대해주세요</div>
+          <div class="m in"><div class="who">별밤 · 🥈실버</div>저도 곧 다이아 갈게요!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- F2 후원톡 -->
+  <div class="feature">
+    <div class="fhead"><span class="fno">F2</span><span class="ftitle">후원톡</span><span class="ftag">MVP · 차별화</span></div>
+    <div class="fbody">
+      <div>
+        <h5>주요 요건</h5>
+        <ul class="flist">
+          <li><span class="ck">✓</span><span><b>후원 연동 메시지</b> — 투네이션 후원과 동시에 채팅에 강조 카드로 노출(슈퍼챗형).</span></li>
+          <li><span class="ck">✓</span><span><b>금액별 강조</b> — 금액대에 따라 카드 크기·색·상단 고정 시간 차등.</span></li>
+          <li><span class="ck">✓</span><span><b>크루 우선 응답</b> — 후원톡은 별도 트레이에 쌓여 크루가 놓치지 않고 답장.</span></li>
+          <li><span class="ck">✓</span><span><b>후원 목표(Goal)</b> — 채널별 목표 게이지, 달성 시 자동 공지.</span></li>
+          <li><span class="ck">✓</span><span><b>답장 = 등급 기여</b> — 후원 누적이 팬 등급 산정에 자동 반영.</span></li>
+        </ul>
+      </div>
+      <div>
+        <h5>미리보기</h5>
+        <div class="mock">
+          <div class="dono">
+            <div class="amt">₩50,000 후원 <span class="badge">TOP FAN</span></div>
+            <div class="txt">"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜"</div>
+          </div>
+          <div class="m out">헉 민수님 감사합니다!! 오늘 지목 콘텐츠 갑니다 🎉</div>
+          <div class="sys">후원 목표 82% · ₩820,000 / ₩1,000,000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- F3 등급관리 -->
+  <div class="feature">
+    <div class="fhead"><span class="fno">F3</span><span class="ftitle">팬 등급 관리 (CRM)</span><span class="ftag">MVP · 열혈네이션 계승</span></div>
+    <div class="fbody">
+      <div>
+        <h5>주요 요건</h5>
+        <ul class="flist">
+          <li><span class="ck">✓</span><span><b>등급 자동 산정</b> — 열혈네이션 로직 계승. 누적 후원·활동으로 티어 자동 부여.</span></li>
+          <li><span class="ck">✓</span><span><b>팬 프로필 카드</b> — 등급·누적 후원·최근 접속·메모·태그를 한 화면에.</span></li>
+          <li><span class="ck">✓</span><span><b>세그먼트 & 필터</b> — "다이아 이상", "최근 14일 미접속" 등으로 팬 그룹핑.</span></li>
+          <li><span class="ck">✓</span><span><b>등급별 혜택</b> — 전용방·배지·우선 답장·이벤트 초대 등 권한 연동.</span></li>
+          <li><span class="ck">✓</span><span><b>수동 메모/태그</b> — 크루가 팬별 특이사항 기록(생일, 취향 등).</span></li>
+        </ul>
+      </div>
+      <div>
+        <h5>운영 관점</h5>
+        <p style="font-size:13.5px;color:var(--ink-2);margin:0">등급은 단순 표시가 아니라 <b>채팅·후원톡·알림 전반의 권한 축</b>이다. 등급이 오르면 전용방이 열리고, 답장 우선순위가 올라가고, 크루의 세그먼트 타겟팅 대상이 된다. 상세 티어 설계는 <b>§06</b> 참조.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- F4 알림 -->
+  <div class="feature">
+    <div class="fhead"><span class="fno">F4</span><span class="ftitle">접속 &amp; 이벤트 알림</span><span class="ftag">MVP · 필수</span></div>
+    <div class="fbody">
+      <div>
+        <h5>주요 요건</h5>
+        <ul class="flist">
+          <li><span class="ck">✓</span><span><b>도네이터 접속 알림</b> — 지정/상위 등급 팬이 접속하면 크루에게 푸시.</span></li>
+          <li><span class="ck">✓</span><span><b>크루 접속 알림</b> — 팔로우한 크루가 접속하면 팬에게 푸시(옵트인).</span></li>
+          <li><span class="ck">✓</span><span><b>이벤트 알림</b> — 후원톡 도착, 등급 상승, 방송 시작, 목표 달성.</span></li>
+          <li><span class="ck">✓</span><span><b>복귀 유도</b> — 미접속 열혈팬에게 크루 발송 리마인드.</span></li>
+          <li><span class="ck">✓</span><span><b>세분화 설정</b> — 등급·채널·이벤트별 알림 on/off, 방해금지 시간.</span></li>
+        </ul>
+      </div>
+      <div>
+        <h5>미리보기</h5>
+        <div class="mock">
+          <div class="m in" style="max-width:100%"><div class="who">🔔 지금</div><b>💎 다이아 팬 '민수'</b>님이 접속했어요.<br><span style="color:var(--ink-3);font-size:11px">최근 후원 ₩50,000 · 3일 만의 접속</span></div>
+          <div class="m in" style="max-width:100%"><div class="who">🔔 방금</div><b>등급 상승</b> — '별밤'님이 🥇골드로 올라섰어요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 06 등급 시스템 -->
+<section id="s6"><div class="wrap">
+  <div class="eyebrow">06 · 팬 등급 시스템 <span class="en">Grade System</span></div>
+  <h2 class="sec-h">열혈네이션을 계승한 5단계 티어</h2>
+  <p class="dek">누적 후원액을 기준으로 자동 산정하되, 크루가 임계값과 명칭을 커스터마이즈할 수 있게 한다. 아래는 <b>기본 프리셋</b> 예시.</p>
+  <div class="ladder">
+    <div class="tier" style="--tc:#b8860b">
+      <div class="tname"><span class="tdot"></span>👑 열혈 (VIP)</div>
+      <div class="tdesc">크루의 최상위 후원자. 전용방·최우선 답장·전용 배지·오프라인 이벤트 초대.</div>
+      <div class="tthr">₩1,000,000+<small>누적 후원</small></div>
+    </div>
+    <div class="tier" style="--tc:#5aa9e6">
+      <div class="tname"><span class="tdot"></span>💎 다이아</div>
+      <div class="tdesc">핵심 단골. 등급 전용방 입장, 후원톡 상단 고정 우대.</div>
+      <div class="tthr">₩300,000+<small>누적 후원</small></div>
+    </div>
+    <div class="tier" style="--tc:#e6b93e">
+      <div class="tname"><span class="tdot"></span>🥇 골드</div>
+      <div class="tdesc">활발한 후원자. 골드 배지, 이벤트 우선 알림.</div>
+      <div class="tthr">₩100,000+<small>누적 후원</small></div>
+    </div>
+    <div class="tier" style="--tc:#9aa4b4">
+      <div class="tname"><span class="tdot"></span>🥈 실버</div>
+      <div class="tdesc">단골로 성장 중. 실버 배지, 크루 채널 참여.</div>
+      <div class="tthr">₩30,000+<small>누적 후원</small></div>
+    </div>
+    <div class="tier" style="--tc:#b08968">
+      <div class="tname"><span class="tdot"></span>🥉 브론즈</div>
+      <div class="tdesc">신규·라이트 팬. 기본 채팅·팔로우.</div>
+      <div class="tthr">₩0+<small>가입 기본</small></div>
+    </div>
+  </div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="card"><div class="ic">A</div><h4>산정 방식</h4><p>기본은 <b>누적 후원액</b>. 옵션으로 최근 90일 활동 가중치, 연속 접속을 반영해 "현재 화력"까지 등급에 담을 수 있다.</p></div>
+    <div class="card"><div class="ic">B</div><h4>커스터마이즈</h4><p>크루가 티어 수·명칭·임계값·혜택을 직접 설정. 크루 브랜딩에 맞춘 등급명 지원.</p></div>
+    <div class="card"><div class="ic">C</div><h4>강등 정책</h4><p>등급 하락 시 유예 기간·"강등 임박" 알림으로 이탈 방지 및 재후원 유도.</p></div>
+  </div>
+</div></section>
+
+<!-- 07 IA & Flow -->
+<section id="s7"><div class="wrap">
+  <div class="eyebrow">07 · 화면 구조 &amp; 플로우 <span class="en">IA &amp; User Flow</span></div>
+  <h2 class="sec-h">역할이 화면을 결정한다</h2>
+  <p class="dek">하단 탭 구조를 역할별로 다르게 구성한다. 크리에이터는 관리에, 도네이터는 소통에 최적화.</p>
+
+  <h3 style="font-size:15px;margin:26px 0 0;color:var(--ink-2)">크리에이터 앱 — 하단 탭</h3>
+  <div class="ia">
+    <div class="ia-row"><div class="nav"><span class="em">💬</span>채팅</div><div class="desc">크루 채널 · 1:1 · 등급 전용방 · 후원톡 트레이</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">👥</span>팬 관리</div><div class="desc">등급별 팬 리스트 · 프로필 카드 · 세그먼트 · 메모/태그</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">🔔</span>알림</div><div class="desc">접속 · 후원톡 · 등급 변동 · 복귀 유도 발송</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">📊</span>인사이트</div><div class="desc">후원 추이 · 등급 분포 · 리텐션 · 후원 목표</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">⚙️</span>설정</div><div class="desc">등급 정책 · 크루원 권한 · 알림 규칙 · 투네이션 연동</div></div>
+  </div>
+
+  <h3 style="font-size:15px;margin:28px 0 0;color:var(--ink-2)">도네이터 앱 — 하단 탭</h3>
+  <div class="ia">
+    <div class="ia-row"><div class="nav"><span class="em">🏠</span>팬 라운지</div><div class="desc">팔로우한 크루 · 온라인 상태 · 공지</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">💬</span>채팅</div><div class="desc">크루 채널 · 1:1 · 입장 가능한 등급방</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">💝</span>후원</div><div class="desc">후원톡 보내기 · 후원 목표 · 내 후원 이력</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">🏅</span>내 등급</div><div class="desc">현재 티어 · 다음 등급까지 · 혜택 · 배지</div></div>
+  </div>
+
+  <h3 style="font-size:15px;margin:30px 0 0;color:var(--ink-2)">핵심 플로우 — 후원톡 → 관계 강화</h3>
+  <div class="flow">
+    <div class="step"><div class="sn">STEP 1</div><b>후원</b><span>도네이터가 후원톡 전송(투네이션 결제)</span></div>
+    <div class="arw">→</div>
+    <div class="step"><div class="sn">STEP 2</div><b>강조 노출</b><span>채팅에 후원 카드 + 크루 트레이 알림</span></div>
+    <div class="arw">→</div>
+    <div class="step"><div class="sn">STEP 3</div><b>등급 반영</b><span>누적 후원 갱신 → 등급 자동 재산정</span></div>
+    <div class="arw">→</div>
+    <div class="step"><div class="sn">STEP 4</div><b>관계 강화</b><span>크루 답장 · 등급 상승 알림 · 전용 혜택</span></div>
+  </div>
+</div></section>
+
+<!-- 08 데이터 모델 -->
+<section id="s8"><div class="wrap">
+  <div class="eyebrow">08 · 데이터 모델 <span class="en">Data Model</span></div>
+  <h2 class="sec-h">핵심 엔티티 개요</h2>
+  <p class="dek">투네이션 후원 데이터를 팬 프로필의 등급·이력과 연결하는 것이 설계의 핵심이다.</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>엔티티</th><th>핵심 필드</th><th>관계</th></tr></thead>
+      <tbody>
+        <tr><td><b>User</b></td><td>id, role(크리에이터/도네이터/매니저), 프로필, 푸시토큰</td><td>1 : N Membership</td></tr>
+        <tr><td><b>Crew</b></td><td>id, 이름, 브랜딩, 등급정책, 후원목표</td><td>1 : N Channel · Membership</td></tr>
+        <tr><td><b>Membership</b></td><td>user_id, crew_id, <b>grade</b>, 누적후원, 최근접속, 메모, 태그</td><td>User × Crew · 등급의 주체</td></tr>
+        <tr><td><b>Channel</b></td><td>id, crew_id, 타입(공개/1:1/등급전용), 최소등급</td><td>1 : N Message</td></tr>
+        <tr><td><b>Message</b></td><td>id, channel_id, sender, 본문, 타입(일반/후원톡/시스템)</td><td>후원톡 → Donation</td></tr>
+        <tr><td><b>Donation</b></td><td>id, user_id, crew_id, 금액, 메시지, 결제상태, 시각</td><td>투네이션 연동 · 등급 산정 입력</td></tr>
+        <tr><td><b>Grade</b></td><td>crew_id, 명칭, 임계값, 혜택, 정렬순서</td><td>Crew별 정의 · Membership 참조</td></tr>
+        <tr><td><b>Notification</b></td><td>id, user_id, 타입(접속/후원/등급/복귀), payload, 읽음</td><td>User 수신함</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">※ 기존 <span class="mono">cash-donation-settlement-erd</span> 정산 스키마와의 연동 지점(Donation)은 별도 정합성 검토 필요.</p>
+</div></section>
+
+<!-- 09 아키텍처 -->
+<section id="s9"><div class="wrap">
+  <div class="eyebrow">09 · 기술 아키텍처 <span class="en">Architecture</span></div>
+  <h2 class="sec-h">실시간 · 알림 · 후원 연동</h2>
+  <div class="arch">
+    <div class="layer">
+      <div class="lh">Client</div>
+      <ul>
+        <li><b>모바일 앱</b><span class="mono">React Native / Flutter</span></li>
+        <li><b>역할별 UI</b><span class="mono">creator / donator 분기</span></li>
+        <li><b>푸시 수신</b><span class="mono">FCM · APNs</span></li>
+        <li><b>로컬 캐시</b><span class="mono">오프라인 메시지 큐</span></li>
+      </ul>
+    </div>
+    <div class="layer">
+      <div class="lh">Realtime &amp; API</div>
+      <ul>
+        <li><b>실시간 채팅</b><span class="mono">WebSocket · Socket.IO</span></li>
+        <li><b>프레즌스</b><span class="mono">온라인/접속 상태 관리</span></li>
+        <li><b>REST/GraphQL</b><span class="mono">프로필·등급·이력</span></li>
+        <li><b>알림 디스패처</b><span class="mono">이벤트 → 푸시 라우팅</span></li>
+      </ul>
+    </div>
+    <div class="layer">
+      <div class="lh">Data &amp; 연동</div>
+      <ul>
+        <li><b>DB</b><span class="mono">PostgreSQL + Redis(프레즌스)</span></li>
+        <li><b>투네이션 후원</b><span class="mono">Webhook · 후원 이벤트 수신</span></li>
+        <li><b>등급 엔진</b><span class="mono">누적 후원 → 티어 산정</span></li>
+        <li><b>인증</b><span class="mono">투네이션 계정 SSO</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">
+    <div class="ci">🔗</div>
+    <div><h4>연동의 심장 — 후원 Webhook</h4><p>투네이션에서 후원이 발생하면 Webhook으로 Donation 이벤트가 들어오고, 이 이벤트가 <b>①후원톡 카드 생성 → ②등급 재산정 → ③알림 발송</b>을 동시에 트리거한다. 이 파이프라인이 앱의 차별점 전부를 관통한다.</p></div>
+  </div>
+</div></section>
+
+<!-- 10 권한 -->
+<section id="s10"><div class="wrap">
+  <div class="eyebrow">10 · 권한 &amp; 역할 <span class="en">Roles</span></div>
+  <h2 class="sec-h">누가 무엇을 할 수 있나</h2>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>역할</th><th>권한 범위</th><th>주요 액션</th></tr></thead>
+      <tbody>
+        <tr><td><b>크리에이터(오너)</b></td><td>크루 전체</td><td>등급정책 설정, 크루원 초대, 전 채널 관리, 인사이트 열람</td></tr>
+        <tr><td><b>매니저(크루원)</b></td><td>위임 범위</td><td>채팅 응대, 모더레이션, 팬 메모, 알림 발송 (정책 변경 불가)</td></tr>
+        <tr><td><b>도네이터</b></td><td>본인 + 입장 채널</td><td>채팅, 후원톡, 등급/혜택 확인, 알림 구독</td></tr>
+        <tr><td><b>게스트</b></td><td>공개 채널 열람</td><td>미가입 관람 → 가입/팔로우 전환 유도</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></section>
+
+<!-- 11 로드맵 -->
+<section id="s11"><div class="wrap">
+  <div class="eyebrow">11 · 개발 로드맵 <span class="en">Roadmap</span></div>
+  <h2 class="sec-h">단계별 출시 계획</h2>
+  <p class="dek">먼저 소수 크루와 <b>클로즈드 베타</b>로 핵심 루프를 검증하고, 확장한다.</p>
+  <div class="road">
+    <div class="phase">
+      <div class="ptag"><div class="pn">Phase 0</div><div class="pd">~4주</div><div class="pgoal">기반 설계</div></div>
+      <div><h4>기반 & 프로토타입</h4><p class="pscope">데이터 모델 확정, 투네이션 인증·후원 Webhook 연동 PoC, 핵심 화면 프로토타입.</p><div class="chips"><span>SSO 연동</span><span>Webhook PoC</span><span>ERD 확정</span><span>UX 프로토</span></div></div>
+    </div>
+    <div class="phase mvp">
+      <div class="ptag"><div class="pn">Phase 1</div><div class="pd">~8주</div><div class="pgoal">MVP · 베타</div></div>
+      <div><h4>MVP — 4대 기능</h4><p class="pscope">실시간 채팅 + 후원톡 + 등급 관리 + 접속 알림. 소수 크루 클로즈드 베타로 핵심 루프 검증.</p><div class="chips"><span>실시간 채팅</span><span>후원톡</span><span>등급 자동산정</span><span>접속 알림</span><span>팬 프로필</span></div></div>
+    </div>
+    <div class="phase">
+      <div class="ptag"><div class="pn">Phase 2</div><div class="pd">~6주</div><div class="pgoal">고도화</div></div>
+      <div><h4>운영 도구 & 인사이트</h4><p class="pscope">세그먼트 타겟 발송, 인사이트 대시보드, 크루원 권한, 등급 커스터마이즈, 후원 목표.</p><div class="chips"><span>세그먼트</span><span>대시보드</span><span>권한관리</span><span>등급 커스텀</span></div></div>
+    </div>
+    <div class="phase later">
+      <div class="ptag"><div class="pn">Phase 3</div><div class="pd">차기</div><div class="pgoal">확장</div></div>
+      <div><h4>확장 & 실험</h4><p class="pscope">유료 멤버십, 이벤트/미션, 크루 간 협업, 방송 플랫폼 오버레이 연동.</p><div class="chips"><span>멤버십</span><span>미션</span><span>오버레이</span><span>다크 라운지</span></div></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 12 리스크 -->
+<section id="s12"><div class="wrap">
+  <div class="eyebrow">12 · 리스크 &amp; 대응 <span class="en">Risks</span></div>
+  <h2 class="sec-h">미리 짚을 위험</h2>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:130px">위험</th><th>내용</th><th style="width:80px">심각도</th><th>대응</th></tr></thead>
+      <tbody>
+        <tr><td><b>과열 후원 유도</b></td><td>등급·경쟁 요소가 과도한 지출을 부추길 우려</td><td><span class="sev h">높음</span></td><td>후원 한도 안내, 건전성 가이드, 미성년 보호</td></tr>
+        <tr><td><b>사생활·경계</b></td><td>1:1·접속 알림이 과도한 사적 접촉/스토킹으로 악용</td><td><span class="sev h">높음</span></td><td>접속 알림 옵트인, 차단·신고, 방해금지 시간</td></tr>
+        <tr><td><b>모더레이션 부담</b></td><td>실시간 채팅의 악성·불법 콘텐츠 대응</td><td><span class="sev m">중간</span></td><td>금칙어·슬로우모드·신고 큐, 매니저 권한 분담</td></tr>
+        <tr><td><b>후원 연동 정합성</b></td><td>정산 스키마와 등급 산정 데이터 불일치</td><td><span class="sev m">중간</span></td><td>Webhook 재시도·멱등 처리, 정산 ERD 정합성 검토</td></tr>
+        <tr><td><b>알림 피로</b></td><td>과다 푸시로 인한 이탈·차단</td><td><span class="sev l">낮음</span></td><td>등급·이벤트별 세분 설정, 스마트 묶음 알림</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></section>
+
+<!-- 13 기대효과 -->
+<section id="s13"><div class="wrap">
+  <div class="eyebrow">13 · 기대효과 <span class="en">Impact</span></div>
+  <h2 class="sec-h">이 앱이 만드는 변화</h2>
+  <div class="outcomes">
+    <div class="oc"><div class="oi">↑</div><div><b>열혈시청자 리텐션 상승</b><p>방송 밖 접점 유지로 핵심 팬 이탈을 줄이고 복귀를 유도.</p></div></div>
+    <div class="oc"><div class="oi">₩</div><div><b>후원 전환 증가</b><p>맥락 있는 소통과 등급 보상이 자연스러운 후원으로 이어짐.</p></div></div>
+    <div class="oc"><div class="oi">◎</div><div><b>관계 관리 일원화</b><p>흩어진 팬 소통을 하나의 CRM으로 통합, 크루 운영 효율화.</p></div></div>
+    <div class="oc"><div class="oi">✦</div><div><b>투네이션 생태계 강화</b><p>후원 데이터가 관계 자산이 되어 크리에이터의 플랫폼 락인 강화.</p></div></div>
+  </div>
+  <div class="callout" style="margin-top:28px">
+    <div class="ci">📌</div>
+    <div><h4>다음 단계</h4><p>①제품명·등급 프리셋 확정 → ②투네이션 인증·후원 Webhook 스펙 확인 → ③Phase 0 데이터 모델 & 프로토타입 착수. 본 문서는 초안(v0.1)이며 이해관계자 리뷰 후 갱신한다.</p></div>
+  </div>
+</div></section>
+
+</main>
+
+<footer><div class="wrap">
+  <div class="fn">열혈톡 · 크리에이터–도네이터 소통 앱 기획서 v0.1 · TOONATION · 2026.09.14 · 초안</div>
+</div></footer>
