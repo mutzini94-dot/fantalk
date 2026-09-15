@@ -286,6 +286,40 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .fn-row>span{width:34px;flex:0 0 auto}
 .fn-bar{height:26px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:38px;color:#fff;font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:12px}
 .fn-bar.conv{background:var(--keep)}
+.badgerow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.badge-ic{width:38px;height:38px;border-radius:11px;background:var(--accent-soft);display:grid;place-items:center;font-size:19px}
+.achlist{display:flex;flex-direction:column}
+.ach{display:flex;gap:11px;padding:10px 0;border-top:1px solid var(--line-2);align-items:flex-start}
+.ach:first-child{border-top:none}
+.ach-ic{width:34px;height:34px;border-radius:10px;background:var(--surface-2);display:grid;place-items:center;font-size:17px;flex:0 0 auto;filter:grayscale(.5);opacity:.55}
+.ach.done .ach-ic{filter:none;opacity:1;background:var(--accent-soft)}
+.ach-main{flex:1;min-width:0}
+.ach-nm{font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:5px;color:var(--ink-3)}
+.ach.done .ach-nm{color:var(--ink)}
+.ach-chk{color:var(--keep);font-weight:700}
+.ach-ds{font-size:11.5px;color:var(--ink-3);margin-top:1px}
+.fancard{position:relative;overflow:hidden;border-radius:18px;padding:18px;color:#fff;background:linear-gradient(140deg,color-mix(in srgb,var(--tc) 55%,#1a1430) 0%,var(--tc) 135%);box-shadow:var(--shadow-lg)}
+.fc-shine{position:absolute;top:-40%;right:-15%;width:110%;height:120%;background:radial-gradient(circle at 72% 28%,rgba(255,255,255,.28),transparent 46%);z-index:1;pointer-events:none}
+.fc-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;position:relative;z-index:2}
+.fc-brand{font-weight:700;opacity:.95}
+.fc-tier{background:rgba(255,255,255,.24);border-radius:20px;padding:3px 10px;font-weight:700}
+.fc-body{display:flex;align-items:center;gap:14px;margin:18px 0;position:relative;z-index:2}
+.fc-emoji{width:60px;height:60px;border-radius:16px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:32px;flex:0 0 auto}
+.fc-name{font-size:23px;font-weight:800;letter-spacing:-.02em}
+.fc-since{font-size:11px;opacity:.85;margin-top:2px}
+.fc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.22);border-radius:12px;overflow:hidden;position:relative;z-index:2}
+.fc-stats>div{background:color-mix(in srgb,var(--tc) 45%,#1a1430);padding:10px 8px;text-align:center}
+.fc-stats span{font-size:9.5px;opacity:.85;display:block}
+.fc-stats b{font-size:14px;font-weight:700;font-family:"IBM Plex Mono",monospace}
+.fc-foot{display:flex;justify-content:space-between;margin-top:14px;font-size:10.5px;font-family:"IBM Plex Mono",monospace;opacity:.9;position:relative;z-index:2}
+.bkrow{display:flex;align-items:center;gap:11px;padding:12px 14px;border-bottom:1px solid var(--line-2)}
+.bkrow:last-child{border-bottom:none}
+.bk-ic{width:34px;height:34px;border-radius:10px;background:var(--accent-soft);display:grid;place-items:center;font-size:16px;flex:0 0 auto}
+.bk-main{flex:1;min-width:0}
+.bk-main b{font-size:13.5px}
+.bk-main p{margin:2px 0 0;font-size:11px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
+.bk-btn{font-size:11.5px;font-weight:700;padding:6px 11px;border-radius:20px;background:var(--accent-soft);color:var(--accent);flex:0 0 auto}
+.bk-btn.del{background:var(--surface-2);color:var(--crit)}
 .mygradehero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 20px;box-shadow:var(--shadow)}
 .mygradehero .big{font-size:44px}.mygradehero .gn{font-size:22px;font-weight:700;margin-top:6px}
 .mygradehero .prog{margin-top:18px}.mygradehero .ptrack{height:14px;background:var(--surface-2);border-radius:8px;overflow:hidden;margin:8px 0;border:1px solid var(--line)}
@@ -414,7 +448,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   thread:thread||[{t:"day",text:"오늘"},{from:"in",text:"안녕하세요! 오늘도 응원할게요 😊",tm:"18:10"}],
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
-  role:"creator",live:false,screen:"onboarding",slide:0,theme:"system",lastBackup:null,autoBackup:false,
+  role:"creator",live:false,screen:"onboarding",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],
   ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
@@ -497,10 +531,11 @@ function showPresenceAlert(f){const el=$("#alertbar");if(!el)return;const t=tier
   el.innerHTML=`<div class="ab-av" data-act="fan" data-v="${f.id}" style="cursor:pointer">${f.emoji}<span class="on-dot"></span></div><div class="ab-tx" data-act="fan" data-v="${f.id}" style="cursor:pointer"><b>🟢 ${esc(f.name)} 접속</b><div class="ab-sub"><span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span> · 지금 온라인 · 누적 ${won(f.cum)}</div></div><button class="ab-go" data-act="alertopen" data-v="${f.id}">채팅 열기</button>`;
   el.classList.add("on");clearTimeout(alertT);alertT=setTimeout(()=>el.classList.remove("on"),4600);}
 /* ---------- 데이터 백업 ---------- */
-function snapshotData(){return {v:1,at:Date.now(),
+function snapshotData(){const raw={v:1,at:Date.now(),
   tiers:TIERS,
   fans:state.fans.map(f=>({id:f.id,name:f.name,emoji:f.emoji,cum:f.cum,seenMin:f.seenMin,online:f.online,temp:f.temp,count:f.count,memo:f.memo,tags:f.tags})),
-  automation:state.automation,alertRules:state.alertRules,goal:state.goal,theme:state.theme};}
+  automation:state.automation,alertRules:state.alertRules,goal:state.goal,theme:state.theme};
+  return JSON.parse(JSON.stringify(raw));}
 function restoreData(d){if(!d||!Array.isArray(d.tiers))throw new Error("형식 오류");
   TIERS=d.tiers;
   if(Array.isArray(d.fans))d.fans.forEach(fb=>{const f=fanById(fb.id);if(f)Object.assign(f,fb);});
@@ -508,9 +543,11 @@ function restoreData(d){if(!d||!Array.isArray(d.tiers))throw new Error("형식 �
   if(d.alertRules)state.alertRules=d.alertRules;
   if(d.goal)state.goal=d.goal;
   if(d.theme)applyTheme(d.theme);}
-function doBackup(){try{const snap=snapshotData();localStorage.setItem("heyeol-backup",JSON.stringify(snap));localStorage.setItem("heyeol-backup-at",String(snap.at));state.lastBackup=snap.at;}catch(e){toast("백업 공간이 부족해요");return;}toast("✅ 백업 완료");renderView();}
-function restoreBackup(){try{const s=localStorage.getItem("heyeol-backup");if(!s){toast("저장된 백업이 없어요");return;}restoreData(JSON.parse(s));toast("↩︎ 백업에서 복원했어요");render();}catch(e){toast("복원에 실패했어요");}}
-function initBackupMeta(){try{const at=localStorage.getItem("heyeol-backup-at");if(at)state.lastBackup=parseInt(at);state.autoBackup=localStorage.getItem("heyeol-autobackup")==="1";}catch(e){}}
+function saveBackups(){try{localStorage.setItem("heyeol-backups",JSON.stringify(state.backups));}catch(e){}}
+function doBackup(){const snap=snapshotData();const s=JSON.stringify(snap);const entry={at:snap.at,size:s.length,fans:snap.fans.length,autos:snap.automation.rules.length,data:snap};state.backups.unshift(entry);if(state.backups.length>10)state.backups.length=10;state.lastBackup=entry.at;saveBackups();toast("✅ 백업 완료");renderView();}
+function restoreBkp(i){const b=state.backups[i];if(!b)return;try{restoreData(JSON.parse(JSON.stringify(b.data)));toast("↩︎ 백업에서 복원했어요");render();}catch(e){toast("복원에 실패했어요");}}
+function delBkp(i){state.backups.splice(i,1);if(state.backups.length)state.lastBackup=state.backups[0].at;else state.lastBackup=null;saveBackups();toast("백업을 삭제했어요");renderView();}
+function initBackupMeta(){try{const s=localStorage.getItem("heyeol-backups");if(s)state.backups=JSON.parse(s)||[];state.autoBackup=localStorage.getItem("heyeol-autobackup")==="1";}catch(e){}if(state.backups&&state.backups.length)state.lastBackup=state.backups[0].at;}
 function exportSheet(){const json=JSON.stringify(snapshotData(),null,2);
   openSheet(`<h3 class="sh">데이터 내보내기</h3><p class="sd">아래 JSON을 복사해 안전한 곳에 보관하세요.</p><textarea id="expjson" rows="8" readonly>${esc(json)}</textarea><button class="btn" data-act="copyexp">전체 선택 · 복사</button><button class="btn ghost" data-act="closesheet">닫기</button>`);
   const t=$("#expjson");if(t)t.onclick=()=>t.select();}
@@ -652,6 +689,32 @@ function donoFeed(){
     <div class="chips">${chips}</div>${cards}`;
 }
 
+/* ---------- 업적 · 팬카드 ---------- */
+function fanTenure(f){return Math.min(36,3+Math.floor(f.cum/50000));}
+function fanAchievements(f){const t=tierOf(f.cum),tn=fanTenure(f);
+  return [
+    {emoji:"⭐",name:"첫 후원",desc:"첫 후원톡을 보냈어요",done:f.count>=1,prog:Math.min(100,f.count*100)},
+    {emoji:"💰",name:"누적 10만 달성",desc:"누적 후원 10만원 돌파",done:f.cum>=100000,prog:Math.round(Math.min(100,f.cum/100000*100))},
+    {emoji:"💎",name:"누적 50만 달성",desc:"누적 후원 50만원 돌파",done:f.cum>=500000,prog:Math.round(Math.min(100,f.cum/500000*100))},
+    {emoji:"👑",name:"누적 100만 달성",desc:"누적 후원 100만원 돌파",done:f.cum>=1000000,prog:Math.round(Math.min(100,f.cum/1000000*100))},
+    {emoji:"🔥",name:"후원 30회",desc:"후원 30번 돌파",done:f.count>=30,prog:Math.round(Math.min(100,f.count/30*100))},
+    {emoji:"🏅",name:t.name+" 등급",desc:t.name+" 등급 달성",done:tierIdx(t.key)>=1,prog:tierIdx(t.key)>=1?100:Math.round(Math.min(100,f.cum/TIERS[1].min*100))},
+    {emoji:"📅",name:"함께한 지 1년",desc:"팬이 된 지 12개월",done:tn>=12,prog:Math.round(Math.min(100,tn/12*100))},
+    {emoji:"❤️",name:"열혈 관계",desc:"관계 온도 90점 이상",done:f.temp>=90,prog:Math.round(Math.min(100,f.temp/90*100))},
+  ];
+}
+function fanCardSheet(id){const f=fanById(id),t=tierOf(f.cum),tn=fanTenure(f),no=String(parseInt((f.id||"0").replace(/\D/g,""))||0).padStart(4,"0");
+  openSheet(`<h3 class="sh">🪪 팬카드</h3>
+    <div class="fancard" style="--tc:${t.color}">
+      <div class="fc-shine"></div>
+      <div class="fc-top"><span class="fc-brand">🎙️ 열혈크루 · FAN CARD</span><span class="fc-tier">${t.emoji} ${t.name}</span></div>
+      <div class="fc-body"><div class="fc-emoji">${f.emoji}</div><div><div class="fc-name">${esc(f.name)}</div><div class="fc-since">since 2024 · ${tn}개월째 응원</div></div></div>
+      <div class="fc-stats"><div><span>누적 후원</span><b>${wonK(f.cum)}</b></div><div><span>후원 횟수</span><b>${f.count}회</b></div><div><span>관계 온도</span><b>${f.temp}°</b></div></div>
+      <div class="fc-foot"><span>NO. ${no}</span><span>ⓗ 열혈네이션 MEMBER</span></div>
+    </div>
+    <button class="btn" data-act="sharecard">공유하기</button><button class="btn ghost" data-act="closesheet">닫기</button>`);
+}
+
 /* ---------- creator: fans CRM ---------- */
 function getFilters(){const n=TIERS.length;return [["all","전체"],["top","👑 "+TIERS[n-1].name],["high","💜 "+TIERS[n-2].name+"+"],["risk","⚠️ 이탈 위험"],["online","🔥 온라인"],["dormant","💤 휴면"]];}
 function filterFans(){let f=[...state.fans];
@@ -678,8 +741,7 @@ function viewFan(id){
   const prog=nt?Math.min(100,Math.round((f.cum-t.min)/(nt.min-t.min)*100)):100;
   const tags=f.tags.map(tg=>`<span class="tag">#${esc(tg)}</span>`).join("")+`<span class="tag add" data-act="addtag" data-v="${id}">+ 태그</span>`;
   const hist=f.hist.map(h=>`<div class="histrow"><span>${h.d}</span><span class="a">+${won(h.a)}</span></div>`).join("");
-  const ach=[];if(f.cum>=1000000)ach.push(["🏆","누적 후원 100만원 달성","2025.04.12"]);else if(f.cum>=500000)ach.push(["🏆","누적 후원 50만원 달성","2025.06.20"]);
-  ach.push(["⭐","첫 후원톡 후원","2024.11.03"]);if(f.count>=30)ach.push(["🔥","후원 "+f.count+"회 돌파","2025.08.01"]);
+  const achs=fanAchievements(f),achDone=achs.filter(a=>a.done).length;
   const desc=f.temp>=85?"언제나 응원해주는 최고의 팬이에요!":f.temp>=60?"꾸준히 함께해주는 소중한 팬이에요.":"관계를 더 다져볼 팬이에요.";
   return `<div class="pad">
     <div class="dhero"><div style="display:flex;align-items:center;gap:13px;position:relative"><div class="dcav">${f.emoji}</div>
@@ -687,10 +749,12 @@ function viewFan(id){
       <div class="dstats"><div><div class="k">💰 누적 후원금액</div><div class="v">${won(f.cum)}</div></div><div><div class="k">🎁 후원 횟수</div><div class="v">${f.count}회</div></div><div><div class="k">🌡️ 관계 온도</div><div class="v">${f.temp}점</div></div></div>
       <span class="cw">👑</span></div>
     ${nt?`<div class="nextbar"><div class="top"><span>${nt.emoji} ${nt.name}까지</span><span class="mono">${won(f.cum)} / ${won(nt.min)}</span></div><div class="ptrack"><div class="pfill" style="width:${prog}%;background:${nt.color}"></div></div></div>`:`<div class="nextbar"><div class="top"><span>🏆 최고 등급 SVIP 달성</span></div></div>`}
-    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn" style="margin-top:0" data-act="thread" data-v="${id}">💬 1:1 채팅하기</button><button class="btn ghost" style="margin-top:0;flex:0 0 auto;width:auto;padding:13px 18px" data-act="benefit">🎁</button></div>
+    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn" style="margin-top:0" data-act="thread" data-v="${id}">💬 1:1 채팅</button><button class="btn ghost" style="margin-top:0" data-act="fancard" data-v="${id}">🪪 팬카드</button></div>
     <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 6px">등급 및 태그</div><div class="taglist">${gpill(f.cum)} ${tags}</div>
       <div class="field"><label>📝 크루 메모</label><textarea id="memo" placeholder="생일, 취향, 특이사항을 남겨보세요">${esc(f.memo)}</textarea></div><button class="btn ghost" data-act="savememo" data-v="${id}">메모 저장</button></div>
-    <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 4px">🏆 주요 업적</div>${ach.map(a=>`<div class="achrow"><span>${a[0]}</span><span>${a[1]}</span><span class="ad">${a[2]}</span></div>`).join("")}</div>
+    <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 8px">🏆 업적 <span class="r">${achDone}/${achs.length} 달성</span></div>
+      <div class="badgerow">${achs.filter(a=>a.done).map(a=>`<div class="badge-ic" title="${esc(a.name)}">${a.emoji}</div>`).join("")||'<span style="font-size:12px;color:var(--ink-3)">아직 획득한 업적이 없어요</span>'}</div>
+      <div class="achlist">${achs.map(a=>`<div class="ach ${a.done?"done":""}"><div class="ach-ic">${a.emoji}</div><div class="ach-main"><div class="ach-nm">${esc(a.name)}${a.done?' <span class="ach-chk">✓</span>':""}</div><div class="ach-ds">${esc(a.desc)}</div>${a.done?"":`<div class="ptrack" style="margin-top:6px"><div class="pfill" style="width:${a.prog}%;background:var(--accent)"></div></div>`}</div></div>`).join("")}</div></div>
     <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 4px">🕘 최근 후원 이력</div>${hist}</div></div>`;
 }
 
@@ -751,12 +815,13 @@ function viewSettings(){
 
 /* ---------- creator: 데이터 백업 ---------- */
 function viewBackup(){
+  const list=state.backups.map((b,i)=>`<div class="bkrow"><div class="bk-ic">💾</div><div class="bk-main"><b>${fmtTime(b.at)}</b><p>팬 ${b.fans} · 자동화 ${b.autos} · ${(b.size/1024).toFixed(1)}KB</p></div><button class="bk-btn" data-act="restorebkp" data-v="${i}">복원</button><button class="bk-btn del" data-act="delbkp" data-v="${i}">삭제</button></div>`).join("")||`<div class="empty">백업 내역이 없어요.<br>‘지금 백업하기’로 첫 백업을 만들어보세요.</div>`;
   return `<div class="pad">
     <div class="card pad"><div style="display:flex;align-items:center;gap:12px"><div class="ac-ic" style="background:var(--accent-soft)">💾</div><div style="flex:1"><b style="font-size:15px">데이터 백업</b><p style="font-size:12px;color:var(--ink-3);margin:2px 0 0">마지막 백업 · <b style="color:var(--ink-2)">${fmtTime(state.lastBackup)}</b></p></div></div>
       <button class="btn" data-act="dobackup">지금 백업하기</button></div>
-    <div class="rows" style="margin-top:16px">
-      <div class="setrow"><div class="sl"><b>자동 백업</b><p>하루 1회 자동으로 백업</p></div><div class="tgl ${state.autoBackup?"on":""}" data-act="autobackup"></div></div>
-      <button class="setrow" data-act="restorebackup" style="width:100%;text-align:left"><div class="sl"><b>백업에서 복원</b><p>마지막 백업 시점으로 되돌리기</p></div><span class="sv">↩︎</span></button></div>
+    <div class="rows" style="margin-top:14px"><div class="setrow"><div class="sl"><b>자동 백업</b><p>하루 1회 자동으로 백업</p></div><div class="tgl ${state.autoBackup?"on":""}" data-act="autobackup"></div></div></div>
+    <div class="sechd" style="margin-top:18px">백업 목록 <span class="r">${state.backups.length}개</span></div>
+    <div class="rows">${list}</div>
     <div class="sechd" style="margin-top:18px">수동 백업 · 이전</div>
     <div class="rows">
       <button class="setrow" data-act="exportdata" style="width:100%;text-align:left"><div class="sl"><b>데이터 내보내기</b><p>백업 JSON 복사</p></div><span class="sv">↗</span></button>
@@ -1026,7 +1091,10 @@ $("#phone").addEventListener("click",e=>{
     case"theme":applyTheme(v);render();break;
     case"openbackup":state.sub="backup";state.param=null;render();break;
     case"dobackup":doBackup();break;
-    case"restorebackup":restoreBackup();break;
+    case"restorebkp":restoreBkp(parseInt(v));break;
+    case"delbkp":delBkp(parseInt(v));break;
+    case"fancard":fanCardSheet(v);break;
+    case"sharecard":toast("🪪 팬카드를 공유했어요 (프로토타입)");break;
     case"autobackup":state.autoBackup=!state.autoBackup;try{localStorage.setItem("heyeol-autobackup",state.autoBackup?"1":"0");}catch(e){}if(state.autoBackup)doBackup();renderView();break;
     case"exportdata":exportSheet();break;
     case"importdata":importSheet();break;
