@@ -479,7 +479,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   thread:thread||[{t:"day",text:"오늘"},{from:"in",text:"안녕하세요! 오늘도 응원할게요 😊",tm:"18:10"}],
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
-  role:"creator",live:false,screen:"onboarding",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],schedEdit:null,
+  role:"creator",live:false,screen:"login",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],schedEdit:null,
   ctab:"msg",msgtab:"chat",settab:"general",fantab:"list",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,achEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
@@ -606,8 +606,7 @@ const DTABS=[["following","💜","팔로잉"],["discover","🔍","탐색"],["dno
 function render(){
   const chrome=state.screen==="app";
   $("#topbar").style.display=chrome?"":"none";$("#appbar").style.display=chrome?"":"none";$("#tabbar").style.display=chrome?"":"none";
-  if(state.screen==="onboarding"){$("#view").innerHTML=viewOnboarding();return;}
-  if(state.screen==="login"){$("#view").innerHTML=viewLogin();return;}
+  if(state.screen==="login"){$("#view").innerHTML=viewLogin();const u=$("#luser");if(u)u.onkeydown=e=>{if(e.key==="Enter")doLogin();};const p=$("#lpw");if(p)p.onkeydown=e=>{if(e.key==="Enter")doLogin();};return;}
   document.querySelectorAll("#roleseg button").forEach(b=>b.classList.toggle("on",b.dataset.v===state.role));
   $("#liveLabel").textContent=state.live?"LIVE ●":"LIVE";document.querySelector(".livebtn").classList.toggle("on",state.live);
   $("#gearbtn").style.display=state.role==="creator"?"":"none";
@@ -1094,12 +1093,13 @@ function viewOnboarding(){
     <div class="bottom"><button class="cta" data-act="obnext">${last?"시작하기":"다음"} →</button><button class="link" data-act="gologin">이미 계정이 있어요 · 로그인</button></div></div>`;
 }
 function viewLogin(){
-  return `<div class="login"><div class="lh"><div class="logo-lg" style="margin:0 auto">👑</div><h1>열혈톡 시작하기</h1><div class="sub">투네이션 계정으로 간편하게 로그인하세요</div></div>
-    <div class="sso"><button class="ssobtn tn" data-act="dologin"><span class="lo" style="background:rgba(255,255,255,.25)">T</span>투네이션 계정으로 로그인</button><button class="ssobtn kk" data-act="dologin"><span class="lo" style="background:rgba(0,0,0,.12)">K</span>카카오로 로그인</button></div>
-    <div class="divider">또는 이메일로 로그인</div>
-    <div class="fields"><input type="email" id="lemail" placeholder="이메일" autocomplete="username"><input type="password" id="lpw" placeholder="비밀번호" autocomplete="current-password"><button class="cta" data-act="dologin" style="margin-top:2px">로그인</button></div>
-    <div class="foot"><a data-act="dologin">게스트로 둘러보기</a> · <a data-act="dologin">회원가입</a></div></div>`;
+  return `<div class="login"><div class="lh"><div class="logo-lg" style="margin:0 auto">👑</div><h1>열혈톡 시작하기</h1><div class="sub">투네이션 계정으로 로그인하세요</div></div>
+    <div class="fields" style="margin-top:26px"><input type="text" id="luser" placeholder="투네이션 아이디" autocomplete="username" autocapitalize="off" spellcheck="false"><input type="password" id="lpw" placeholder="비밀번호" autocomplete="current-password"><button class="cta" data-act="dologin" style="margin-top:2px">로그인</button></div>
+    <div class="foot">데모 계정 · 아이디 <b style="color:var(--ink-2)">toonation</b> / 비밀번호 <b style="color:var(--ink-2)">1234</b></div></div>`;
 }
+function doLogin(){const u=($("#luser")?$("#luser").value:"").trim(),p=$("#lpw")?$("#lpw").value:"";
+  if(u==="toonation"&&p==="1234"){state.screen="app";render();toast("환영합니다! 🎉 열혈톡에 로그인했어요");}
+  else toast("아이디 또는 비밀번호가 올바르지 않습니다");}
 
 /* ================= ACTIONS ================= */
 function sendMsg(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if(!tx)return;state.drafts[id]="";
@@ -1174,8 +1174,8 @@ $("#phone").addEventListener("click",e=>{
     case"obnext":if(state.slide<2)state.slide++;else state.screen="login";render();break;
     case"obdot":state.slide=parseInt(v);render();break;
     case"gologin":state.screen="login";render();break;
-    case"dologin":state.screen="app";render();toast("환영합니다! 🎉 열혈톡에 로그인했어요");break;
-    case"logout":if(state.live){clearInterval(liveTimer);state.live=false;}state.screen="onboarding";state.slide=0;state.sub=null;render();break;
+    case"dologin":doLogin();break;
+    case"logout":if(state.live){clearInterval(liveTimer);state.live=false;}state.screen="login";state.sub=null;render();break;
     case"role":state.role=v;state.sub=null;state.param=null;if(v==="donator")state.dtab="following";else state.ctab="msg";render();break;
     case"live":toggleLive();break;
     case"tab":if(state.role==="creator")state.ctab=v;else state.dtab=v;state.sub=null;state.param=null;render();break;
