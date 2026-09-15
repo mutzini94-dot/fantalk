@@ -201,9 +201,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .tgl.on{background:var(--keep)}
 .tgl::after{content:"";position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .tgl.on::after{transform:translateX(18px)}
-.tieredit{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line-2)}
-.tieredit:last-child{border-bottom:none}.tieredit .tn{display:flex;align-items:center;gap:7px;font-weight:600;font-size:13.5px}
-.tieredit input{width:120px;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:7px 9px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;text-align:right;color:var(--ink)}
+.tieredit{display:grid;grid-template-columns:26px 1fr 96px 30px;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line-2)}
+.tieredit:last-child{border-bottom:none}
+.te-emoji{font-size:18px;text-align:center}
+.tieredit input{border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:8px 9px;font-size:13px;color:var(--ink);min-width:0;font-family:inherit}
+.tieredit .tn-name{font-weight:600}
+.tieredit .tn-min{font-family:"IBM Plex Mono",monospace;text-align:right}
+.tdel{width:30px;height:30px;border-radius:8px;background:var(--surface-2);color:var(--crit);font-size:18px;line-height:1}
 .permrole{display:flex;gap:6px}.permrole .pr{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--surface-2);color:var(--ink-3);border:1px solid var(--line)}
 .permrole .pr.on{background:var(--accent-soft);color:var(--accent);border-color:transparent}
 .kakao{width:26px;height:26px;border-radius:8px;background:#FEE500;color:#3c1e1e;display:grid;place-items:center;font-size:9px;font-weight:800;flex:0 0 auto}
@@ -274,7 +278,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <div class="sheet" id="sheet"></div>
     <div class="toast" id="toast"></div>
   </div>
-  <div class="cap">열혈톡 · iOS · Android 하이브리드 앱 프로토타입 · 크리에이터↔도네이터 1:1 쪽지 · 상단에서 역할 전환, LIVE로 실시간 시뮬레이션</div>
+  <div class="cap">열혈톡 · iOS · Android 하이브리드 앱 프로토타입 · 크리에이터↔도네이터 1:1 채팅 · 상단에서 역할 전환, LIVE로 실시간 시뮬레이션</div>
 </div>
 
 <script>
@@ -295,7 +299,13 @@ function tierOf(a){let t=TIERS[0];for(const x of TIERS)if(a>=x.min)t=x;return t;
 function tierIdx(k){return TIERS.findIndex(t=>t.key===k);}
 function nextTier(a){const i=tierIdx(tierOf(a).key);return TIERS[i+1]||null;}
 function gpill(a){const t=tierOf(a);return `<span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span>`;}
-const isVIP=a=>tierIdx(tierOf(a).key)>=tierIdx("vip");
+const isVIP=a=>tierIdx(tierOf(a).key)>=1;
+const GRADE_COLORS=["#9d97b5","#a78bfa","#8b6ef0","#7c5ce6","#6d47d9","#5b34c4"];
+function readTierRows(){const rows=[...document.querySelectorAll("[data-tierrow]")];if(!rows.length)return;
+  TIERS=rows.map(r=>{const old=TIERS.find(t=>t.key===r.dataset.tierrow)||{};
+    return {key:r.dataset.tierrow,name:(r.querySelector(".tn-name").value.trim()||"등급"),emoji:old.emoji||"👑",color:old.color||"#8b6ef0",min:parseInt((r.querySelector(".tn-min").value||"").replace(/\D/g,""))||0};});}
+function normalizeTiers(){TIERS.sort((a,b)=>a.min-b.min);
+  TIERS=TIERS.map((t,i)=>({key:"t"+i,name:t.name,emoji:i===0?"👤":"👑",color:i===TIERS.length-1?"#a9832a":GRADE_COLORS[Math.min(i,GRADE_COLORS.length-1)],min:i===0?0:t.min}));}
 
 /* ---------- seed: creator side (내 팬들과의 1:1 쪽지) ---------- */
 const fnames=["별하늘","밤톨","라온","두부왕","해피","코코","도현","나비","장군","소라","핫식스","달toon"];
@@ -322,7 +332,7 @@ let state={
     mkFan(11,8000,60*24*20,false,25,2,0,"",["휴면위험"]),
   ],
   notifs:[
-    {type:"dono",title:"<b>👑 VVIP '별하늘'</b>님이 ₩50,000 후원",sub:"1:1 쪽지 · 후원톡 도착",min:7,unread:true},
+    {type:"dono",title:"<b>👑 VVIP '별하늘'</b>님이 ₩50,000 후원",sub:"1:1 채팅 · 후원톡 도착",min:7,unread:true},
     {type:"presence",title:"<b>👑 VVIP '해피'</b>님이 접속했어요",sub:"최근 후원 ₩540,000 · 15분 만의 접속",min:15,unread:true},
     {type:"grade",title:"<b>'도현'</b>님이 👑 VIP로 등급 상승",sub:"누적 ₩100,000 달성 · 카카오 알림톡 자동 발송됨",min:120,unread:false},
     {type:"system",title:"이번 달 후원 목표 <b>82%</b> 달성",sub:"₩4,100,000 / ₩5,000,000",min:200,unread:false},
@@ -352,7 +362,7 @@ let state={
   ],
   dnotifs:[
     {type:"presence",title:"<b>🎙️ 열혈크루</b>님이 방송을 시작했어요",sub:"지금 라이브 · 놓치지 마세요",min:3,unread:true},
-    {type:"dono",title:"<b>🎨 소이</b>님이 쪽지를 보냈어요",sub:"오늘 그림 방송 보러 오실거죠?",min:20,unread:true},
+    {type:"dono",title:"<b>🎨 소이</b>님이 메시지를 보냈어요",sub:"오늘 그림 방송 보러 오실거죠?",min:20,unread:true},
     {type:"grade",title:"<b>🍳 미미</b>님과 👑 VVIP 등급 유지 중",sub:"누적 ₩720,000",min:300,unread:false},
   ],
   myDonHist:[{d:"오늘",a:50000,c:"열혈크루"},{d:"2025.09.09",a:186000,c:"미미"},{d:"2025.09.02",a:155000,c:"열혈크루"},{d:"2025.08.20",a:124000,c:"소이"}],
@@ -366,7 +376,7 @@ function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clea
 function openSheet(h){$("#sheet").innerHTML='<div class="grip"></div>'+h;$("#sheet").classList.add("on");$("#sheetBg").classList.add("on");}
 function closeSheet(){$("#sheet").classList.remove("on");$("#sheetBg").classList.remove("on");}
 
-const CTABS=[["msg","✉️","쪽지"],["fans","👥","팬 관리"],["notif","🔔","알림"],["insights","📊","인사이트"],["settings","⚙️","설정"]];
+const CTABS=[["msg","💬","채팅"],["fans","👥","팬 관리"],["notif","🔔","알림"],["insights","📊","인사이트"],["settings","⚙️","설정"]];
 const DTABS=[["following","💜","팔로잉"],["discover","🔍","탐색"],["dnotif","🔔","알림"],["me","🏅","내 정보"]];
 
 function render(){
@@ -400,7 +410,7 @@ function renderAppbar(){
     h=`${back}<div class="hav">${p.emoji}${p.online?'<span class="on-dot"></span>':""}</div><div><h1 style="font-size:17px">${esc(p.name)}</h1><div class="sub"><span class="gp" style="--gc:${grade.color}">${grade.emoji} ${grade.name}</span> ${status}</div></div>`;
   }else if(state.sub==="fan"){h=`${back}<div><h1>VIP 후원자 정보</h1><div class="sub">${esc(fanById(state.param).name)}</div></div>`;}
   else{
-    const map={msg:["쪽지","팬과의 1:1 대화"],fans:["팬 관리","등급별 CRM"],notif:["알림","접속 · 후원 · 등급"],insights:["인사이트","크루 대시보드"],settings:["설정","등급 · 권한 · 자동화"],
+    const map={msg:["채팅","팬과의 1:1 대화"],fans:["팬 관리","등급별 CRM"],notif:["알림","접속 · 후원 · 등급"],insights:["인사이트","크루 대시보드"],settings:["설정","등급 · 자동화 · 연동"],
       following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
     const cur=state.role==="creator"?state.ctab:state.dtab,m=map[cur];let act="";
     if(cur==="fans")act=`<button class="act" data-act="segsheet" title="세그먼트 발송">✈️</button>`;
@@ -434,7 +444,7 @@ function viewThread(id){
   }).join("");
   const draft=state.drafts[id]||"";
   const dbtn=state.role==="donator"?`<button class="dbtn" data-act="donsheet" data-v="${id}" title="후원톡">🎁</button>`:"";
-  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="composer">${dbtn}<input id="ci" placeholder="${state.role==="creator"?"답장 보내기…":"쪽지 보내기…"}" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="send" data-v="${id}">➤</button></div></div>`;
+  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="composer">${dbtn}<input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="send" data-v="${id}">➤</button></div></div>`;
 }
 function bindComposer(){const ci=$("#ci");if(ci){ci.oninput=e=>{state.drafts[state.param]=e.target.value;};ci.onkeydown=e=>{if(e.key==="Enter")sendMsg(state.param);};}}
 
@@ -446,22 +456,22 @@ function viewMsg(){
     <div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}</div><div class="pv">${esc(threadPreview(f.thread))}</div></div>
     <div class="meta"><div class="tm">${threadTime(f.thread)||ago(f.seenMin)}</div>${f.unread?`<span class="cnt">${f.unread}</span>`:""}</div></button>`).join("");
   const totalUnread=state.fans.reduce((a,f)=>a+f.unread,0);
-  return `<div class="pad"><div class="sechd">받은 쪽지 ${totalUnread?`· 안읽음 ${totalUnread}`:""}<span class="r" data-act="tab" data-v="fans">팬 관리 ›</span></div>
+  return `<div class="pad"><div class="sechd">채팅 ${totalUnread?`· 안읽음 ${totalUnread}`:""}<span class="r" data-act="tab" data-v="fans">팬 관리 ›</span></div>
     <div class="rows">${rows}</div>
-    <div class="hint">💡 팬 한 명 한 명과 1:1로 소통해요. 상단 <b>LIVE</b>를 켜면 실시간으로 쪽지·후원톡이 들어옵니다.</div></div>`;
+    <div class="hint">💡 팬 한 명 한 명과 1:1 채팅으로 소통해요. 상단 <b>LIVE</b>를 켜면 실시간으로 채팅·후원톡이 들어옵니다.</div></div>`;
 }
 
 /* ---------- creator: fans CRM ---------- */
-const FILTERS=[["all","전체"],["svip","👑 SVIP"],["vvipp","💜 VVIP+"],["risk","⚠️ 이탈 위험"],["online","🔥 온라인"],["dormant","💤 휴면"]];
+function getFilters(){const n=TIERS.length;return [["all","전체"],["top","👑 "+TIERS[n-1].name],["high","💜 "+TIERS[n-2].name+"+"],["risk","⚠️ 이탈 위험"],["online","🔥 온라인"],["dormant","💤 휴면"]];}
 function filterFans(){let f=[...state.fans];
-  if(state.filter==="svip")f=f.filter(x=>tierOf(x.cum).key==="svip");
-  else if(state.filter==="vvipp")f=f.filter(x=>tierIdx(tierOf(x.cum).key)>=tierIdx("vvip"));
+  if(state.filter==="top")f=f.filter(x=>tierIdx(tierOf(x.cum).key)===TIERS.length-1);
+  else if(state.filter==="high")f=f.filter(x=>tierIdx(tierOf(x.cum).key)>=TIERS.length-2);
   else if(state.filter==="risk")f=f.filter(x=>isVIP(x.cum)&&x.seenMin>=7*1440);
   else if(state.filter==="online")f=f.filter(x=>x.online);
   else if(state.filter==="dormant")f=f.filter(x=>x.seenMin>=14*1440);
   return f.sort((a,b)=>b.cum-a.cum);}
 function viewFans(){
-  const chips=FILTERS.map(([k,l])=>`<button class="chip ${state.filter===k?"on":""}" data-act="filter" data-v="${k}">${l}</button>`).join("");
+  const chips=getFilters().map(([k,l])=>`<button class="chip ${state.filter===k?"on":""}" data-act="filter" data-v="${k}">${l}</button>`).join("");
   const list=filterFans();
   const rows=list.map(f=>{const risk=isVIP(f.cum)&&f.seenMin>=7*1440;
     return `<button class="row" data-act="fan" data-v="${f.id}"><div class="av">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div>
@@ -470,7 +480,7 @@ function viewFans(){
   return `<div class="pad"><div class="chips">${chips}</div>
     <div class="sechd">${list.length}명 표시 · 총 ${state.fans.length}명 · 온라인 ${state.fans.filter(f=>f.online).length}<span class="r" data-act="segsheet">세그먼트 발송 ✈️</span></div>
     <div class="rows">${rows}</div>
-    <div class="hint">💡 필터로 세그먼트를 만들고 ✈️로 해당 그룹에게 단체 쪽지를 보낼 수 있어요.</div></div>`;
+    <div class="hint">💡 필터로 세그먼트를 만들고 ✈️로 해당 그룹에게 단체 메시지를 보낼 수 있어요.</div></div>`;
 }
 function viewFan(id){
   const f=fanById(id),t=tierOf(f.cum),nt=nextTier(f.cum);
@@ -486,7 +496,7 @@ function viewFan(id){
       <div class="dstats"><div><div class="k">💰 누적 후원금액</div><div class="v">${won(f.cum)}</div></div><div><div class="k">🎁 후원 횟수</div><div class="v">${f.count}회</div></div><div><div class="k">🌡️ 관계 온도</div><div class="v">${f.temp}점</div></div></div>
       <span class="cw">👑</span></div>
     ${nt?`<div class="nextbar"><div class="top"><span>${nt.emoji} ${nt.name}까지</span><span class="mono">${won(f.cum)} / ${won(nt.min)}</span></div><div class="ptrack"><div class="pfill" style="width:${prog}%;background:${nt.color}"></div></div></div>`:`<div class="nextbar"><div class="top"><span>🏆 최고 등급 SVIP 달성</span></div></div>`}
-    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn" style="margin-top:0" data-act="thread" data-v="${id}">✉️ 1:1 쪽지 보내기</button><button class="btn ghost" style="margin-top:0;flex:0 0 auto;width:auto;padding:13px 18px" data-act="benefit">🎁</button></div>
+    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn" style="margin-top:0" data-act="thread" data-v="${id}">💬 1:1 채팅하기</button><button class="btn ghost" style="margin-top:0;flex:0 0 auto;width:auto;padding:13px 18px" data-act="benefit">🎁</button></div>
     <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 6px">등급 및 태그</div><div class="taglist">${gpill(f.cum)} ${tags}</div>
       <div class="field"><label>📝 크루 메모</label><textarea id="memo" placeholder="생일, 취향, 특이사항을 남겨보세요">${esc(f.memo)}</textarea></div><button class="btn ghost" data-act="savememo" data-v="${id}">메모 저장</button></div>
     <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 4px">🏆 주요 업적</div>${ach.map(a=>`<div class="achrow"><span>${a[0]}</span><span>${a[1]}</span><span class="ad">${a[2]}</span></div>`).join("")}</div>
@@ -530,22 +540,20 @@ function viewInsights(){
 }
 function viewSettings(){
   const cards=TIERS.map(t=>`<div class="tcard"><div class="c">${t.emoji}</div><div class="n" style="color:${t.color}">${t.name}</div><div class="m">${t.min?wonK(t.min)+"+":"0~"}</div></div>`).join("");
-  const tiers=[...TIERS].reverse().map(t=>`<div class="tieredit"><div class="tn">${t.emoji} ${t.name}</div><input class="mono" data-tier="${t.key}" value="${t.min}" inputmode="numeric"></div>`).join("");
-  const crew=state.crew.map(c=>`<div class="setrow"><div class="av" style="width:38px;height:38px;font-size:18px;border-radius:11px">${c.emoji}</div><div class="sl"><b>${esc(c.name)}</b><div class="permrole" style="margin-top:5px">${["정책","응대","발송","모더"].map(p=>`<span class="pr ${c.perms.includes(p)?"on":""}">${p}</span>`).join("")}</div></div></div>`).join("");
+  const tiers=[...TIERS].sort((a,b)=>b.min-a.min).map(t=>`<div class="tieredit" data-tierrow="${t.key}"><span class="te-emoji">${t.emoji}</span><input class="tn-name" value="${esc(t.name)}" placeholder="등급 이름" maxlength="10"><input class="tn-min mono" value="${t.min}" inputmode="numeric" placeholder="0"><button class="tdel" data-act="deltier" data-v="${t.key}" title="삭제">×</button></div>`).join("");
   const rules=[["presence","도네이터 접속 알림","단골·상위 등급 접속 시"],["dono","후원톡 알림","후원 도착 시 즉시"],["grade","등급 변동 알림","팬 등급 상승/강등"],["broadcast","방송 시작 알림","팬에게 발송"],["dnd","방해금지 (00–08시)","야간 푸시 묶음"]].map(([k,l,d])=>`<div class="setrow"><div class="sl"><b>${l}</b><p>${d}</p></div><div class="tgl ${state.alertRules[k]?"on":""}" data-act="rule" data-v="${k}"></div></div>`).join("");
   const kk=state.kakao;
   return `<div class="pad"><div class="sechd">VIP 등급 안내</div><div class="tiercards">${cards}</div>
-    <div class="sechd" style="margin-top:18px">등급 정책 커스터마이즈</div><div class="card pad"><p style="font-size:12px;color:var(--ink-3);margin:0 0 6px">등급별 누적 후원 임계값(원). 크루 브랜딩에 맞게 조정하세요.</p>${tiers}<button class="btn" data-act="savetiers">임계값 저장 & 재산정</button></div>
+    <div class="sechd" style="margin-top:18px">등급 관리</div><div class="card pad"><p style="font-size:12px;color:var(--ink-3);margin:0 0 10px">등급 이름과 누적 후원 임계값(원)을 자유롭게 바꾸고, 등급을 추가·삭제할 수 있어요.</p>${tiers}<button class="btn ghost" data-act="addtier" style="margin-top:12px">+ 등급 추가</button><button class="btn" data-act="savetiers">저장 & 전체 재산정</button></div>
     <div class="sechd" style="margin-top:18px">자동화 · 카카오 알림톡</div><div class="rows">
       <div class="setrow"><div class="kakao">TALK</div><div class="sl"><b>카카오 알림톡 자동 발송</b><p>등급 달성·생일·기념일에 자동 발송</p></div><div class="tgl ${kk.on?"on":""}" data-act="kakao" data-v="on"></div></div>
       <div class="setrow sub"><div class="sl"><b>등급 달성 축하</b><p>VIP/VVIP/SVIP 승급 시</p></div><div class="tgl ${kk.grade?"on":""}" data-act="kakao" data-v="grade"></div></div>
       <div class="setrow sub"><div class="sl"><b>생일 축하</b><p>팬 생일 당일 자동</p></div><div class="tgl ${kk.bday?"on":""}" data-act="kakao" data-v="bday"></div></div>
       <div class="setrow sub"><div class="sl"><b>후원 기념일</b><p>첫 후원·N주년 자동</p></div><div class="tgl ${kk.anniv?"on":""}" data-act="kakao" data-v="anniv"></div></div></div>
-    <div class="sechd" style="margin-top:18px">크루원 권한</div><div class="rows">${crew}</div>
     <div class="sechd" style="margin-top:18px">알림 규칙</div><div class="rows">${rules}</div>
     <div class="sechd" style="margin-top:18px">투네이션 연동</div><div class="rows"><div class="setrow"><div class="sl"><b>후원 Webhook</b><p>실시간 후원 이벤트 수신</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div><div class="setrow"><div class="sl"><b>계정 SSO</b><p>투네이션 계정 연동</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div></div>
     <button class="btn ghost" data-act="logout" style="color:var(--crit)">로그아웃</button>
-    <div class="hint">열혈톡 v0.4 프로토타입 · 1:1 쪽지 · Phase 1–2 · 열혈네이션 등급 연동</div></div>`;
+    <div class="hint">열혈톡 v0.5 프로토타입 · 1:1 채팅 · 등급 커스터마이즈 · Phase 1–2</div></div>`;
 }
 
 /* ---------- donator ---------- */
@@ -559,7 +567,7 @@ function viewFollowing(){
   return `<div class="pad">
     <div class="sechd">응원하는 크리에이터 ${list.length}<span class="r" data-act="dtab" data-v="discover">더 찾기 🔍</span></div>
     <div class="rows">${rows}</div>
-    <div class="hint">💡 크리에이터를 선택하면 1:1 쪽지로 소통하고, 🎁 후원톡을 보낼 수 있어요.</div></div>`;
+    <div class="hint">💡 크리에이터를 선택하면 1:1 채팅으로 소통하고, 🎁 후원톡을 보낼 수 있어요.</div></div>`;
 }
 function viewDiscover(){
   const cats=["all","게임","그림","음악","뷰티","운동","쿠킹","토크"];
@@ -602,7 +610,7 @@ function viewMe(){
 function viewOnboarding(){
   const slides=[
     {ic:"👑",h:"열혈톡",d:"최애 크리에이터와\n1:1로 특별하게 소통하세요.",il:"👑"},
-    {ic:"✉️",h:"1:1 쪽지 & 후원톡",d:"응원하는 마음을 쪽지와 후원톡으로\n직접 전할 수 있어요.",il:"✉️"},
+    {ic:"💬",h:"1:1 채팅 & 후원톡",d:"응원하는 마음을 채팅과 후원톡으로\n직접 전할 수 있어요.",il:"💬"},
     {ic:"🏅",h:"나만의 등급",d:"후원할수록 크리에이터별로\n특별해지는 나만의 등급.",il:"🏅"},
   ];
   const s=slides[state.slide],last=state.slide===slides.length-1;
@@ -639,7 +647,7 @@ function liveTick(){
     if(r<0.4){const amt=[3000,5000,10000,30000,50000][Math.floor(Math.random()*5)],before=tierOf(f.cum).key;f.cum+=amt;f.online=true;f.seenMin=0;f.count++;
       const t2=["대박이에요 🔥","오늘도 최고!","힘내세요 💪","콘텐츠 미쳤다ㅋㅋ","항상 응원합니다"];const tx=t2[Math.floor(Math.random()*t2.length)];
       f.thread.push({from:"dono",amt,text:tx,tm:nowT()});if(!open)f.unread++;state.goal.cur+=amt;
-      state.notifs.unshift({type:"dono",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 ${won(amt)} 후원`,sub:"1:1 쪽지 · 후원톡 도착",min:0,unread:true});
+      state.notifs.unshift({type:"dono",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 ${won(amt)} 후원`,sub:"1:1 채팅 · 후원톡 도착",min:0,unread:true});
       const after=tierOf(f.cum).key;if(tierIdx(after)>tierIdx(before)){const t=tierOf(f.cum);f.thread.push({from:"sys",text:`🎉 ${f.name}님이 ${t.emoji} ${t.name} 등급으로 올라섰어요!`});state.notifs.unshift({type:"grade",title:`<b>'${f.name}'</b>님이 ${t.emoji}${t.name}로 등급 상승`,sub:`누적 ${won(f.cum)} · 알림톡 자동 발송`,min:0,unread:true});}
     }else if(r<0.72){const t2=["안녕하세요~","오늘 방송 언제해요?","저 왔어요!","화이팅!!","이번 콘텐츠 기대돼요","답장 기다릴게요 ㅎㅎ"];f.thread.push({from:"in",text:t2[Math.floor(Math.random()*t2.length)],tm:nowT()});if(!open)f.unread++;
     }else if(r<0.9){if(!f.online){f.online=true;f.seenMin=0;if(isVIP(f.cum))state.notifs.unshift({type:"presence",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 접속했어요`,sub:`누적 ${won(f.cum)} · 단골 접속`,min:0,unread:true});}
@@ -649,7 +657,7 @@ function liveTick(){
     const pool=state.creators.filter(c=>c.followed),c=pool[Math.floor(Math.random()*pool.length)];if(!c)return;const open=state.sub==="thread"&&state.param===c.id;
     const r=Math.random();
     if(r<0.5){const t2=["지금 방송 시작했어요! 🔴","오늘도 와주셔서 감사해요 😊","다음 콘텐츠 기대해주세요!","별하늘님 덕분에 힘나요 💜","곧 이벤트 있어요 놓치지 마세요"];c.thread.push({from:"in",text:t2[Math.floor(Math.random()*t2.length)],tm:nowT()});if(!open)c.unread++;
-      state.dnotifs.unshift({type:"dono",title:`<b>${c.emoji} ${c.name}</b>님이 쪽지를 보냈어요`,sub:c.thread[c.thread.length-1].text,min:0,unread:true});}
+      state.dnotifs.unshift({type:"dono",title:`<b>${c.emoji} ${c.name}</b>님이 메시지를 보냈어요`,sub:c.thread[c.thread.length-1].text,min:0,unread:true});}
     else if(r<0.75){if(!c.online){c.online=true;state.dnotifs.unshift({type:"presence",title:`<b>${c.emoji} ${c.name}</b>님이 방송을 시작했어요`,sub:"지금 라이브 · 놓치지 마세요",min:0,unread:true});}}
     else{if(c.online&&Math.random()<0.4)c.online=false;}
     if(state.dnotifs.length>40)state.dnotifs.length=40;
@@ -659,8 +667,8 @@ function liveTick(){
 }
 let liveTimer;
 function toggleLive(){state.live=!state.live;if(state.live){liveTimer=setInterval(liveTick,3200);toast("⚡ 실시간 시뮬레이션 시작");}else{clearInterval(liveTimer);toast("실시간 시뮬레이션 정지");}render();}
-function segSheet(){const list=filterFans(),fl=FILTERS.find(f=>f[0]===state.filter)[1];
-  openSheet(`<h3 class="sh">✈️ 세그먼트 발송</h3><p class="sd">현재 세그먼트 <b>「${fl}」 ${list.length}명</b>에게 단체 쪽지를 보냅니다.</p><textarea id="segmsg" rows="3" placeholder="예: VVIP 여러분만을 위한 깜짝 이벤트 안내드려요! 🎉"></textarea><button class="btn" data-act="dosegsend">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
+function segSheet(){const list=filterFans(),fl=getFilters().find(f=>f[0]===state.filter)[1];
+  openSheet(`<h3 class="sh">✈️ 세그먼트 발송</h3><p class="sd">현재 세그먼트 <b>「${fl}」 ${list.length}명</b>에게 단체 메시지를 보냅니다.</p><textarea id="segmsg" rows="3" placeholder="예: VVIP 여러분만을 위한 깜짝 이벤트 안내드려요! 🎉"></textarea><button class="btn" data-act="dosegsend">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 function winbackSheet(){const list=state.fans.filter(f=>f.seenMin>=14*1440);
   openSheet(`<h3 class="sh">💌 복귀 유도 발송</h3><p class="sd">14일 이상 미접속한 팬 <b>${list.length}명</b>에게 복귀 리마인드를 보냅니다. (카카오 알림톡 연동)</p><textarea id="wbmsg" rows="3">보고 싶어요! 오랜만에 방송에서 만나요 💜 복귀하시면 특별 혜택이 기다려요.</textarea><button class="btn" data-act="dowinback">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 function addTagSheet(id){openSheet(`<h3 class="sh"># 태그 추가</h3><p class="sd">${esc(fanById(id).name)}님에게 태그를 붙입니다.</p><input id="taginput" placeholder="예: 큰손, 생일3월" autocomplete="off"><button class="btn" data-act="doaddtag" data-v="${id}">추가</button>`);}
@@ -701,7 +709,9 @@ $("#phone").addEventListener("click",e=>{
     case"doaddtag":{const t=$("#taginput").value.trim();if(t)fanById(v).tags.push(t);closeSheet();renderView();break;}
     case"savememo":fanById(v).memo=$("#memo").value;toast("메모를 저장했어요");break;
     case"benefit":toast("🎁 맞춤 혜택 설정 (프로토타입)");break;
-    case"savetiers":document.querySelectorAll("[data-tier]").forEach(inp=>{const t=TIERS.find(x=>x.key===inp.dataset.tier);t.min=parseInt(inp.value.replace(/\D/g,""))||0;});toast("임계값 저장 · 전체 등급 재산정 완료");render();break;
+    case"addtier":readTierRows();{const mx=Math.max(0,...TIERS.map(t=>t.min));TIERS.push({key:"t"+Date.now(),name:"새 등급",emoji:"👑",color:"#8b6ef0",min:mx+100000});}renderView();break;
+    case"deltier":readTierRows();if(TIERS.length<=2){toast("등급은 최소 2개가 필요해요");break;}TIERS=TIERS.filter(t=>t.key!==v);renderView();break;
+    case"savetiers":readTierRows();normalizeTiers();render();toast("등급 저장 · 전체 재산정 완료");break;
     case"rule":state.alertRules[v]=!state.alertRules[v];renderView();break;
     case"kakao":state.kakao[v]=!state.kakao[v];renderView();break;
     case"donsheet":donSheet(v);break;
