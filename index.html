@@ -783,10 +783,12 @@ function viewFans(){
     return `<button class="row" data-act="fan" data-v="${f.id}"><div class="av">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div>
     <div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}${f.blocked?' <span class="gp" style="--gc:var(--crit)">🚫 차단</span>':""}${f.watch?' <span class="gp" style="--gc:var(--accent)">🔔</span>':""}${risk?' <span class="gp" style="--gc:var(--crit)">⚠️ 이탈위험</span>':""}</div><div class="pv">누적 ${won(f.cum)} · ${f.online?"<span style='color:var(--keep)'>● 온라인</span>":ago(f.seenMin)+" 접속"}</div></div>
     <div class="meta"><div class="tm">›</div></div></button>`;}).join("")||`<div class="empty">조건에 맞는 팬이 없어요.</div>`;
+  const dormant=state.fans.filter(f=>!f.blocked&&f.seenMin>=14*1440).length;
   return `<div class="pad"><div class="chips">${chips}</div>
     <div class="sechd">${list.length}명 표시 · 총 ${state.fans.length}명 · 온라인 ${state.fans.filter(f=>f.online).length}<span class="r" data-act="segsheet">세그먼트 발송 ${SEND_ICON}</span></div>
     <div class="rows">${rows}</div>
-    <div class="hint">💡 필터로 세그먼트를 만들고 ${SEND_ICON} 버튼으로 해당 그룹에게 단체 메시지를 보낼 수 있어요.</div></div>`;
+    <div class="card pad" style="margin-top:14px;display:flex;align-items:center;gap:12px"><div class="ac-ic" style="width:38px;height:38px;font-size:18px;background:var(--accent-soft)">💌</div><div style="flex:1"><b style="font-size:14.5px">복귀 유도 발송</b><p style="font-size:12px;color:var(--ink-3);margin:2px 0 0">14일 이상 미접속한 팬 <b style="color:var(--ink-2)">${dormant}명</b>에게 복귀 리마인드</p></div><button class="ac-btn primary" data-act="winback">발송</button></div>
+    <div class="hint">💡 필터로 세그먼트를 만들고 ${SEND_ICON} 버튼으로 단체 메시지를, 💌로 휴면 팬에게 복귀 유도를 보낼 수 있어요.</div></div>`;
 }
 function viewFan(id){
   const f=fanById(id),t=tierOf(f.cum),nt=nextTier(f.cum);
@@ -815,9 +817,8 @@ function viewFan(id){
 /* ---------- creator: notif / insights / settings ---------- */
 function viewNotif(){
   const ic={presence:"🟢",dono:"🎁",grade:"⬆️",system:"🎯"};
-  const rows=state.notifs.map(n=>{const o=n.fid?`<button class="nrow ${n.unread?"unread":""}" data-act="fan" data-v="${n.fid}" style="width:100%;text-align:left">`:`<div class="nrow ${n.unread?"unread":""}">`,c=n.fid?"</button>":"</div>";return `${o}<div class="nic ${n.type}">${ic[n.type]}</div><div style="flex:1"><div class="nt">${n.title}</div><div class="ntm">${esc(n.sub)} · ${ago(n.min)}</div></div>${c}`;}).join("")||`<div class="empty">알림이 없어요.</div>`;
-  return `<div class="pad"><div class="sechd">알림 <span class="r" data-act="readall">모두 읽음</span></div><div class="rows">${rows}</div>
-    <div class="card pad" style="margin-top:14px"><div style="font-weight:700;font-size:14px">💌 복귀 유도 발송</div><p style="font-size:12.5px;color:var(--ink-3);margin:6px 0 0">14일 이상 미접속한 팬 <b>${state.fans.filter(f=>f.seenMin>=14*1440).length}명</b>에게 복귀 리마인드 쪽지를 보낼 수 있어요.</p><button class="btn" data-act="winback">복귀 유도 메시지 작성</button></div></div>`;
+  const nrows=state.notifs.map(n=>{const o=n.fid?`<button class="nrow ${n.unread?"unread":""}" data-act="fan" data-v="${n.fid}" style="width:100%;text-align:left">`:`<div class="nrow ${n.unread?"unread":""}">`,c=n.fid?"</button>":"</div>";return `${o}<div class="nic ${n.type}">${ic[n.type]}</div><div style="flex:1"><div class="nt">${n.title}</div><div class="ntm">${esc(n.sub)} · ${ago(n.min)}</div></div>${c}`;}).join("")||`<div class="empty">알림이 없어요.</div>`;
+  return `<div class="pad"><div class="sechd">알림 <span class="r" data-act="readall">모두 읽음</span></div><div class="rows">${nrows}</div></div>`;
 }
 function lineChart(vals,labels){const W=320,H=140,pl=6,pr=10,pt=14,pb=20,iw=W-pl-pr,ih=H-pt-pb,max=Math.max(...vals)*1.14||1;
   const X=i=>pl+iw/(vals.length-1)*i,Y=v=>pt+ih-(v/max)*ih,pts=vals.map((v,i)=>[X(i),Y(v)]);
@@ -1083,7 +1084,7 @@ function viewLogin(){
     <div class="foot">데모 계정 · 아이디 <b style="color:var(--ink-2)">toonation</b> / 비밀번호 <b style="color:var(--ink-2)">1234</b></div></div>`;
 }
 function doLogin(){const u=($("#luser")?$("#luser").value:"").trim(),p=$("#lpw")?$("#lpw").value:"";
-  if(u==="toonation"&&p==="1234"){state.screen="app";render();toast("환영합니다! 🎉 열혈톡에 로그인했어요");}
+  if(u==="toonation"&&p==="1234"){touchSession();state.screen="app";render();toast("환영합니다! 🎉 열혈톡에 로그인했어요 (세션 30분 유지)");}
   else toast("아이디 또는 비밀번호가 올바르지 않습니다");}
 
 /* ================= ACTIONS ================= */
@@ -1134,7 +1135,7 @@ let liveTimer;
 function toggleLive(){state.live=!state.live;if(state.live){liveTimer=setInterval(liveTick,3200);toast("⚡ 실시간 시뮬레이션 시작");}else{clearInterval(liveTimer);toast("실시간 시뮬레이션 정지");}render();}
 function segSheet(){const list=filterFans(),fl=getFilters().find(f=>f[0]===state.filter)[1];
   openSheet(`<h3 class="sh">${SEND_ICON} 세그먼트 발송</h3><p class="sd">현재 세그먼트 <b>「${fl}」 ${list.length}명</b>에게 단체 메시지를 보냅니다.</p><textarea id="segmsg" rows="3" placeholder="예: VVIP 여러분만을 위한 깜짝 이벤트 안내드려요! 🎉"></textarea><button class="btn" data-act="dosegsend">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
-function winbackSheet(){const list=state.fans.filter(f=>f.seenMin>=14*1440);
+function winbackSheet(){const list=state.fans.filter(f=>!f.blocked&&f.seenMin>=14*1440);
   openSheet(`<h3 class="sh">💌 복귀 유도 발송</h3><p class="sd">14일 이상 미접속한 팬 <b>${list.length}명</b>에게 복귀 리마인드를 보냅니다. (🔔 열혈톡 푸시 발송)</p><textarea id="wbmsg" rows="3">보고 싶어요! 오랜만에 방송에서 만나요 💜 복귀하시면 특별 혜택이 기다려요.</textarea><button class="btn" data-act="dowinback">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 function addTagSheet(id){openSheet(`<h3 class="sh"># 태그 추가</h3><p class="sd">${esc(fanById(id).name)}님에게 태그를 붙입니다.</p><input id="taginput" placeholder="예: 큰손, 생일3월" autocomplete="off"><button class="btn" data-act="doaddtag" data-v="${id}">추가</button>`);}
 function donSheet(id){const c=creById(id),presets=[5000,10000,30000,50000,100000,500000],nt=nextTier(c.myCum),toNext=nt?nt.min-c.myCum:0;
@@ -1155,12 +1156,13 @@ function donSheet(id){const c=creById(id),presets=[5000,10000,30000,50000,100000
 
 $("#phone").addEventListener("click",e=>{
   const el=e.target.closest("[data-act]");if(!el)return;const act=el.dataset.act,v=el.dataset.v;
+  if(state.screen==="app")touchSession();
   switch(act){
     case"obnext":if(state.slide<2)state.slide++;else state.screen="login";render();break;
     case"obdot":state.slide=parseInt(v);render();break;
     case"gologin":state.screen="login";render();break;
     case"dologin":doLogin();break;
-    case"logout":if(state.live){clearInterval(liveTimer);state.live=false;}state.screen="login";state.sub=null;render();break;
+    case"logout":if(state.live){clearInterval(liveTimer);state.live=false;}clearSession();state.screen="login";state.sub=null;render();break;
     case"role":state.role=v;state.sub=null;state.param=null;if(v==="donator")state.dtab="following";else state.ctab="msg";render();break;
     case"live":toggleLive();break;
     case"tab":if(state.role==="creator")state.ctab=v;else state.dtab=v;state.sub=null;state.param=null;render();break;
@@ -1248,5 +1250,10 @@ $("#phone").addEventListener("click",e=>{
 });
 ["f1","f2","f5"].forEach(id=>{const f=fanById(id);if(f)f.watch=true;});
 {const bf=fanById("f8");if(bf)bf.blocked=true;}
-initTheme();initBackupMeta();render();
+/* ---------- 로그인 세션 (30분 유지) ---------- */
+const SESSION_MS=30*60*1000;
+function touchSession(){try{localStorage.setItem("heyeol-session",String(Date.now()));}catch(e){}}
+function clearSession(){try{localStorage.removeItem("heyeol-session");}catch(e){}}
+function initSession(){try{const ts=parseInt(localStorage.getItem("heyeol-session")||"0");if(ts&&Date.now()-ts<SESSION_MS){state.screen="app";touchSession();return;}}catch(e){}clearSession();state.screen="login";}
+initTheme();initBackupMeta();initSession();render();
 </script>
