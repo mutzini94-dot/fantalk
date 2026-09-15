@@ -251,6 +251,19 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .permrole{display:flex;gap:6px}.permrole .pr{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--surface-2);color:var(--ink-3);border:1px solid var(--line)}
 .permrole .pr.on{background:var(--accent-soft);color:var(--accent);border-color:transparent}
 .kakao{width:26px;height:26px;border-radius:8px;background:#FEE500;color:#3c1e1e;display:grid;place-items:center;font-size:9px;font-weight:800;flex:0 0 auto}
+.autocard{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+.autocard.off{opacity:.5}
+.ac-head{display:flex;align-items:center;gap:11px;padding:13px 14px}
+.ac-ic{width:38px;height:38px;border-radius:11px;background:var(--surface-2);display:grid;place-items:center;font-size:19px;flex:0 0 auto}
+.ac-name{font-weight:600;font-size:14.5px}
+.ac-desc{font-size:11.5px;color:var(--ink-3);margin-top:2px;line-height:1.4}
+.ac-tpl{margin:0 14px;padding:10px 12px;background:var(--surface-2);border-radius:10px}
+.ac-chan{font-size:10px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:20px}
+.ac-msg{font-size:12.5px;color:var(--ink);margin-top:7px;line-height:1.45}
+.ac-foot{display:flex;align-items:center;gap:8px;padding:11px 14px}
+.ac-sent{font-size:11px;color:var(--ink-3);flex:1}
+.ac-btn{font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:20px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.ac-btn.primary{background:var(--accent);color:var(--on-accent);border-color:transparent}
 .mygradehero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 20px;box-shadow:var(--shadow)}
 .mygradehero .big{font-size:44px}.mygradehero .gn{font-size:22px;font-weight:700;margin-top:6px}
 .mygradehero .prog{margin-top:18px}.mygradehero .ptrack{height:14px;background:var(--surface-2);border-radius:8px;overflow:hidden;margin:8px 0;border:1px solid var(--line)}
@@ -383,13 +396,19 @@ let state={
   notifs:[
     {type:"dono",title:"<b>👑 VVIP '별하늘'</b>님이 ₩50,000 후원",sub:"1:1 채팅 · 후원톡 도착",min:7,unread:true},
     {type:"presence",title:"<b>👑 VVIP '해피'</b>님이 접속했어요",sub:"최근 후원 ₩540,000 · 15분 만의 접속",min:15,unread:true},
-    {type:"grade",title:"<b>'도현'</b>님이 👑 VIP로 등급 상승",sub:"누적 ₩100,000 달성 · 카카오 알림톡 자동 발송됨",min:120,unread:false},
+    {type:"grade",title:"<b>'도현'</b>님이 👑 VIP로 등급 상승",sub:"누적 ₩100,000 달성 · 🔔 열혈톡 푸시 자동 발송됨",min:120,unread:false},
     {type:"system",title:"이번 달 후원 목표 <b>82%</b> 달성",sub:"₩4,100,000 / ₩5,000,000",min:200,unread:false},
   ],
   goal:{cur:4100000,target:5000000},
   crew:[{name:"나 (오너)",emoji:"🎙️",role:"owner",perms:["정책","응대","발송","모더"]},{name:"매니저 · 진",emoji:"🧑‍💼",role:"manager",perms:["응대","발송","모더"]},{name:"매니저 · 유",emoji:"🧑‍💻",role:"manager",perms:["응대","모더"]}],
   alertRules:{presence:true,dono:true,grade:true,broadcast:true,dnd:false},
-  kakao:{on:true,grade:true,bday:true,anniv:true},
+  automation:{on:true,rules:[
+    {key:"grade",on:true,emoji:"🎉",name:"등급 달성 축하",desc:"팬이 상위 등급으로 승급하면 축하 푸시를 자동 발송",tpl:"{닉네임}님, {등급} 등급 달성 축하해요! 🎉 앞으로도 잘 부탁드려요 💜",sent:38},
+    {key:"bday",on:true,emoji:"🎂",name:"생일 축하",desc:"팬 생일 당일 축하 메시지와 쿠폰을 자동 발송",tpl:"{닉네임}님, 생일 축하해요! 🎂 오늘 하루 행복하세요 🎁",sent:12},
+    {key:"anniv",on:true,emoji:"💝",name:"후원 기념일",desc:"첫 후원·후원 N주년에 감사 푸시를 자동 발송",tpl:"{닉네임}님, 함께한 지 벌써 1주년! 늘 감사해요 💝",sent:9},
+    {key:"winback",on:false,emoji:"💤",name:"휴면 팬 리마인드",desc:"14일 이상 미접속 팬에게 복귀 유도 푸시를 자동 발송",tpl:"{닉네임}님, 보고 싶어요! 오랜만에 방송에서 만나요 💜",sent:21},
+    {key:"live",on:true,emoji:"🔴",name:"방송 시작 알림",desc:"방송을 시작하면 팔로우한 팬에게 푸시를 자동 발송",tpl:"{닉네임}님, 지금 방송 시작했어요! 🔴 보러 오세요",sent:142},
+  ]},
   don:{trend:[420,380,510,470,620,560,880],days:["9.3","9.4","9.5","9.6","9.7","9.8","9.9"]},
   retention:{d30:43,trend:[31,34,33,38,40,41,43]},
   autoperf:{sent:142,open:72,conv:8.5},
@@ -461,6 +480,7 @@ function renderAppbar(){
     h=`${back}<div class="hav">${p.emoji}${p.online?'<span class="on-dot"></span>':""}</div><div><h1 style="font-size:17px">${esc(p.name)}</h1><div class="sub"><span class="gp" style="--gc:${grade.color}">${grade.emoji} ${grade.name}</span> ${status}</div></div>`;
   }else if(state.sub==="fan"){h=`${back}<div><h1>VIP 후원자 정보</h1><div class="sub">${esc(fanById(state.param).name)}</div></div>`;}
   else if(state.sub==="settings"){h=`${back}<div><h1>설정</h1><div class="sub">등급 · 자동화 · 연동</div></div>`;}
+  else if(state.sub==="automation"){h=`${back}<div><h1>자동화</h1><div class="sub">열혈톡 자동 알림</div></div>`;}
   else{
     const map={msg:["채팅","팬과의 1:1 대화"],dono:["후원톡","받은 후원 관리"],fans:["팬 관리","등급별 CRM"],notif:["알림","접속 · 후원 · 등급"],insights:["인사이트","크루 대시보드"],
       following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
@@ -476,6 +496,7 @@ function renderView(){
   if(state.sub==="thread"){v.innerHTML=viewThread(state.param);v.scrollTop=v.scrollHeight;bindComposer();return;}
   if(state.sub==="fan"){v.innerHTML=viewFan(state.param);return;}
   if(state.sub==="settings"){v.innerHTML=viewSettings();return;}
+  if(state.sub==="automation"){v.innerHTML=viewAutomation();return;}
   if(state.role==="creator")v.innerHTML={msg:viewChat,dono:viewDono,fans:viewFans,notif:viewNotif,insights:viewInsights}[state.ctab]();
   else v.innerHTML={following:viewFollowing,discover:viewDiscover,dnotif:viewDNotif,me:viewMe}[state.dtab]();
 }
@@ -627,27 +648,41 @@ function viewInsights(){
     <div class="chartcard"><div class="ctop"><div><h3>최근 후원 추이</h3><div class="cs">최근 7일</div></div><div class="cbig">${won(total7)}<div class="dl">▲ 18%</div></div></div>${lineChart(state.don.trend,state.don.days)}</div>
     <div class="chartcard"><h3>등급 분포</h3><div class="cs">내 팬 ${state.fans.length}명 · 등급별 인원</div>${distBars}</div>
     <div class="chartcard"><h3>D30 리텐션 추이</h3><div class="cs">최근 7주 · 열혈시청자 30일 잔존율</div>${sparkline(state.retention.trend)}</div>
-    <div class="chartcard"><h3>⚡ 자동화 성과</h3><div class="cs">지난 30일 · 카카오 알림톡</div><div class="perf3"><div><div class="k">발송 알림톡</div><div class="v">${state.autoperf.sent}건</div><div class="dl">▲ 18%</div></div><div><div class="k">열람률</div><div class="v">${state.autoperf.open}%</div><div class="dl">▲ 12%</div></div><div><div class="k">후원 전환율</div><div class="v">${state.autoperf.conv}%</div><div class="dl">▲ 2.3%</div></div></div></div>
-    <div class="chartcard"><h3>📅 다가오는 기념일</h3><div class="cs">자동 혜택·알림톡 예약됨</div>${state.events.map(e=>`<div class="evrow"><span>${e.emoji}</span><span><b>${e.name}</b> · ${e.label}</span><span class="dd">D-${e.d}</span></div>`).join("")}</div>
+    <div class="chartcard"><div class="ctop"><div><h3>⚡ 자동화 성과</h3><div class="cs">지난 30일 · 열혈톡 푸시</div></div><button class="ac-btn" data-act="openauto">관리 ›</button></div><div class="perf3"><div><div class="k">발송 푸시</div><div class="v">${state.autoperf.sent}건</div><div class="dl">▲ 18%</div></div><div><div class="k">열람률</div><div class="v">${state.autoperf.open}%</div><div class="dl">▲ 12%</div></div><div><div class="k">후원 전환율</div><div class="v">${state.autoperf.conv}%</div><div class="dl">▲ 2.3%</div></div></div></div>
     <div class="chartcard"><h3>🎯 후원 목표</h3><div class="cs">이번 달 크루 목표</div><div style="display:flex;justify-content:space-between;font-size:13px"><b>${won(state.goal.cur)}</b><span class="mono" style="color:var(--ink-3)">/ ${won(state.goal.target)}</span></div><div class="goalbar"><div class="goalfill" style="width:${gp}%"><span>${gp}%</span></div></div></div></div>`;
 }
 function viewSettings(){
   const cards=TIERS.map(t=>`<div class="tcard"><div class="c">${t.emoji}</div><div class="n" style="color:${t.color}">${t.name}</div><div class="m">${t.min?wonK(t.min)+"+":"0~"}</div></div>`).join("");
   const tiers=[...TIERS].sort((a,b)=>b.min-a.min).map(t=>`<div class="tieredit" data-tierrow="${t.key}"><span class="te-emoji">${t.emoji}</span><input class="tn-name" value="${esc(t.name)}" placeholder="등급 이름" maxlength="10"><input class="tn-min mono" value="${t.min}" inputmode="numeric" placeholder="0"><button class="tdel" data-act="deltier" data-v="${t.key}" title="삭제">×</button></div>`).join("");
   const rules=[["presence","도네이터 접속 알림","단골·상위 등급 접속 시"],["dono","후원톡 알림","후원 도착 시 즉시"],["grade","등급 변동 알림","팬 등급 상승/강등"],["broadcast","방송 시작 알림","팬에게 발송"],["dnd","방해금지 (00–08시)","야간 푸시 묶음"]].map(([k,l,d])=>`<div class="setrow"><div class="sl"><b>${l}</b><p>${d}</p></div><div class="tgl ${state.alertRules[k]?"on":""}" data-act="rule" data-v="${k}"></div></div>`).join("");
-  const kk=state.kakao;
+  const active=state.automation.rules.filter(r=>r.on).length;
   return `<div class="pad"><div class="sechd">VIP 등급 안내</div><div class="tiercards">${cards}</div>
     <div class="sechd" style="margin-top:18px">등급 관리</div><div class="card pad"><p style="font-size:12px;color:var(--ink-3);margin:0 0 10px">등급 이름과 누적 후원 임계값(원)을 자유롭게 바꾸고, 등급을 추가·삭제할 수 있어요.</p>${tiers}<button class="btn ghost" data-act="addtier" style="margin-top:12px">+ 등급 추가</button><button class="btn" data-act="savetiers">저장 & 전체 재산정</button></div>
-    <div class="sechd" style="margin-top:18px">자동화 · 카카오 알림톡</div><div class="rows">
-      <div class="setrow"><div class="kakao">TALK</div><div class="sl"><b>카카오 알림톡 자동 발송</b><p>등급 달성·생일·기념일에 자동 발송</p></div><div class="tgl ${kk.on?"on":""}" data-act="kakao" data-v="on"></div></div>
-      <div class="setrow sub"><div class="sl"><b>등급 달성 축하</b><p>VIP/VVIP/SVIP 승급 시</p></div><div class="tgl ${kk.grade?"on":""}" data-act="kakao" data-v="grade"></div></div>
-      <div class="setrow sub"><div class="sl"><b>생일 축하</b><p>팬 생일 당일 자동</p></div><div class="tgl ${kk.bday?"on":""}" data-act="kakao" data-v="bday"></div></div>
-      <div class="setrow sub"><div class="sl"><b>후원 기념일</b><p>첫 후원·N주년 자동</p></div><div class="tgl ${kk.anniv?"on":""}" data-act="kakao" data-v="anniv"></div></div></div>
+    <div class="sechd" style="margin-top:18px">자동화</div><div class="rows">
+      <button class="setrow" data-act="openauto" style="text-align:left;width:100%"><div class="ac-ic" style="width:36px;height:36px;font-size:17px;background:var(--accent-soft)">⚡</div><div class="sl"><b>열혈톡 자동 알림 관리</b><p>${state.automation.on?active+"개 시나리오 활성":"꺼짐"} · 열혈톡 푸시로 발송</p></div><span class="sv">›</span></button></div>
     <div class="sechd" style="margin-top:18px">알림 규칙</div><div class="rows">${rules}</div>
     <div class="sechd" style="margin-top:18px">투네이션 연동</div><div class="rows"><div class="setrow"><div class="sl"><b>후원 Webhook</b><p>실시간 후원 이벤트 수신</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div><div class="setrow"><div class="sl"><b>계정 SSO</b><p>투네이션 계정 연동</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div></div>
     <button class="btn ghost" data-act="logout" style="color:var(--crit)">로그아웃</button>
     <div class="hint">열혈톡 v0.5 프로토타입 · 1:1 채팅 · 등급 커스터마이즈 · Phase 1–2</div></div>`;
 }
+
+/* ---------- creator: 자동화 (열혈톡 자동 알림) ---------- */
+function viewAutomation(){
+  const a=state.automation,active=a.rules.filter(r=>r.on).length;
+  const rules=a.rules.map(r=>`<div class="autocard ${a.on&&r.on?"":"off"}">
+    <div class="ac-head"><div class="ac-ic">${r.emoji}</div><div style="flex:1"><div class="ac-name">${esc(r.name)}</div><div class="ac-desc">${esc(r.desc)}</div></div><div class="tgl ${r.on?"on":""}" data-act="autorule" data-v="${r.key}"></div></div>
+    <div class="ac-tpl"><span class="ac-chan">🔔 열혈톡 푸시</span><div class="ac-msg">${esc(r.tpl)}</div></div>
+    <div class="ac-foot"><span class="ac-sent">누적 발송 ${r.sent.toLocaleString("ko-KR")}건</span><button class="ac-btn" data-act="autoedit" data-v="${r.key}">메시지 수정</button><button class="ac-btn primary" data-act="autotest" data-v="${r.key}">지금 테스트</button></div></div>`).join("");
+  return `<div class="pad">
+    <div class="card pad" style="display:flex;align-items:center;gap:12px"><div class="ac-ic" style="background:var(--accent-soft)">⚡</div><div style="flex:1"><b style="font-size:15px">열혈톡 자동 알림</b><p style="font-size:12px;color:var(--ink-3);margin:2px 0 0">이벤트 발생 시 <b>열혈톡 푸시</b>로 자동 발송돼요</p></div><div class="tgl ${a.on?"on":""}" data-act="autotoggle"></div></div>
+    <div class="sechd" style="margin-top:18px">자동화 시나리오 · ${active}개 활성</div>${rules}
+    <div class="sechd" style="margin-top:18px">자동화 성과 <span class="r">지난 30일</span></div>
+    <div class="perf3"><div><div class="k">발송 푸시</div><div class="v">${state.autoperf.sent}건</div><div class="dl">▲ 18%</div></div><div><div class="k">열람률</div><div class="v">${state.autoperf.open}%</div><div class="dl">▲ 12%</div></div><div><div class="k">후원 전환율</div><div class="v">${state.autoperf.conv}%</div><div class="dl">▲ 2.3%</div></div></div>
+    <div class="sechd" style="margin-top:18px">📅 다가오는 기념일</div><div class="card pad">${state.events.map(e=>`<div class="evrow"><span>${e.emoji}</span><span><b>${e.name}</b> · ${e.label}</span><span class="dd">D-${e.d}</span></div>`).join("")}</div>
+    <div class="hint">💡 모든 자동 알림은 카카오 알림톡이 아닌 <b>열혈톡 인앱 알림/푸시</b>로 발송됩니다.</div></div>`;
+}
+function autoEditSheet(key){const r=state.automation.rules.find(x=>x.key===key);
+  openSheet(`<h3 class="sh">${r.emoji} ${esc(r.name)} 메시지</h3><p class="sd">열혈톡 푸시로 발송될 메시지예요. <span class="mono">{닉네임}</span> <span class="mono">{등급}</span> 변수를 쓸 수 있어요.</p><textarea id="autotpl" rows="3">${esc(r.tpl)}</textarea><button class="btn" data-act="autosave" data-v="${key}">저장</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 
 /* ---------- donator ---------- */
 function viewFollowing(){
@@ -745,7 +780,7 @@ function liveTick(){
       f.thread.push({from:"dono",amt,text:tx,tm:nowT()});if(!open)f.unread++;state.goal.cur+=amt;
       state.dtalks.unshift({id:"d"+Date.now(),fid:f.id,amt,text:tx,min:0,answered:false});if(state.dtalks.length>60)state.dtalks.length=60;
       state.notifs.unshift({type:"dono",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 ${won(amt)} 후원`,sub:"1:1 채팅 · 후원톡 도착",min:0,unread:true});
-      const after=tierOf(f.cum).key;if(tierIdx(after)>tierIdx(before)){const t=tierOf(f.cum);f.thread.push({from:"sys",text:`🎉 ${f.name}님이 ${t.emoji} ${t.name} 등급으로 올라섰어요!`});state.notifs.unshift({type:"grade",title:`<b>'${f.name}'</b>님이 ${t.emoji}${t.name}로 등급 상승`,sub:`누적 ${won(f.cum)} · 알림톡 자동 발송`,min:0,unread:true});}
+      const after=tierOf(f.cum).key;if(tierIdx(after)>tierIdx(before)){const t=tierOf(f.cum);f.thread.push({from:"sys",text:`🎉 ${f.name}님이 ${t.emoji} ${t.name} 등급으로 올라섰어요!`});state.notifs.unshift({type:"grade",title:`<b>'${f.name}'</b>님이 ${t.emoji}${t.name}로 등급 상승`,sub:`누적 ${won(f.cum)} · ${state.automation.on&&state.automation.rules.find(r=>r.key==="grade").on?"🔔 열혈톡 푸시 자동 발송":"알림"}`,min:0,unread:true});if(state.automation.on&&state.automation.rules.find(r=>r.key==="grade").on)state.autoperf.sent++;}
     }else if(r<0.72){const t2=["안녕하세요~","오늘 방송 언제해요?","저 왔어요!","화이팅!!","이번 콘텐츠 기대돼요","답장 기다릴게요 ㅎㅎ"];f.thread.push({from:"in",text:t2[Math.floor(Math.random()*t2.length)],tm:nowT()});if(!open)f.unread++;
     }else if(r<0.9){if(!f.online){f.online=true;f.seenMin=0;if(isVIP(f.cum))state.notifs.unshift({type:"presence",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 접속했어요`,sub:`누적 ${won(f.cum)} · 단골 접속`,min:0,unread:true});}
     }else{if(f.online&&Math.random()<0.5){f.online=false;f.seenMin=1;}}
@@ -767,7 +802,7 @@ function toggleLive(){state.live=!state.live;if(state.live){liveTimer=setInterva
 function segSheet(){const list=filterFans(),fl=getFilters().find(f=>f[0]===state.filter)[1];
   openSheet(`<h3 class="sh">✈️ 세그먼트 발송</h3><p class="sd">현재 세그먼트 <b>「${fl}」 ${list.length}명</b>에게 단체 메시지를 보냅니다.</p><textarea id="segmsg" rows="3" placeholder="예: VVIP 여러분만을 위한 깜짝 이벤트 안내드려요! 🎉"></textarea><button class="btn" data-act="dosegsend">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 function winbackSheet(){const list=state.fans.filter(f=>f.seenMin>=14*1440);
-  openSheet(`<h3 class="sh">💌 복귀 유도 발송</h3><p class="sd">14일 이상 미접속한 팬 <b>${list.length}명</b>에게 복귀 리마인드를 보냅니다. (카카오 알림톡 연동)</p><textarea id="wbmsg" rows="3">보고 싶어요! 오랜만에 방송에서 만나요 💜 복귀하시면 특별 혜택이 기다려요.</textarea><button class="btn" data-act="dowinback">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
+  openSheet(`<h3 class="sh">💌 복귀 유도 발송</h3><p class="sd">14일 이상 미접속한 팬 <b>${list.length}명</b>에게 복귀 리마인드를 보냅니다. (🔔 열혈톡 푸시 발송)</p><textarea id="wbmsg" rows="3">보고 싶어요! 오랜만에 방송에서 만나요 💜 복귀하시면 특별 혜택이 기다려요.</textarea><button class="btn" data-act="dowinback">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 function addTagSheet(id){openSheet(`<h3 class="sh"># 태그 추가</h3><p class="sd">${esc(fanById(id).name)}님에게 태그를 붙입니다.</p><input id="taginput" placeholder="예: 큰손, 생일3월" autocomplete="off"><button class="btn" data-act="doaddtag" data-v="${id}">추가</button>`);}
 function donSheet(id){const c=creById(id),presets=[5000,10000,30000,50000,100000,500000],nt=nextTier(c.myCum),toNext=nt?nt.min-c.myCum:0;
   const pad=presets.map(p=>`<button class="${state.donPreset===p?"on":""}" data-act="preset" data-v="${p}">${wonK(p)}</button>`).join("");
@@ -822,7 +857,12 @@ $("#phone").addEventListener("click",e=>{
     case"deltier":readTierRows();if(TIERS.length<=2){toast("등급은 최소 2개가 필요해요");break;}TIERS=TIERS.filter(t=>t.key!==v);renderView();break;
     case"savetiers":readTierRows();normalizeTiers();render();toast("등급 저장 · 전체 재산정 완료");break;
     case"rule":state.alertRules[v]=!state.alertRules[v];renderView();break;
-    case"kakao":state.kakao[v]=!state.kakao[v];renderView();break;
+    case"openauto":state.sub="automation";state.param=null;render();break;
+    case"autotoggle":state.automation.on=!state.automation.on;renderView();break;
+    case"autorule":{const r=state.automation.rules.find(x=>x.key===v);if(r)r.on=!r.on;renderView();break;}
+    case"autotest":{const r=state.automation.rules.find(x=>x.key===v);state.autoperf.sent++;toast(`🔔 '${r.name}' 테스트 푸시를 보냈어요`);renderView();break;}
+    case"autoedit":autoEditSheet(v);break;
+    case"autosave":{const r=state.automation.rules.find(x=>x.key===v),ta=$("#autotpl");if(r&&ta)r.tpl=ta.value;closeSheet();renderView();toast("메시지를 저장했어요");break;}
     case"donsheet":donSheet(v);break;
     case"emoji":emojiSheet(v);break;
     case"sticker":{const[sid,em]=v.split("|");sendSticker(sid,em);break;}
