@@ -338,6 +338,18 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .bk-main p{margin:2px 0 0;font-size:11px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
 .bk-btn{font-size:11.5px;font-weight:700;padding:6px 11px;border-radius:20px;background:var(--accent-soft);color:var(--accent);flex:0 0 auto}
 .bk-btn.del{background:var(--surface-2);color:var(--crit)}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;padding-top:14px}
+.pod{flex:1;max-width:112px;text-align:center;min-width:0}
+.pod-av{width:56px;height:56px;border-radius:16px;margin:0 auto;display:grid;place-items:center;font-size:28px;border:2px solid var(--tc);background:var(--surface);position:relative;cursor:pointer}
+.pod.p1 .pod-av{width:66px;height:66px;font-size:33px}
+.pod .medal{position:absolute;top:-12px;right:-8px;font-size:22px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.2))}
+.pod-name{font-weight:700;font-size:13px;margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pod-val{font-size:11px;color:var(--ink-2);font-family:"IBM Plex Mono",monospace;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pod-base{margin-top:9px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--tc) 32%,var(--surface)),color-mix(in srgb,var(--tc) 10%,var(--surface)));border:1px solid var(--line);border-bottom:none;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-weight:800;font-size:20px;color:var(--tc)}
+.pod.p1 .pod-base{height:84px}.pod.p2 .pod-base{height:62px}.pod.p3 .pod-base{height:46px}
+.hof-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--line-2);width:100%;text-align:left}
+.hof-row:last-child{border-bottom:none}.hof-row:active{background:var(--surface-2)}
+.hof-rank{width:26px;text-align:center;font-family:"IBM Plex Mono",monospace;font-weight:800;font-size:15px;color:var(--ink-3);flex:0 0 auto}
 .schrow{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line-2);width:100%;text-align:left}
 .schrow:last-child{border-bottom:none}
 .schrow:active{background:var(--surface-2)}
@@ -479,7 +491,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"login",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],schedEdit:null,
-  ctab:"msg",msgtab:"chat",settab:"general",fantab:"list",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,achEdit:null,drafts:{},
+  ctab:"msg",msgtab:"chat",settab:"general",fantab:"list",hofCriteria:"cum",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,achEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
     mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
@@ -642,6 +654,7 @@ function renderAppbar(){
   else if(state.sub==="achievements"){h=`${back}<div><h1>업적</h1><div class="sub">크루 도전과제</div></div>`;}
   else if(state.sub==="schedule"){h=`${back}<div><h1>방송 스케줄</h1><div class="sub">일정 관리</div></div>`;}
   else if(state.sub==="notif"){h=`${back}<div><h1>알림</h1><div class="sub">접속 · 후원 · 등급</div></div>`;}
+  else if(state.sub==="halloffame"){h=`${back}<div><h1>명예의 전당</h1><div class="sub">최고의 후원자</div></div>`;}
   else{
     const map={msg:["채팅","팬과의 1:1 대화"],dono:["후원톡","받은 후원 관리"],fans:["팬 관리","등급별 CRM"],schedule:["방송 스케줄","일정 관리"],insights:["인사이트","크루 대시보드"],
       following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
@@ -662,6 +675,7 @@ function renderView(){
   if(state.sub==="achievements"){v.innerHTML=viewAchievements();return;}
   if(state.sub==="schedule"){v.innerHTML=viewSchedule();return;}
   if(state.sub==="notif"){v.innerHTML=viewNotif();return;}
+  if(state.sub==="halloffame"){v.innerHTML=viewHallOfFame();return;}
   if(state.role==="creator")v.innerHTML={msg:viewChat,dono:viewDono,fans:viewFansTab,schedule:viewSchedule,insights:viewInsights}[state.ctab]();
   else v.innerHTML={following:viewFollowing,discover:viewDiscover,dnotif:viewDNotif,me:viewMe}[state.dtab]();
 }
@@ -839,11 +853,31 @@ function sparkline(vals){const W=320,H=70,pl=4,pr=26,pt=8,ih=54,max=Math.max(...
   const d=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
   const area=`M${pl} ${pt+ih} `+pts.map(p=>"L"+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ")+` L${pts[pts.length-1][0].toFixed(1)} ${pt+ih} Z`,end=pts[pts.length-1];
   return `<svg viewBox="0 0 ${W} ${H}" role="img"><defs><linearGradient id="ret" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".24"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs><path d="${area}" fill="url(#ret)"/><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${end[0].toFixed(1)}" cy="${end[1].toFixed(1)}" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/><text x="${(end[0]-2).toFixed(1)}" y="${(end[1]-8).toFixed(1)}" text-anchor="end" font-size="10" font-family="IBM Plex Mono" font-weight="600" fill="var(--accent)">${vals[vals.length-1]}%</text></svg>`;}
+/* ---------- creator: 명예의 전당 ---------- */
+function hofValue(f,crit){return crit==="count"?f.count:crit==="temp"?f.temp:f.cum;}
+function hofFmt(v,crit){return crit==="count"?v+"회":crit==="temp"?v+"점":won(v);}
+function viewHallOfFame(){
+  const crit=state.hofCriteria||"cum";
+  const ranked=state.fans.filter(f=>!f.blocked).sort((a,b)=>hofValue(b,crit)-hofValue(a,crit));
+  const crits=[["cum","누적 후원"],["count","후원 횟수"],["temp","관계 온도"]];
+  const chips=crits.map(([k,l])=>`<button class="chip ${crit===k?"on":""}" data-act="hofcrit" data-v="${k}">${l}</button>`).join("");
+  const medals=["🥇","🥈","🥉"],cols=["#d4a017","#9aa4b4","#b08968"],top3=ranked.slice(0,3),order=[1,0,2];
+  const podium=order.map(i=>{const f=top3[i];if(!f)return `<div class="pod p${i+1}"></div>`;const rankN=i+1;
+    return `<div class="pod p${rankN}" style="--tc:${cols[i]}"><div class="pod-av" data-act="fan" data-v="${f.id}">${f.emoji}<span class="medal">${medals[i]}</span></div><div class="pod-name">${esc(f.name)}</div><div class="pod-val">${hofFmt(hofValue(f,crit),crit)}</div><div class="pod-base">${rankN}</div></div>`;}).join("");
+  const rest=ranked.slice(3).map((f,idx)=>`<button class="hof-row" data-act="fan" data-v="${f.id}"><div class="hof-rank">${idx+4}</div><div class="av" style="width:40px;height:40px;font-size:20px;border-radius:12px">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px">${esc(f.name)} ${gpill(f.cum)}</div></div><div class="mono" style="font-weight:700;font-size:13px">${hofFmt(hofValue(f,crit),crit)}</div></button>`).join("");
+  return `<div class="pad">
+    <div class="dhero" style="text-align:center"><div class="dh-k">🏆 명예의 전당</div><div class="dh-v" style="font-size:22px">최고의 후원자</div><div class="dh-d">우리 크루를 빛내주는 열혈팬</div><span class="cw">🏆</span></div>
+    <div class="chips" style="margin-top:14px">${chips}</div>
+    <div class="card pad"><div class="podium">${podium}</div></div>
+    ${rest?`<div class="sechd" style="margin-top:18px">4위 ~</div><div class="rows">${rest}</div>`:""}
+    <div class="hint">💡 기준을 바꿔 누적 후원·후원 횟수·관계 온도별 순위를 볼 수 있어요.</div></div>`;
+}
 function viewInsights(){
   const dist={};TIERS.forEach(t=>dist[t.key]=0);state.fans.forEach(f=>dist[tierOf(f.cum).key]++);const maxD=Math.max(...Object.values(dist))||1;
   const distBars=[...TIERS].reverse().map(t=>`<div class="tierbar"><div class="lb">${t.emoji} ${t.name}</div><div class="track"><div class="fill" style="width:${dist[t.key]/maxD*100}%;background:${t.color}"></div></div><div class="vv">${dist[t.key]}</div></div>`).join("");
   const gp=Math.round(state.goal.cur/state.goal.target*100),vipCnt=state.fans.filter(f=>isVIP(f.cum)).length,avgTemp=Math.round(state.fans.reduce((a,f)=>a+f.temp,0)/state.fans.length),risk=atRisk().length,total7=state.don.trend.reduce((a,b)=>a+b,0)*1000;
   return `<div class="pad">
+    <button class="card pad" data-act="openhof" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;margin-bottom:12px"><div class="ac-ic" style="background:linear-gradient(135deg,#d4a017,#f0c040);color:#fff">🏆</div><div style="flex:1"><b style="font-size:15px">명예의 전당</b><p style="font-size:12px;color:var(--ink-3);margin:2px 0 0">최고의 후원자 순위 보기</p></div><span class="sv">›</span></button>
     <div class="dhero"><div class="dh-k">VIP 후원자 수 (VIP 이상)</div><div class="dh-v">${vipCnt}명</div><div class="dh-d">▲ 2명 (전주 대비)</div><span class="cw">👑</span></div>
     <div class="metgrid"><div class="metcard"><div class="k">🌡️ 팬 관계 온도</div><div class="v">${avgTemp}<small>점</small></div><div class="mbar"><div class="f" style="width:${avgTemp}%;background:linear-gradient(90deg,var(--accent-2),var(--accent))"></div></div></div>
       <div class="metcard"><div class="k">⚠️ 이탈 위험 VIP</div><div class="v">${risk}<small>명</small></div><div class="mbar"><div class="f" style="width:${Math.min(100,risk/Math.max(vipCnt,1)*100)}%;background:linear-gradient(90deg,#ff9b6b,var(--crit))"></div></div></div></div>
@@ -1239,6 +1273,8 @@ $("#phone").addEventListener("click",e=>{
     case"settab":state.settab=v;renderView();break;
     case"fantab":state.fantab=v;renderView();break;
     case"opennotif":state.role="creator";state.sub="notif";state.param=null;render();break;
+    case"openhof":state.sub="halloffame";state.param=null;render();break;
+    case"hofcrit":state.hofCriteria=v;renderView();break;
     case"openbackup":state.sub="backup";state.param=null;render();break;
     case"openach":state.sub="achievements";state.param=null;render();break;
     case"opensched":state.sub="schedule";state.param=null;render();break;
