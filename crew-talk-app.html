@@ -140,6 +140,24 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .composer input{flex:1;border:1px solid var(--line);background:var(--surface-2);border-radius:22px;padding:10px 14px;font-size:14px;font-family:inherit;color:var(--ink);min-width:0}
 .composer .send{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-size:17px;flex:0 0 auto}
 .composer .dbtn{width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:19px;flex:0 0 auto;border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
+.subtabs{display:flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:14px}
+.subtabs button{flex:1;padding:9px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:5px}
+.subtabs button.on{background:var(--surface);color:var(--accent);box-shadow:var(--shadow)}
+.subtabs .sb{display:inline-grid;place-items:center;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--accent);color:var(--on-accent);font-size:9px;font-weight:700;font-family:"IBM Plex Mono",monospace}
+.dtcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+.dtcard.unans{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+.dt-top{display:flex;align-items:center;gap:10px;padding:12px 14px 8px}
+.dt-top .av{width:40px;height:40px;border-radius:12px;font-size:20px}
+.dt-top .nm{font-weight:600;font-size:14px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.dt-top .tm{font-size:10.5px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;margin-top:2px}
+.dt-amt{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:18px;color:var(--accent);white-space:nowrap}
+.dt-msg{padding:2px 14px 12px;font-size:14px;color:var(--ink);line-height:1.45}
+.dt-foot{display:flex;align-items:center;gap:8px;padding:9px 14px;border-top:1px solid var(--line-2);background:var(--surface-2)}
+.dt-status{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.dt-status.wait{background:var(--warn-soft);color:var(--warn)}
+.dt-status.done{background:var(--keep-soft);color:var(--keep)}
+.dt-reply{margin-left:auto;font-size:12px;font-weight:700;color:var(--on-accent);background:var(--accent);border-radius:20px;padding:7px 15px}
+.dt-reply.ghost{background:var(--surface);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
 .chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 12px;-webkit-overflow-scrolling:touch}
 .chips::-webkit-scrollbar{height:0}
 .chip{flex:0 0 auto;font-size:12px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);white-space:nowrap}
@@ -316,7 +334,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"onboarding",slide:0,
-  ctab:"msg",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,drafts:{},
+  ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
     mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
@@ -330,6 +348,14 @@ let state={
     mkFan(9,5000,30,true,35,2,0,"신규 유입, 온보딩 관심",["신규"]),
     mkFan(10,155000,60*24*15,false,66,12,0,"매운맛 리액션 담당 ㅋㅋ 요즘 잠잠",["이탈주의"]),
     mkFan(11,8000,60*24*20,false,25,2,0,"",["휴면위험"]),
+  ],
+  dtalks:[
+    {id:"d1",fid:"f1",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",min:7,answered:true},
+    {id:"d2",fid:"f5",amt:30000,text:"오늘도 화이팅! 💪",min:20,answered:false},
+    {id:"d3",fid:"f2",amt:100000,text:"다음 콘텐츠도 기대할게요! 밤에 또 올게요",min:95,answered:false},
+    {id:"d4",fid:"f7",amt:20000,text:"방송 늦게 봐서 아쉬워요 ㅠ 다음엔 일찍 올게요",min:200,answered:true},
+    {id:"d5",fid:"f4",amt:5000,text:"소소하게 응원합니다 :)",min:320,answered:true},
+    {id:"d6",fid:"f3",amt:10000,text:"이모티콘 감사해요 ㅋㅋㅋ",min:400,answered:true},
   ],
   notifs:[
     {type:"dono",title:"<b>👑 VVIP '별하늘'</b>님이 ₩50,000 후원",sub:"1:1 채팅 · 후원톡 도착",min:7,unread:true},
@@ -423,7 +449,7 @@ function renderView(){
   const v=$("#view");
   if(state.sub==="thread"){v.innerHTML=viewThread(state.param);v.scrollTop=v.scrollHeight;bindComposer();return;}
   if(state.sub==="fan"){v.innerHTML=viewFan(state.param);return;}
-  if(state.role==="creator")v.innerHTML={msg:viewMsg,fans:viewFans,notif:viewNotif,insights:viewInsights,settings:viewSettings}[state.ctab]();
+  if(state.role==="creator")v.innerHTML={msg:viewMsgTab,fans:viewFans,notif:viewNotif,insights:viewInsights,settings:viewSettings}[state.ctab]();
   else v.innerHTML={following:viewFollowing,discover:viewDiscover,dnotif:viewDNotif,me:viewMe}[state.dtab]();
 }
 
@@ -449,16 +475,40 @@ function viewThread(id){
 function bindComposer(){const ci=$("#ci");if(ci){ci.oninput=e=>{state.drafts[state.param]=e.target.value;};ci.onkeydown=e=>{if(e.key==="Enter")sendMsg(state.param);};}}
 
 /* ---------- creator: 쪽지 inbox ---------- */
-function viewMsg(){
+function viewMsgTab(){
+  const unread=state.fans.reduce((a,f)=>a+f.unread,0),unans=state.dtalks.filter(d=>!d.answered).length;
+  const seg=`<div class="subtabs">
+    <button class="${state.msgtab==="chat"?"on":""}" data-act="msgtab" data-v="chat">💬 채팅${unread?` <span class="sb">${unread}</span>`:""}</button>
+    <button class="${state.msgtab==="dono"?"on":""}" data-act="msgtab" data-v="dono">🎁 후원톡${unans?` <span class="sb">${unans}</span>`:""}</button></div>`;
+  return `<div class="pad">${seg}${state.msgtab==="chat"?msgInbox():donoFeed()}</div>`;
+}
+function msgInbox(){
   const list=[...state.fans].sort((a,b)=>(b.unread-a.unread)||(a.seenMin-b.seenMin));
   const rows=list.map(f=>`<button class="row" data-act="thread" data-v="${f.id}">
     <div class="av">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div>
     <div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}</div><div class="pv">${esc(threadPreview(f.thread))}</div></div>
     <div class="meta"><div class="tm">${threadTime(f.thread)||ago(f.seenMin)}</div>${f.unread?`<span class="cnt">${f.unread}</span>`:""}</div></button>`).join("");
-  const totalUnread=state.fans.reduce((a,f)=>a+f.unread,0);
-  return `<div class="pad"><div class="sechd">채팅 ${totalUnread?`· 안읽음 ${totalUnread}`:""}<span class="r" data-act="tab" data-v="fans">팬 관리 ›</span></div>
+  return `<div class="sechd">1:1 채팅 <span class="r" data-act="tab" data-v="fans">팬 관리 ›</span></div>
     <div class="rows">${rows}</div>
-    <div class="hint">💡 팬 한 명 한 명과 1:1 채팅으로 소통해요. 상단 <b>LIVE</b>를 켜면 실시간으로 채팅·후원톡이 들어옵니다.</div></div>`;
+    <div class="hint">💡 팬 한 명 한 명과 1:1 채팅으로 소통해요. 상단 <b>LIVE</b>를 켜면 실시간으로 채팅·후원톡이 들어옵니다.</div>`;
+}
+function donoFeed(){
+  let list=[...state.dtalks];
+  if(state.dtfilter==="wait")list=list.filter(d=>!d.answered);
+  if(state.dtfilter==="amt")list.sort((a,b)=>b.amt-a.amt);else list.sort((a,b)=>a.min-b.min);
+  const today=state.dtalks.filter(d=>d.min<24*60),todaySum=today.reduce((a,d)=>a+d.amt,0),gp=Math.round(state.goal.cur/state.goal.target*100);
+  const chips=[["all","전체"],["wait","미답장"],["amt","고액순"]].map(([k,l])=>`<button class="chip ${state.dtfilter===k?"on":""}" data-act="dtfilter" data-v="${k}">${l}${k==="wait"&&state.dtalks.some(d=>!d.answered)?` (${state.dtalks.filter(d=>!d.answered).length})`:""}</button>`).join("");
+  const cards=list.map(d=>{const f=fanById(d.fid);
+    return `<div class="dtcard ${d.answered?"":"unans"}">
+      <div class="dt-top"><div class="av">${f.emoji}</div><div style="flex:1;min-width:0"><div class="nm">${esc(f.name)} ${gpill(f.cum)}</div><div class="tm">${ago(d.min)}</div></div><div class="dt-amt">${won(d.amt)}</div></div>
+      <div class="dt-msg">“${esc(d.text)}”</div>
+      <div class="dt-foot">${d.answered?'<span class="dt-status done">✓ 답장 완료</span>':'<span class="dt-status wait">⏳ 답장 대기</span>'}<button class="dt-reply ${d.answered?"ghost":""}" data-act="dtreply" data-v="${d.id}">${d.answered?"채팅 열기":"답장하기"}</button></div>
+    </div>`;}).join("")||`<div class="empty">해당하는 후원톡이 없어요.</div>`;
+  return `<div class="card pad" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><div style="font-size:11.5px;color:var(--ink-3)">오늘 받은 후원톡</div><div style="font-size:21px;font-weight:700;margin-top:2px">${today.length}건 · ${won(todaySum)}</div></div>
+      <div style="text-align:right"><div style="font-size:11.5px;color:var(--ink-3)">이번 달 목표</div><div style="font-size:15px;font-weight:700;margin-top:2px" class="mono">${gp}%</div></div></div>
+    <div class="goalbar"><div class="goalfill" style="width:${gp}%"><span>${won(state.goal.cur)}</span></div></div></div>
+    <div class="chips">${chips}</div>${cards}`;
 }
 
 /* ---------- creator: fans CRM ---------- */
@@ -629,7 +679,9 @@ function viewLogin(){
 /* ================= ACTIONS ================= */
 function sendMsg(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if(!tx)return;state.drafts[id]="";
   const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];
-  p.thread.push({from:"out",text:tx,tm:nowT()});renderView();renderTabbar();}
+  p.thread.push({from:"out",text:tx,tm:nowT()});
+  if(state.role==="creator")state.dtalks.forEach(d=>{if(d.fid===id)d.answered=true;});
+  renderView();renderTabbar();}
 function doDonate(id){
   const amt=state.donPreset,msg=($("#donmsg")?$("#donmsg").value.trim():"")||"응원합니다!",c=creById(id),before=tierOf(c.myCum).key;
   c.myCum+=amt;c.myTemp=Math.min(100,(c.myTemp||0)+1);if(!c.thread)c.thread=[{t:"day",text:"오늘"}];
@@ -647,6 +699,7 @@ function liveTick(){
     if(r<0.4){const amt=[3000,5000,10000,30000,50000][Math.floor(Math.random()*5)],before=tierOf(f.cum).key;f.cum+=amt;f.online=true;f.seenMin=0;f.count++;
       const t2=["대박이에요 🔥","오늘도 최고!","힘내세요 💪","콘텐츠 미쳤다ㅋㅋ","항상 응원합니다"];const tx=t2[Math.floor(Math.random()*t2.length)];
       f.thread.push({from:"dono",amt,text:tx,tm:nowT()});if(!open)f.unread++;state.goal.cur+=amt;
+      state.dtalks.unshift({id:"d"+Date.now(),fid:f.id,amt,text:tx,min:0,answered:false});if(state.dtalks.length>60)state.dtalks.length=60;
       state.notifs.unshift({type:"dono",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 ${won(amt)} 후원`,sub:"1:1 채팅 · 후원톡 도착",min:0,unread:true});
       const after=tierOf(f.cum).key;if(tierIdx(after)>tierIdx(before)){const t=tierOf(f.cum);f.thread.push({from:"sys",text:`🎉 ${f.name}님이 ${t.emoji} ${t.name} 등급으로 올라섰어요!`});state.notifs.unshift({type:"grade",title:`<b>'${f.name}'</b>님이 ${t.emoji}${t.name}로 등급 상승`,sub:`누적 ${won(f.cum)} · 알림톡 자동 발송`,min:0,unread:true});}
     }else if(r<0.72){const t2=["안녕하세요~","오늘 방송 언제해요?","저 왔어요!","화이팅!!","이번 콘텐츠 기대돼요","답장 기다릴게요 ㅎㅎ"];f.thread.push({from:"in",text:t2[Math.floor(Math.random()*t2.length)],tm:nowT()});if(!open)f.unread++;
@@ -691,6 +744,9 @@ $("#phone").addEventListener("click",e=>{
     case"role":state.role=v;state.sub=null;state.param=null;if(v==="donator")state.dtab="following";else state.ctab="msg";render();break;
     case"live":toggleLive();break;
     case"tab":if(state.role==="creator")state.ctab=v;else state.dtab=v;state.sub=null;state.param=null;render();break;
+    case"msgtab":state.msgtab=v;renderView();break;
+    case"dtfilter":state.dtfilter=v;renderView();break;
+    case"dtreply":{const d=state.dtalks.find(x=>x.id===v);if(d){d.answered=true;state.sub="thread";state.param=d.fid;}render();break;}
     case"dtab":state.dtab=v;state.sub=null;render();break;
     case"back":state.sub=null;state.param=null;render();break;
     case"thread":state.sub="thread";state.param=v;render();break;
