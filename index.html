@@ -71,6 +71,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .livebtn{flex:0 0 auto;display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;padding:6px 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)}
 .livebtn.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .iconbtn{flex:0 0 auto;width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);display:grid;place-items:center;font-size:15px}
+.ntb-badge{position:absolute;top:-4px;right:-4px;min-width:15px;height:15px;padding:0 4px;border-radius:8px;background:var(--accent);color:var(--on-accent);font-size:9px;font-weight:700;place-items:center;font-family:"IBM Plex Mono",monospace;display:none;line-height:1}
+.ntb-badge.on{display:grid}
 .livebtn .d{width:7px;height:7px;border-radius:50%;background:var(--ink-3)}
 .livebtn.on .d{background:var(--accent);animation:pulse 1.6s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
@@ -416,6 +418,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       <div class="brand"><span class="logo">👑</span> 열혈톡</div>
       <div class="roleseg" id="roleseg"><button data-act="role" data-v="creator">크리에이터</button><button data-act="role" data-v="donator">도네이터</button></div>
       <button class="livebtn" data-act="live"><span class="d"></span><span id="liveLabel">LIVE</span></button>
+      <button class="iconbtn" id="notifbtn" data-act="opennotif" title="알림" style="position:relative">🔔<span class="ntb-badge" id="notifBadge"></span></button>
       <button class="iconbtn" id="gearbtn" data-act="opensettings" title="설정">⚙️</button>
     </div>
     <div id="appbar"></div>
@@ -476,7 +479,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"onboarding",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],schedEdit:null,
-  ctab:"msg",msgtab:"chat",settab:"general",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,drafts:{},
+  ctab:"msg",msgtab:"chat",settab:"general",fantab:"list",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
     mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
@@ -586,7 +589,7 @@ function exportSheet(){const json=JSON.stringify(snapshotData(),null,2);
   const t=$("#expjson");if(t)t.onclick=()=>t.select();}
 function importSheet(){openSheet(`<h3 class="sh">데이터 가져오기</h3><p class="sd">백업 JSON을 붙여넣어 복원합니다. 현재 데이터를 덮어써요.</p><textarea id="impjson" rows="8" placeholder="여기에 JSON 붙여넣기"></textarea><button class="btn" data-act="doimport">복원하기</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 
-const CTABS=[["msg","💬","채팅"],["dono","🎁","후원톡"],["fans","👥","팬 관리"],["notif","🔔","알림"],["insights","📊","인사이트"]];
+const CTABS=[["msg","💬","채팅"],["dono","🎁","후원톡"],["fans","👥","팬 관리"],["schedule","📅","스케줄"],["insights","📊","인사이트"]];
 const DTABS=[["following","💜","팔로잉"],["discover","🔍","탐색"],["dnotif","🔔","알림"],["me","🏅","내 정보"]];
 
 function render(){
@@ -597,6 +600,8 @@ function render(){
   document.querySelectorAll("#roleseg button").forEach(b=>b.classList.toggle("on",b.dataset.v===state.role));
   $("#liveLabel").textContent=state.live?"LIVE ●":"LIVE";document.querySelector(".livebtn").classList.toggle("on",state.live);
   $("#gearbtn").style.display=state.role==="creator"?"":"none";
+  $("#notifbtn").style.display=state.role==="creator"?"":"none";
+  const un=state.notifs.filter(n=>n.unread).length,nb=$("#notifBadge");if(nb){nb.textContent=un||"";nb.classList.toggle("on",un>0&&state.role==="creator");}
   renderTabbar();renderAppbar();renderView();
 }
 function renderTabbar(){
@@ -628,12 +633,12 @@ function renderAppbar(){
   else if(state.sub==="backup"){h=`${back}<div><h1>데이터 백업</h1><div class="sub">백업 · 복원</div></div>`;}
   else if(state.sub==="achievements"){h=`${back}<div><h1>업적</h1><div class="sub">크루 도전과제</div></div>`;}
   else if(state.sub==="schedule"){h=`${back}<div><h1>방송 스케줄</h1><div class="sub">일정 관리</div></div>`;}
+  else if(state.sub==="notif"){h=`${back}<div><h1>알림</h1><div class="sub">접속 · 후원 · 등급</div></div>`;}
   else{
-    const map={msg:["채팅","팬과의 1:1 대화"],dono:["후원톡","받은 후원 관리"],fans:["팬 관리","등급별 CRM"],notif:["알림","접속 · 후원 · 등급"],insights:["인사이트","크루 대시보드"],
+    const map={msg:["채팅","팬과의 1:1 대화"],dono:["후원톡","받은 후원 관리"],fans:["팬 관리","등급별 CRM"],schedule:["방송 스케줄","일정 관리"],insights:["인사이트","크루 대시보드"],
       following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
     const cur=state.role==="creator"?state.ctab:state.dtab,m=map[cur];let act="";
-    if(cur==="fans")act+=`<button class="act" data-act="segsheet" title="세그먼트 발송">${SEND_ICON}</button>`;
-    if(cur==="notif")act+=`<button class="act" data-act="winback" title="복귀 유도">💌</button>`;
+    if(cur==="fans"&&(state.fantab||"list")==="list")act+=`<button class="act" data-act="segsheet" title="세그먼트 발송">${SEND_ICON}</button>`;
     h=`<div><h1>${m[0]}</h1><div class="sub">${m[1]}</div></div><div class="sp"></div>${act}`;
   }
   $("#appbar").className="appbar";$("#appbar").innerHTML=h;
@@ -648,7 +653,8 @@ function renderView(){
   if(state.sub==="backup"){v.innerHTML=viewBackup();return;}
   if(state.sub==="achievements"){v.innerHTML=viewAchievements();return;}
   if(state.sub==="schedule"){v.innerHTML=viewSchedule();return;}
-  if(state.role==="creator")v.innerHTML={msg:viewChat,dono:viewDono,fans:viewFans,notif:viewNotif,insights:viewInsights}[state.ctab]();
+  if(state.sub==="notif"){v.innerHTML=viewNotif();return;}
+  if(state.role==="creator")v.innerHTML={msg:viewChat,dono:viewDono,fans:viewFansTab,schedule:viewSchedule,insights:viewInsights}[state.ctab]();
   else v.innerHTML={following:viewFollowing,discover:viewDiscover,dnotif:viewDNotif,me:viewMe}[state.dtab]();
 }
 
@@ -752,6 +758,14 @@ function fanCardSheet(id){const f=fanById(id),t=tierOf(f.cum),tn=fanTenure(f),no
     <button class="btn" data-act="sharecard">공유하기</button><button class="btn ghost" data-act="closesheet">닫기</button>`);
 }
 
+/* ---------- creator: 팬 관리 (탭: 팬 / 업적 / 자동화) ---------- */
+function viewFansTab(){
+  const tab=state.fantab||"list",tabs=[["list","팬"],["ach","업적"],["auto","자동화"]];
+  const bar=`<div class="pad" style="padding-bottom:0"><div class="subtabs" style="margin-bottom:0">${tabs.map(([k,l])=>`<button class="${tab===k?"on":""}" data-act="fantab" data-v="${k}">${l}</button>`).join("")}</div></div>`;
+  const body=tab==="ach"?viewAchievements():tab==="auto"?viewAutomation():viewFans();
+  return bar+body;
+}
+
 /* ---------- creator: fans CRM ---------- */
 function getFilters(){const n=TIERS.length;return [["all","전체"],["top","👑 "+TIERS[n-1].name],["high","💜 "+TIERS[n-2].name+"+"],["risk","⚠️ 이탈 위험"],["online","🔥 온라인"],["dormant","💤 휴면"]];}
 function filterFans(){let f=[...state.fans];
@@ -835,7 +849,7 @@ function viewSettings(){
   const rules=[["presence","도네이터 접속 알림","단골·상위 등급 접속 시"],["dono","후원톡 알림","후원 도착 시 즉시"],["grade","등급 변동 알림","팬 등급 상승/강등"],["broadcast","방송 시작 알림","팬에게 발송"],["dnd","방해금지 (00–08시)","야간 푸시 묶음"]].map(([k,l,d])=>`<div class="setrow"><div class="sl"><b>${l}</b><p>${d}</p></div><div class="tgl ${state.alertRules[k]?"on":""}" data-act="rule" data-v="${k}"></div></div>`).join("");
   const active=state.automation.rules.filter(r=>r.on).length;
   const tab=state.settab||"general";
-  const tabs=[["general","일반"],["grade","등급"],["crew","크루"],["data","데이터"]];
+  const tabs=[["general","일반"],["grade","등급설정"],["backup","백업"]];
   const tabbar=`<div class="subtabs">${tabs.map(([k,l])=>`<button class="${tab===k?"on":""}" data-act="settab" data-v="${k}">${l}</button>`).join("")}</div>`;
   const ic=(e)=>`<div class="ac-ic" style="width:36px;height:36px;font-size:16px;background:var(--accent-soft)">${e}</div>`;
   let body="";
@@ -845,21 +859,15 @@ function viewSettings(){
       <button class="${state.theme==="light"?"on":""}" data-act="theme" data-v="light">☀️ 라이트</button>
       <button class="${state.theme==="dark"?"on":""}" data-act="theme" data-v="dark">🌙 다크</button></div>
     <div class="sechd" style="margin-top:18px">알림 규칙</div><div class="rows">${rules}</div>
+    <div class="sechd" style="margin-top:18px">투네이션 연동</div><div class="rows"><div class="setrow"><div class="sl"><b>후원 Webhook</b><p>실시간 후원 이벤트 수신</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div><div class="setrow"><div class="sl"><b>계정 SSO</b><p>투네이션 계정 연동</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div></div>
     <button class="btn ghost" data-act="logout" style="color:var(--crit);margin-top:18px">로그아웃</button>`;}
   else if(tab==="grade"){body=`
     <div class="sechd">VIP 등급 안내</div><div class="tiercards">${cards}</div>
     <div class="sechd" style="margin-top:18px">등급 관리</div><div class="card pad"><p style="font-size:12px;color:var(--ink-3);margin:0 0 10px">등급 이름과 누적 후원 임계값(원)을 자유롭게 바꾸고, 등급을 추가·삭제할 수 있어요.</p>${tiers}<button class="btn ghost" data-act="addtier" style="margin-top:12px">+ 등급 추가</button><button class="btn" data-act="savetiers">저장 & 전체 재산정</button></div>`;}
-  else if(tab==="crew"){body=`
-    <div class="sechd">크루 관리</div><div class="rows">
-      <button class="setrow" data-act="openach" style="width:100%;text-align:left">${ic("🏆")}<div class="sl"><b>업적 / 도전과제</b><p>${crewAchievements().filter(a=>a.done).length}/${crewAchievements().length} 달성</p></div><span class="sv">›</span></button>
-      <button class="setrow" data-act="opensched" style="width:100%;text-align:left">${ic("📅")}<div class="sl"><b>방송 스케줄</b><p>${state.schedule.length}개 일정</p></div><span class="sv">›</span></button></div>
-    <div class="sechd" style="margin-top:18px">자동화</div><div class="rows">
-      <button class="setrow" data-act="openauto" style="text-align:left;width:100%">${ic("⚡")}<div class="sl"><b>열혈톡 자동 알림 관리</b><p>${state.automation.on?active+"개 시나리오 활성":"꺼짐"} · 열혈톡 푸시로 발송</p></div><span class="sv">›</span></button></div>`;}
-  else if(tab==="data"){body=`
-    <div class="sechd">투네이션 연동</div><div class="rows"><div class="setrow"><div class="sl"><b>후원 Webhook</b><p>실시간 후원 이벤트 수신</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div><div class="setrow"><div class="sl"><b>계정 SSO</b><p>투네이션 계정 연동</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div></div>
-    <div class="sechd" style="margin-top:18px">데이터 백업</div><div class="rows"><button class="setrow" data-act="openbackup" style="width:100%;text-align:left">${ic("💾")}<div class="sl"><b>데이터 백업 · 복원</b><p>${state.lastBackup?"마지막 백업 "+fmtTime(state.lastBackup):"백업 없음"}</p></div><span class="sv">›</span></button></div>`;}
+  else if(tab==="backup"){body=`
+    <div class="sechd">데이터 백업</div><div class="rows"><button class="setrow" data-act="openbackup" style="width:100%;text-align:left">${ic("💾")}<div class="sl"><b>데이터 백업 · 복원</b><p>${state.lastBackup?"마지막 백업 "+fmtTime(state.lastBackup):"백업 없음"}</p></div><span class="sv">›</span></button></div>`;}
   return `<div class="pad">${tabbar}${body}
-    <div class="hint">열혈톡 v0.7 프로토타입 · 설정 탭</div></div>`;
+    <div class="hint">열혈톡 v0.8 프로토타입 · 설정 탭</div></div>`;
 }
 
 /* ---------- creator: 업적 (크루 도전과제) ---------- */
@@ -1183,6 +1191,8 @@ $("#phone").addEventListener("click",e=>{
     case"closesheet":closeSheet();break;
     case"theme":applyTheme(v);render();break;
     case"settab":state.settab=v;renderView();break;
+    case"fantab":state.fantab=v;renderView();break;
+    case"opennotif":state.role="creator";state.sub="notif";state.param=null;render();break;
     case"openbackup":state.sub="backup";state.param=null;render();break;
     case"openach":state.sub="achievements";state.param=null;render();break;
     case"opensched":state.sub="schedule";state.param=null;render();break;
