@@ -165,6 +165,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .emoji-btn:active{background:var(--accent-soft)}
 .emoji-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .emoji-mini{font-size:19px;width:40px;height:40px;border-radius:11px;background:var(--surface-2);border:1px solid var(--line)}
+.emoji-mini.on{border-color:var(--accent);background:var(--accent-soft)}
 .dono-thumb-wrap{position:relative;display:inline-block;margin-top:12px}
 .dono-thumb{max-width:120px;max-height:120px;border-radius:12px;display:block;border:1px solid var(--line)}
 .thumb-x{position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:15px;box-shadow:var(--shadow)}
@@ -479,7 +480,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"onboarding",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],schedEdit:null,
-  ctab:"msg",msgtab:"chat",settab:"general",fantab:"list",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,drafts:{},
+  ctab:"msg",msgtab:"chat",settab:"general",fantab:"list",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,achEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
     mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
@@ -522,6 +523,16 @@ let state={
   retention:{d30:43,trend:[31,34,33,38,40,41,43]},
   autoperf:{sent:142,open:72,conv:8.5},
   events:[{name:"별하늘",emoji:"🌙",label:"후원 1주년",d:11},{name:"해피",emoji:"🐻",label:"생일",d:5},{name:"코코",emoji:"🐱",label:"생일",d:12}],
+  achievements:[
+    {id:"a1",emoji:"🎉",name:"첫 후원톡",desc:"첫 후원톡을 받았어요",metric:"dono",target:1},
+    {id:"a2",emoji:"👥",name:"팬 10명",desc:"팬 10명 모으기",metric:"fans",target:10},
+    {id:"a3",emoji:"👑",name:"VIP 팬 5명",desc:"VIP 이상 팬 5명 확보",metric:"vip",target:5},
+    {id:"a4",emoji:"💎",name:"VVIP 팬 2명",desc:"VVIP 이상 팬 2명 확보",metric:"vvip",target:2},
+    {id:"a5",emoji:"💰",name:"누적 후원 300만",desc:"크루 누적 후원 300만원",metric:"totalCum",target:3000000},
+    {id:"a6",emoji:"🏆",name:"누적 후원 1000만",desc:"크루 누적 후원 1000만원",metric:"totalCum",target:10000000},
+    {id:"a7",emoji:"🤖",name:"자동화 마스터",desc:"자동화 3개 이상 운영",metric:"autoOn",target:3},
+    {id:"a8",emoji:"🌡️",name:"찐팬 크루",desc:"평균 관계 온도 70 이상",metric:"avgTemp",target:70},
+  ],
   schedule:[
     {id:"s1",title:"엑셀방송",date:"2026-09-15",time:"21:00",type:"방송"},
     {id:"s2",title:"휴방 안내",date:"2026-09-18",time:"19:00",type:"공지"},
@@ -704,7 +715,7 @@ function sendSticker(id,emoji){const p=state.role==="creator"?fanById(id):creByI
 function viewChat(){return `<div class="pad">${msgInbox()}</div>`;}
 function viewDono(){return `<div class="pad">${donoFeed()}</div>`;}
 function msgInbox(){
-  const list=[...state.fans].sort((a,b)=>(b.unread-a.unread)||(a.seenMin-b.seenMin));
+  const list=state.fans.filter(f=>!f.blocked).sort((a,b)=>(b.unread-a.unread)||(a.seenMin-b.seenMin));
   const rows=list.map(f=>`<button class="row" data-act="thread" data-v="${f.id}">
     <div class="av">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div>
     <div class="main"><div class="tt">${fanLink(f)} ${gpill(f.cum)}</div><div class="pv">${esc(threadPreview(f.thread,true))}</div></div>
@@ -714,7 +725,7 @@ function msgInbox(){
     <div class="hint">💡 팬 한 명 한 명과 1:1 채팅으로 소통해요. 상단 <b>LIVE</b>를 켜면 실시간으로 채팅·후원톡이 들어옵니다.</div>`;
 }
 function donoFeed(){
-  let list=[...state.dtalks];
+  let list=state.dtalks.filter(d=>{const f=fanById(d.fid);return f&&!f.blocked;});
   if(state.dtfilter==="wait")list=list.filter(d=>!d.answered);
   if(state.dtfilter==="amt")list.sort((a,b)=>b.amt-a.amt);else list.sort((a,b)=>a.min-b.min);
   const today=state.dtalks.filter(d=>d.min<24*60),todaySum=today.reduce((a,d)=>a+d.amt,0),answered=state.dtalks.filter(d=>d.answered).length,unans=state.dtalks.filter(d=>!d.answered).length,totalCum=state.fans.reduce((a,f)=>a+f.cum,0);
@@ -767,8 +778,10 @@ function viewFansTab(){
 }
 
 /* ---------- creator: fans CRM ---------- */
-function getFilters(){const n=TIERS.length;return [["all","전체"],["watch","🔔 접속알림"],["top","👑 "+TIERS[n-1].name],["high","💜 "+TIERS[n-2].name+"+"],["risk","⚠️ 이탈 위험"],["online","🔥 온라인"],["dormant","💤 휴면"]];}
+function getFilters(){const n=TIERS.length;return [["all","전체"],["watch","🔔 접속알림"],["top","👑 "+TIERS[n-1].name],["high","💜 "+TIERS[n-2].name+"+"],["risk","⚠️ 이탈 위험"],["online","🔥 온라인"],["dormant","💤 휴면"],["block","🚫 차단"]];}
 function filterFans(){let f=[...state.fans];
+  if(state.filter==="block")return f.filter(x=>x.blocked).sort((a,b)=>b.cum-a.cum);
+  f=f.filter(x=>!x.blocked);
   if(state.filter==="watch")f=f.filter(x=>x.watch);
   else if(state.filter==="top")f=f.filter(x=>tierIdx(tierOf(x.cum).key)===TIERS.length-1);
   else if(state.filter==="high")f=f.filter(x=>tierIdx(tierOf(x.cum).key)>=TIERS.length-2);
@@ -781,7 +794,7 @@ function viewFans(){
   const list=filterFans();
   const rows=list.map(f=>{const risk=isVIP(f.cum)&&f.seenMin>=7*1440;
     return `<button class="row" data-act="fan" data-v="${f.id}"><div class="av">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div>
-    <div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}${f.watch?' <span class="gp" style="--gc:var(--accent)">🔔</span>':""}${risk?' <span class="gp" style="--gc:var(--crit)">⚠️ 이탈위험</span>':""}</div><div class="pv">누적 ${won(f.cum)} · ${f.online?"<span style='color:var(--keep)'>● 온라인</span>":ago(f.seenMin)+" 접속"}</div></div>
+    <div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}${f.blocked?' <span class="gp" style="--gc:var(--crit)">🚫 차단</span>':""}${f.watch?' <span class="gp" style="--gc:var(--accent)">🔔</span>':""}${risk?' <span class="gp" style="--gc:var(--crit)">⚠️ 이탈위험</span>':""}</div><div class="pv">누적 ${won(f.cum)} · ${f.online?"<span style='color:var(--keep)'>● 온라인</span>":ago(f.seenMin)+" 접속"}</div></div>
     <div class="meta"><div class="tm">›</div></div></button>`;}).join("")||`<div class="empty">조건에 맞는 팬이 없어요.</div>`;
   return `<div class="pad"><div class="chips">${chips}</div>
     <div class="sechd">${list.length}명 표시 · 총 ${state.fans.length}명 · 온라인 ${state.fans.filter(f=>f.online).length}<span class="r" data-act="segsheet">세그먼트 발송 ${SEND_ICON}</span></div>
@@ -808,7 +821,8 @@ function viewFan(id){
     <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 8px">🏆 업적 <span class="r">${achDone}/${achs.length} 달성</span></div>
       <div class="badgerow">${achs.filter(a=>a.done).map(a=>`<div class="badge-ic" title="${esc(a.name)}">${a.emoji}</div>`).join("")||'<span style="font-size:12px;color:var(--ink-3)">아직 획득한 업적이 없어요</span>'}</div>
       <div class="achlist">${achs.map(a=>`<div class="ach ${a.done?"done":""}"><div class="ach-ic">${a.emoji}</div><div class="ach-main"><div class="ach-nm">${esc(a.name)}${a.done?' <span class="ach-chk">✓</span>':""}</div><div class="ach-ds">${esc(a.desc)}</div>${a.done?"":`<div class="ptrack" style="margin-top:6px"><div class="pfill" style="width:${a.prog}%;background:var(--accent)"></div></div>`}</div></div>`).join("")}</div></div>
-    <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 4px">🕘 최근 후원 이력</div>${hist}</div></div>`;
+    <div class="card pad" style="margin-top:12px"><div class="sechd" style="margin:0 0 4px">🕘 최근 후원 이력</div>${hist}</div>
+    <button class="btn ghost" data-act="blocktgl" data-v="${id}" style="color:${f.blocked?"var(--keep)":"var(--crit)"};margin-top:12px">${f.blocked?"🔓 차단 해제":"🚫 이 팬 차단하기"}</button></div>`;
 }
 
 /* ---------- creator: notif / insights / settings ---------- */
@@ -873,25 +887,47 @@ function viewSettings(){
 }
 
 /* ---------- creator: 업적 (크루 도전과제) ---------- */
-function crewAchievements(){
-  const fans=state.fans.length,vip=state.fans.filter(f=>isVIP(f.cum)).length,vvip=state.fans.filter(f=>tierIdx(tierOf(f.cum).key)>=tierIdx("vvip")).length,totalCum=state.fans.reduce((a,f)=>a+f.cum,0),avgTemp=Math.round(state.fans.reduce((a,f)=>a+f.temp,0)/state.fans.length),autoOn=state.automation.rules.filter(r=>r.on).length,donoN=state.dtalks.length;
-  return [
-    {emoji:"🎉",name:"첫 후원톡",desc:"첫 후원톡을 받았어요",done:donoN>=1,prog:donoN?100:0},
-    {emoji:"👥",name:"팬 10명",desc:"팬 10명 모으기",done:fans>=10,prog:Math.round(Math.min(100,fans/10*100))},
-    {emoji:"👑",name:"VIP 팬 5명",desc:"VIP 이상 팬 5명 확보",done:vip>=5,prog:Math.round(Math.min(100,vip/5*100))},
-    {emoji:"💎",name:"VVIP 팬 2명",desc:"VVIP 이상 팬 2명 확보",done:vvip>=2,prog:Math.round(Math.min(100,vvip/2*100))},
-    {emoji:"💰",name:"누적 후원 300만",desc:"크루 누적 후원 300만원",done:totalCum>=3000000,prog:Math.round(Math.min(100,totalCum/3000000*100))},
-    {emoji:"🏆",name:"누적 후원 1000만",desc:"크루 누적 후원 1000만원",done:totalCum>=10000000,prog:Math.round(Math.min(100,totalCum/10000000*100))},
-    {emoji:"🤖",name:"자동화 마스터",desc:"자동화 3개 이상 운영",done:autoOn>=3,prog:Math.round(Math.min(100,autoOn/3*100))},
-    {emoji:"🌡️",name:"찐팬 크루",desc:"평균 관계 온도 70 이상",done:avgTemp>=70,prog:Math.round(Math.min(100,avgTemp/70*100))},
-  ];
-}
+const ACH_METRICS=[
+  {k:"fans",label:"팬 수",unit:"명",fmt:v=>v+"명",cur:()=>state.fans.filter(f=>!f.blocked).length},
+  {k:"vip",label:"VIP 이상 팬",unit:"명",fmt:v=>v+"명",cur:()=>state.fans.filter(f=>!f.blocked&&isVIP(f.cum)).length},
+  {k:"vvip",label:"VVIP 이상 팬",unit:"명",fmt:v=>v+"명",cur:()=>state.fans.filter(f=>!f.blocked&&tierIdx(tierOf(f.cum).key)>=tierIdx("vvip")).length},
+  {k:"totalCum",label:"누적 후원액",unit:"원",fmt:v=>won(v),cur:()=>state.fans.reduce((a,f)=>a+f.cum,0)},
+  {k:"dono",label:"후원톡 수",unit:"건",fmt:v=>v+"건",cur:()=>state.dtalks.length},
+  {k:"autoOn",label:"운영 자동화",unit:"개",fmt:v=>v+"개",cur:()=>state.automation.rules.filter(r=>r.on).length},
+  {k:"avgTemp",label:"평균 관계 온도",unit:"점",fmt:v=>v+"점",cur:()=>Math.round(state.fans.reduce((a,f)=>a+f.temp,0)/state.fans.length)},
+];
+function achMetric(k){return ACH_METRICS.find(m=>m.k===k)||ACH_METRICS[0];}
+function crewAchievements(){return state.achievements.map(a=>{const m=achMetric(a.metric),cur=m.cur();return Object.assign({},a,{cur,fmtCur:m.fmt(cur),fmtTarget:m.fmt(a.target),metricLabel:m.label,done:cur>=a.target,prog:Math.round(Math.min(100,a.target?cur/a.target*100:100))});});}
 function viewAchievements(){const achs=crewAchievements(),done=achs.filter(a=>a.done).length;
+  const items=achs.map(a=>`<div class="autocard ${a.done?"":"off"}">
+    <div class="ac-head"><div class="ac-ic">${a.emoji}</div><div style="flex:1"><div class="ac-name">${esc(a.name)}${a.done?' <span class="ach-chk">✓</span>':""}</div><div class="ac-meta"><span>${esc(a.desc)}</span></div></div></div>
+    <div class="ac-tpl"><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2)"><span>${a.metricLabel}</span><span class="mono">${a.fmtCur} / ${a.fmtTarget}</span></div><div class="ptrack" style="margin-top:7px"><div class="pfill" style="width:${a.prog}%;background:${a.done?"var(--keep)":"var(--accent)"}"></div></div></div>
+    <div class="ac-foot"><span class="ac-sent">${a.done?"✓ 달성 완료":a.prog+"% 진행 중"}</span><button class="ac-btn" data-act="achedit" data-v="${a.id}">수정</button></div></div>`).join("");
   return `<div class="pad">
     <div class="dhero"><div class="dh-k">달성한 업적</div><div class="dh-v">${done} / ${achs.length}</div><div class="dh-d">크루 레벨 ${Math.max(1,Math.ceil(done/2))} · 계속 도전해보세요</div><span class="cw">🏆</span></div>
-    <div class="card pad" style="margin-top:14px"><div class="badgerow">${achs.filter(a=>a.done).map(a=>`<div class="badge-ic" title="${esc(a.name)}">${a.emoji}</div>`).join("")||'<span style="font-size:12px;color:var(--ink-3)">아직 달성한 업적이 없어요</span>'}</div>
-      <div class="achlist">${achs.map(a=>`<div class="ach ${a.done?"done":""}"><div class="ach-ic">${a.emoji}</div><div class="ach-main"><div class="ach-nm">${esc(a.name)}${a.done?' <span class="ach-chk">✓</span>':""}</div><div class="ach-ds">${esc(a.desc)}</div>${a.done?"":`<div class="ptrack" style="margin-top:6px"><div class="pfill" style="width:${a.prog}%;background:var(--accent)"></div></div>`}</div></div>`).join("")}</div></div>
-    <div class="hint">💡 팬을 모으고 관계를 다질수록 새로운 업적이 열려요.</div></div>`;
+    <div class="sechd" style="margin-top:16px">획득 배지</div><div class="card pad"><div class="badgerow" style="margin:0">${achs.filter(a=>a.done).map(a=>`<div class="badge-ic" title="${esc(a.name)}">${a.emoji}</div>`).join("")||'<span style="font-size:12px;color:var(--ink-3)">아직 달성한 업적이 없어요</span>'}</div></div>
+    <div class="sechd" style="margin-top:18px">업적 목록 <span class="r">${achs.length}개</span></div>${items}
+    <button class="addauto" data-act="achnew">＋ 새 업적 만들기</button>
+    <div class="hint">💡 조건(지표)과 목표값을 직접 정해 나만의 업적을 만들 수 있어요.</div></div>`;
+}
+const ACH_EMOJIS=["🏆","🎉","👑","💎","💰","🔥","🤖","🌡️","⭐","🥇","🎯","💜","👥","🚀","🌟","❤️"];
+function openAchEditor(id){
+  if(id){const a=state.achievements.find(x=>x.id===id);state.achEdit={id:a.id,emoji:a.emoji,name:a.name,desc:a.desc,metric:a.metric,target:a.target};}
+  else state.achEdit={id:null,emoji:"🏆",name:"",desc:"",metric:"fans",target:10};
+  achEditorSheet();
+}
+function captureAch(){const n=$("#acName"),d=$("#acDesc"),t=$("#acTarget");if(n)state.achEdit.name=n.value;if(d)state.achEdit.desc=d.value;if(t)state.achEdit.target=parseInt((t.value||"").replace(/\D/g,""))||0;}
+function achEditorSheet(){const e=state.achEdit;
+  const emos=ACH_EMOJIS.map(x=>`<button class="emoji-mini ${e.emoji===x?"on":""}" data-act="ach-emoji" data-v="${x}">${x}</button>`).join("");
+  const mets=ACH_METRICS.map(m=>`<button class="chip ${e.metric===m.k?"on":""}" data-act="ach-metric" data-v="${m.k}">${m.label}</button>`).join("");
+  openSheet(`<h3 class="sh">${e.id?"업적 수정":"새 업적 만들기"}</h3><p class="sd">조건(지표)이 목표값에 도달하면 업적이 완료돼요.</p>
+    <label class="ae-lb">아이콘</label><div class="emoji-row">${emos}</div>
+    <label class="ae-lb">이름</label><input id="acName" value="${esc(e.name)}" placeholder="예: 팬 50명" autocomplete="off" maxlength="16">
+    <label class="ae-lb">설명</label><input id="acDesc" value="${esc(e.desc)}" placeholder="예: 팬 50명 모으기" autocomplete="off" maxlength="30">
+    <label class="ae-lb">조건 · 지표</label><div class="chips wrap">${mets}</div>
+    <label class="ae-lb">목표값 (${achMetric(e.metric).unit})</label><input id="acTarget" class="mono" value="${e.target}" inputmode="numeric">
+    <button class="btn" data-act="ach-save">${e.id?"저장":"만들기"}</button>
+    ${e.id?`<button class="btn ghost" data-act="ach-del" style="color:var(--crit)">이 업적 삭제</button>`:`<button class="btn ghost" data-act="closesheet">취소</button>`}`);
 }
 
 /* ---------- creator: 방송 스케줄 ---------- */
@@ -1085,7 +1121,8 @@ function doDonate(id){
 }
 function liveTick(){
   if(state.role==="creator"){
-    const pool=state.fans,f=pool[Math.floor(Math.random()*pool.length)],r=Math.random(),open=state.sub==="thread"&&state.param===f.id;
+    const pool=state.fans.filter(x=>!x.blocked);if(!pool.length){renderTabbar();return;}
+    const f=pool[Math.floor(Math.random()*pool.length)],r=Math.random(),open=state.sub==="thread"&&state.param===f.id;
     if(r<0.4){const amt=[3000,5000,10000,30000,50000][Math.floor(Math.random()*5)],before=tierOf(f.cum).key;f.cum+=amt;f.online=true;f.seenMin=0;f.count++;
       const t2=["대박이에요 🔥","오늘도 최고!","힘내세요 💪","콘텐츠 미쳤다ㅋㅋ","항상 응원합니다"];const tx=t2[Math.floor(Math.random()*t2.length)];
       f.thread.push({from:"dono",amt,text:tx,tm:nowT()});if(!open)f.unread++;state.goal.cur+=amt;
@@ -1165,6 +1202,13 @@ $("#phone").addEventListener("click",e=>{
     case"savememo":fanById(v).memo=$("#memo").value;toast("메모를 저장했어요");break;
     case"benefit":toast("🎁 맞춤 혜택 설정 (프로토타입)");break;
     case"watchtgl":{const f=fanById(v);f.watch=!f.watch;toast(f.watch?`🔔 ${f.name}님 접속 알림을 켰어요`:"접속 알림을 껐어요");renderView();break;}
+    case"blocktgl":{const f=fanById(v);f.blocked=!f.blocked;if(f.blocked)f.watch=false;toast(f.blocked?`🚫 ${f.name}님을 차단했어요`:`${f.name}님 차단을 해제했어요`);renderView();break;}
+    case"achnew":openAchEditor(null);break;
+    case"achedit":openAchEditor(v);break;
+    case"ach-emoji":captureAch();state.achEdit.emoji=v;achEditorSheet();break;
+    case"ach-metric":captureAch();state.achEdit.metric=v;achEditorSheet();break;
+    case"ach-save":{captureAch();const e=state.achEdit;if(!e.name.trim())e.name="새 업적";if(!e.desc.trim())e.desc=achMetric(e.metric).label+" "+e.target;if(e.id){Object.assign(state.achievements.find(x=>x.id===e.id),{emoji:e.emoji,name:e.name,desc:e.desc,metric:e.metric,target:e.target});toast("업적을 저장했어요");}else{state.achievements.push({id:"a"+Date.now(),emoji:e.emoji,name:e.name,desc:e.desc,metric:e.metric,target:e.target});toast("새 업적을 만들었어요 ✨");}state.achEdit=null;closeSheet();renderView();break;}
+    case"ach-del":state.achievements=state.achievements.filter(x=>x.id!==state.achEdit.id);state.achEdit=null;closeSheet();renderView();toast("업적을 삭제했어요");break;
     case"addtier":readTierRows();{const mx=Math.max(0,...TIERS.map(t=>t.min));TIERS.push({key:"t"+Date.now(),name:"새 등급",emoji:"👑",color:"#8b6ef0",min:mx+100000});}renderView();break;
     case"deltier":readTierRows();if(TIERS.length<=2){toast("등급은 최소 2개가 필요해요");break;}TIERS=TIERS.filter(t=>t.key!==v);renderView();break;
     case"savetiers":readTierRows();normalizeTiers();render();toast("등급 저장 · 전체 재산정 완료");break;
@@ -1218,5 +1262,6 @@ $("#phone").addEventListener("click",e=>{
   }
 });
 ["f1","f2","f5"].forEach(id=>{const f=fanById(id);if(f)f.watch=true;});
+{const bf=fanById("f8");if(bf)bf.blocked=true;}
 initTheme();initBackupMeta();render();
 </script>
