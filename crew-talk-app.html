@@ -70,6 +70,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .roleseg button.on{background:var(--accent);color:var(--on-accent)}
 .livebtn{flex:0 0 auto;display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;padding:6px 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)}
 .livebtn.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.iconbtn{flex:0 0 auto;width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);display:grid;place-items:center;font-size:15px}
 .livebtn .d{width:7px;height:7px;border-radius:50%;background:var(--ink-3)}
 .livebtn.on .d{background:var(--accent);animation:pulse 1.6s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
@@ -136,7 +137,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .dono .amt{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:18px}
 .dono .bg{font-size:9px;background:rgba(255,255,255,.22);padding:2px 8px;border-radius:20px;letter-spacing:.06em;font-weight:600}
 .dono .tx{font-size:13.5px;margin-top:7px;position:relative;line-height:1.4}
-.composer{position:sticky;bottom:0;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line);align-items:center}
+.footwrap{position:sticky;bottom:0;background:var(--surface)}
+.replybar{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--accent-soft);border-top:1px solid color-mix(in srgb,var(--accent) 28%,transparent)}
+.replybar .rb-ic{font-size:18px;flex:0 0 auto}
+.replybar .rb-txt{flex:1;min-width:0;font-size:11.5px;color:var(--ink-2)}
+.replybar .rb-txt b{color:var(--accent)}
+.replybar .rb-msg{font-size:12.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.rb-x{width:24px;height:24px;border-radius:50%;background:var(--surface);color:var(--ink-3);font-size:15px;flex:0 0 auto}
+.composer{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line);align-items:center}
 .composer input{flex:1;border:1px solid var(--line);background:var(--surface-2);border-radius:22px;padding:10px 14px;font-size:14px;font-family:inherit;color:var(--ink);min-width:0}
 .composer .send{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-size:17px;flex:0 0 auto}
 .composer .dbtn{width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:19px;flex:0 0 auto;border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
@@ -302,6 +310,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       <div class="brand"><span class="logo">👑</span> 열혈톡</div>
       <div class="roleseg" id="roleseg"><button data-act="role" data-v="creator">크리에이터</button><button data-act="role" data-v="donator">도네이터</button></div>
       <button class="livebtn" data-act="live"><span class="d"></span><span id="liveLabel">LIVE</span></button>
+      <button class="iconbtn" id="gearbtn" data-act="opensettings" title="설정">⚙️</button>
     </div>
     <div id="appbar"></div>
     <div class="view" id="view"></div>
@@ -348,7 +357,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"onboarding",slide:0,
-  ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,drafts:{},
+  ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
     mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
@@ -426,6 +435,7 @@ function render(){
   if(state.screen==="login"){$("#view").innerHTML=viewLogin();return;}
   document.querySelectorAll("#roleseg button").forEach(b=>b.classList.toggle("on",b.dataset.v===state.role));
   $("#liveLabel").textContent=state.live?"LIVE ●":"LIVE";document.querySelector(".livebtn").classList.toggle("on",state.live);
+  $("#gearbtn").style.display=state.role==="creator"?"":"none";
   renderTabbar();renderAppbar();renderView();
 }
 function renderTabbar(){
@@ -457,7 +467,6 @@ function renderAppbar(){
     const cur=state.role==="creator"?state.ctab:state.dtab,m=map[cur];let act="";
     if(cur==="fans")act+=`<button class="act" data-act="segsheet" title="세그먼트 발송">✈️</button>`;
     if(cur==="notif")act+=`<button class="act" data-act="winback" title="복귀 유도">💌</button>`;
-    if(state.role==="creator")act+=`<button class="act" data-act="opensettings" title="설정">⚙️</button>`;
     h=`<div><h1>${m[0]}</h1><div class="sub">${m[1]}</div></div><div class="sp"></div>${act}`;
   }
   $("#appbar").className="appbar";$("#appbar").innerHTML=h;
@@ -497,7 +506,9 @@ function viewThread(id){
   const draft=state.drafts[id]||"";
   const dbtn=state.role==="donator"?`<button class="dbtn" data-act="donsheet" data-v="${id}" title="후원톡">🎁</button>`:"";
   const attach=`<button class="attach" data-act="emoji" data-v="${id}" title="스티커">😊</button><label class="attach" for="imgfile" title="이미지 첨부">🖼️</label><input type="file" id="imgfile" accept="image/*" hidden>`;
-  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="composer">${attach}${dbtn}<input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="send" data-v="${id}">➤</button></div></div>`;
+  const rt=state.replyTo;
+  const replybar=(state.role==="creator"&&rt&&rt.fid===id)?`<div class="replybar"><span class="rb-ic">🎁</span><div class="rb-txt"><b>후원톡에 답장</b> · <span class="mono">${won(rt.amt)}</span><div class="rb-msg">“${esc(rt.text)}”</div></div><button class="rb-x" data-act="clearreply">×</button></div>`:"";
+  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="footwrap">${replybar}<div class="composer">${attach}${dbtn}<input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="send" data-v="${id}">➤</button></div></div></div>`;
 }
 function bindComposer(){const ci=$("#ci");if(ci){ci.oninput=e=>{state.drafts[state.param]=e.target.value;};ci.onkeydown=e=>{if(e.key==="Enter")sendMsg(state.param);};}
   const im=$("#imgfile");if(im)im.onchange=e=>handleImg(e,state.param,false);}
@@ -505,11 +516,11 @@ function handleImg(e,id,isDono){const file=e.target.files&&e.target.files[0];if(
   if(file.size>4*1024*1024){toast("이미지는 4MB 이하만 첨부할 수 있어요");e.target.value="";return;}
   const r=new FileReader();r.onload=()=>{
     if(isDono){const cur=$("#donmsg");if(cur)state.drafts.donmsg=cur.value;state.donImg=r.result;donSheet(id);}
-    else{const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];p.thread.push({from:"out",img:r.result,tm:nowT()});if(state.role==="creator")state.dtalks.forEach(d=>{if(d.fid===id)d.answered=true;});renderView();toast("📷 이미지를 보냈어요");}
+    else{const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];p.thread.push({from:"out",img:r.result,tm:nowT()});if(state.role==="creator")state.dtalks.forEach(d=>{if(d.fid===id)d.answered=true;});state.replyTo=null;renderView();toast("📷 이미지를 보냈어요");}
   };r.readAsDataURL(file);}
 const STICKERS=["❤️","🎉","👍","🔥","😂","😍","🥹","👏","💜","🙏","💪","✨","🎁","🌟","😭","🤩","🥳","😎"];
 function emojiSheet(id){openSheet(`<h3 class="sh">스티커 보내기</h3><div class="emoji-grid">${STICKERS.map(s=>`<button class="emoji-btn" data-act="sticker" data-v="${id}|${s}">${s}</button>`).join("")}</div>`);}
-function sendSticker(id,emoji){const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];p.thread.push({from:"out",sticker:emoji,tm:nowT()});if(state.role==="creator")state.dtalks.forEach(d=>{if(d.fid===id)d.answered=true;});closeSheet();renderView();}
+function sendSticker(id,emoji){const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];p.thread.push({from:"out",sticker:emoji,tm:nowT()});if(state.role==="creator")state.dtalks.forEach(d=>{if(d.fid===id)d.answered=true;});state.replyTo=null;closeSheet();renderView();}
 
 /* ---------- creator: 쪽지 inbox ---------- */
 function viewChat(){return `<div class="pad">${msgInbox()}</div>`;}
@@ -713,7 +724,7 @@ function sendMsg(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if
   const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];
   p.thread.push({from:"out",text:tx,tm:nowT()});
   if(state.role==="creator")state.dtalks.forEach(d=>{if(d.fid===id)d.answered=true;});
-  renderView();renderTabbar();}
+  state.replyTo=null;renderView();renderTabbar();}
 function doDonate(id){
   const amt=state.donPreset,msg=($("#donmsg")?$("#donmsg").value.trim():"")||"응원합니다!",c=creById(id),before=tierOf(c.myCum).key;
   c.myCum+=amt;c.myTemp=Math.min(100,(c.myTemp||0)+1);if(!c.thread)c.thread=[{t:"day",text:"오늘"}];
@@ -787,10 +798,11 @@ $("#phone").addEventListener("click",e=>{
     case"tab":if(state.role==="creator")state.ctab=v;else state.dtab=v;state.sub=null;state.param=null;render();break;
     case"opensettings":state.sub="settings";state.param=null;render();break;
     case"dtfilter":state.dtfilter=v;renderView();break;
-    case"dtreply":{const d=state.dtalks.find(x=>x.id===v);if(d){d.answered=true;state.sub="thread";state.param=d.fid;}render();break;}
+    case"dtreply":{const d=state.dtalks.find(x=>x.id===v);if(d){d.answered=true;state.replyTo={fid:d.fid,amt:d.amt,text:d.text};state.sub="thread";state.param=d.fid;}render();break;}
+    case"clearreply":state.replyTo=null;renderView();break;
     case"dtab":state.dtab=v;state.sub=null;render();break;
-    case"back":state.sub=null;state.param=null;render();break;
-    case"thread":state.sub="thread";state.param=v;render();break;
+    case"back":state.sub=null;state.param=null;state.replyTo=null;render();break;
+    case"thread":state.replyTo=null;state.sub="thread";state.param=v;render();break;
     case"fan":state.sub="fan";state.param=v;render();break;
     case"send":sendMsg(v);break;
     case"filter":state.filter=v;renderView();break;
