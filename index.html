@@ -328,6 +328,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .grip{width:38px;height:4px;border-radius:2px;background:var(--line);margin:-8px auto 14px}
 .toast{position:absolute;left:50%;bottom:88px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:22px;font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);z-index:60;opacity:0;transition:.25s;max-width:86%;text-align:center;pointer-events:none}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+.alertbar{position:absolute;top:8px;left:12px;right:12px;z-index:70;display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:16px;background:var(--surface);border:1px solid color-mix(in srgb,var(--accent) 32%,var(--line));box-shadow:var(--shadow-lg);transform:translateY(-160%);transition:.32s cubic-bezier(.2,.85,.25,1);opacity:0;pointer-events:none}
+.alertbar.on{transform:translateY(0);opacity:1;pointer-events:auto}
+.alertbar .ab-av{width:40px;height:40px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;font-size:20px;position:relative;flex:0 0 auto;border:1px solid var(--line)}
+.alertbar .ab-av .on-dot{position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:var(--keep);border:2px solid var(--surface)}
+.alertbar .ab-tx{flex:1;min-width:0}
+.alertbar .ab-tx b{font-size:13.5px;display:flex;align-items:center;gap:5px}
+.alertbar .ab-tx .ab-sub{font-size:11px;color:var(--ink-3);margin-top:1px}
+.alertbar .ab-go{font-size:11.5px;font-weight:700;color:var(--on-accent);background:var(--accent);border-radius:20px;padding:7px 13px;flex:0 0 auto}
+.themeseg{display:flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:3px}
+.themeseg button{flex:1;padding:9px;border-radius:9px;font-size:13px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:5px}
+.themeseg button.on{background:var(--surface);color:var(--accent);box-shadow:var(--shadow)}
 .empty{text-align:center;color:var(--ink-3);font-size:13px;padding:40px 20px;line-height:1.6}
 .hint{font-size:11.5px;color:var(--ink-3);text-align:center;padding:10px;line-height:1.5}
 </style>
@@ -351,6 +362,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <div class="sheet-bg" id="sheetBg" data-act="closesheet"></div>
     <div class="sheet" id="sheet"></div>
     <div class="toast" id="toast"></div>
+    <div class="alertbar" id="alertbar"></div>
   </div>
   <div class="cap">열혈톡 · iOS · Android 하이브리드 앱 프로토타입 · 크리에이터↔도네이터 1:1 채팅 · 상단에서 역할 전환, LIVE로 실시간 시뮬레이션</div>
 </div>
@@ -398,7 +410,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   thread:thread||[{t:"day",text:"오늘"},{from:"in",text:"안녕하세요! 오늘도 응원할게요 😊",tm:"18:10"}],
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
-  role:"creator",live:false,screen:"onboarding",slide:0,
+  role:"creator",live:false,screen:"onboarding",slide:0,theme:"system",
   ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
@@ -472,6 +484,14 @@ let toastT;
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1900);}
 function openSheet(h){$("#sheet").innerHTML='<div class="grip"></div>'+h;$("#sheet").classList.add("on");$("#sheetBg").classList.add("on");}
 function closeSheet(){$("#sheet").classList.remove("on");$("#sheetBg").classList.remove("on");}
+/* ---------- 테마(라이트/다크/시스템) ---------- */
+function applyTheme(t){const r=document.documentElement;if(t==="light"||t==="dark")r.setAttribute("data-theme",t);else r.removeAttribute("data-theme");state.theme=t;try{localStorage.setItem("heyeol-theme",t);}catch(e){}}
+function initTheme(){let t="system";try{t=localStorage.getItem("heyeol-theme")||"system";}catch(e){}applyTheme(t);}
+/* ---------- 열혈 도네이터 접속 헤즈업 알림 ---------- */
+let alertT;
+function showPresenceAlert(f){const el=$("#alertbar");if(!el)return;const t=tierOf(f.cum);
+  el.innerHTML=`<div class="ab-av">${f.emoji}<span class="on-dot"></span></div><div class="ab-tx"><b>🟢 ${esc(f.name)} 접속</b><div class="ab-sub"><span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span> · 지금 온라인 · 누적 ${won(f.cum)}</div></div><button class="ab-go" data-act="alertopen" data-v="${f.id}">채팅 열기</button>`;
+  el.classList.add("on");clearTimeout(alertT);alertT=setTimeout(()=>el.classList.remove("on"),4600);}
 
 const CTABS=[["msg","💬","채팅"],["dono","🎁","후원톡"],["fans","👥","팬 관리"],["notif","🔔","알림"],["insights","📊","인사이트"]];
 const DTABS=[["following","💜","팔로잉"],["discover","🔍","탐색"],["dnotif","🔔","알림"],["me","🏅","내 정보"]];
@@ -687,7 +707,12 @@ function viewSettings(){
   const tiers=[...TIERS].sort((a,b)=>b.min-a.min).map(t=>`<div class="tieredit" data-tierrow="${t.key}"><span class="te-emoji">${t.emoji}</span><input class="tn-name" value="${esc(t.name)}" placeholder="등급 이름" maxlength="10"><input class="tn-min mono" value="${t.min}" inputmode="numeric" placeholder="0"><button class="tdel" data-act="deltier" data-v="${t.key}" title="삭제">×</button></div>`).join("");
   const rules=[["presence","도네이터 접속 알림","단골·상위 등급 접속 시"],["dono","후원톡 알림","후원 도착 시 즉시"],["grade","등급 변동 알림","팬 등급 상승/강등"],["broadcast","방송 시작 알림","팬에게 발송"],["dnd","방해금지 (00–08시)","야간 푸시 묶음"]].map(([k,l,d])=>`<div class="setrow"><div class="sl"><b>${l}</b><p>${d}</p></div><div class="tgl ${state.alertRules[k]?"on":""}" data-act="rule" data-v="${k}"></div></div>`).join("");
   const active=state.automation.rules.filter(r=>r.on).length;
-  return `<div class="pad"><div class="sechd">VIP 등급 안내</div><div class="tiercards">${cards}</div>
+  return `<div class="pad">
+    <div class="sechd">화면 테마</div><div class="themeseg">
+      <button class="${state.theme==="system"?"on":""}" data-act="theme" data-v="system">🖥️ 시스템</button>
+      <button class="${state.theme==="light"?"on":""}" data-act="theme" data-v="light">☀️ 라이트</button>
+      <button class="${state.theme==="dark"?"on":""}" data-act="theme" data-v="dark">🌙 다크</button></div>
+    <div class="sechd" style="margin-top:18px">VIP 등급 안내</div><div class="tiercards">${cards}</div>
     <div class="sechd" style="margin-top:18px">등급 관리</div><div class="card pad"><p style="font-size:12px;color:var(--ink-3);margin:0 0 10px">등급 이름과 누적 후원 임계값(원)을 자유롭게 바꾸고, 등급을 추가·삭제할 수 있어요.</p>${tiers}<button class="btn ghost" data-act="addtier" style="margin-top:12px">+ 등급 추가</button><button class="btn" data-act="savetiers">저장 & 전체 재산정</button></div>
     <div class="sechd" style="margin-top:18px">자동화</div><div class="rows">
       <button class="setrow" data-act="openauto" style="text-align:left;width:100%"><div class="ac-ic" style="width:36px;height:36px;font-size:17px;background:var(--accent-soft)">⚡</div><div class="sl"><b>열혈톡 자동 알림 관리</b><p>${state.automation.on?active+"개 시나리오 활성":"꺼짐"} · 열혈톡 푸시로 발송</p></div><span class="sv">›</span></button></div>
@@ -858,7 +883,7 @@ function liveTick(){
       state.notifs.unshift({type:"dono",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 ${won(amt)} 후원`,sub:"1:1 채팅 · 후원톡 도착",min:0,unread:true});
       const after=tierOf(f.cum).key;if(tierIdx(after)>tierIdx(before)){const t=tierOf(f.cum);f.thread.push({from:"sys",text:`🎉 ${f.name}님이 ${t.emoji} ${t.name} 등급으로 올라섰어요!`});state.notifs.unshift({type:"grade",title:`<b>'${f.name}'</b>님이 ${t.emoji}${t.name}로 등급 상승`,sub:`누적 ${won(f.cum)} · ${state.automation.on&&state.automation.rules.find(r=>r.key==="grade").on?"🔔 열혈톡 푸시 자동 발송":"알림"}`,min:0,unread:true});if(state.automation.on&&state.automation.rules.find(r=>r.key==="grade").on)state.autoperf.sent++;}
     }else if(r<0.72){const t2=["안녕하세요~","오늘 방송 언제해요?","저 왔어요!","화이팅!!","이번 콘텐츠 기대돼요","답장 기다릴게요 ㅎㅎ"];f.thread.push({from:"in",text:t2[Math.floor(Math.random()*t2.length)],tm:nowT()});if(!open)f.unread++;
-    }else if(r<0.9){if(!f.online){f.online=true;f.seenMin=0;if(isVIP(f.cum))state.notifs.unshift({type:"presence",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 접속했어요`,sub:`누적 ${won(f.cum)} · 단골 접속`,min:0,unread:true});}
+    }else if(r<0.9){if(!f.online){f.online=true;f.seenMin=0;if(isVIP(f.cum)){state.notifs.unshift({type:"presence",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 접속했어요`,sub:`누적 ${won(f.cum)} · 열혈 도네이터 접속`,min:0,unread:true});if(state.alertRules.presence)showPresenceAlert(f);}}
     }else{if(f.online&&Math.random()<0.5){f.online=false;f.seenMin=1;}}
     if(state.notifs.length>40)state.notifs.length=40;state.fans.forEach(x=>{if(x.thread.length>50)x.thread.splice(1,x.thread.length-50);});
   }else{
@@ -956,7 +981,9 @@ $("#phone").addEventListener("click",e=>{
     case"preset":{const ta=$("#donmsg");if(ta)state.drafts.donmsg=ta.value;}state.donPreset=parseInt(v);if($("#sheet").classList.contains("on")&&state.sub==="thread")donSheet(state.param);break;
     case"dodonate":doDonate(v);break;
     case"closesheet":closeSheet();break;
+    case"theme":applyTheme(v);render();break;
+    case"alertopen":$("#alertbar").classList.remove("on");state.role="creator";state.sub="thread";state.param=v;render();break;
   }
 });
-render();
+initTheme();render();
 </script>
