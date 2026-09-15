@@ -264,6 +264,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .ac-sent{font-size:11px;color:var(--ink-3);flex:1}
 .ac-btn{font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:20px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
 .ac-btn.primary{background:var(--accent);color:var(--on-accent);border-color:transparent}
+.ac-meta{font-size:11px;color:var(--ink-3);margin-top:3px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.ac-meta span{color:var(--ink-2);font-weight:500}
+.addauto{width:100%;padding:13px;border-radius:13px;border:1.5px dashed color-mix(in srgb,var(--accent) 45%,var(--line));background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:14px;margin-top:2px}
+.ae-lb{display:block;font-size:11px;font-weight:600;font-family:"IBM Plex Mono",monospace;letter-spacing:.05em;color:var(--ink-3);margin:15px 0 7px;text-transform:uppercase}
+.chips.wrap{flex-wrap:wrap;overflow:visible;padding-bottom:0}
 .mygradehero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 20px;box-shadow:var(--shadow)}
 .mygradehero .big{font-size:44px}.mygradehero .gn{font-size:22px;font-weight:700;margin-top:6px}
 .mygradehero .prog{margin-top:18px}.mygradehero .ptrack{height:14px;background:var(--surface-2);border-radius:8px;overflow:hidden;margin:8px 0;border:1px solid var(--line)}
@@ -342,6 +347,15 @@ const won=n=>"₩"+Math.round(n).toLocaleString("ko-KR");
 const wonK=n=>n>=10000?(n/10000).toFixed(n%10000?1:0)+"만":n.toLocaleString("ko-KR");
 function ago(min){min=Math.round(min);if(min<1)return"방금";if(min<60)return min+"분 전";const h=Math.floor(min/60);if(h<24)return h+"시간 전";return Math.floor(h/24)+"일 전";}
 function nowT(){const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
+/* ---------- 파비콘(투네이션 나선형 말풍선 로고) ---------- */
+function brandLogoSVG(){
+  const cx=32,cy=30;let sp="";const steps=150,turns=2.5,r0=1.6,rmax=13.5;
+  for(let i=0;i<=steps;i++){const t=i/steps,a=t*turns*2*Math.PI,r=r0+(rmax-r0)*t,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);sp+=(i?"L":"M")+x.toFixed(2)+" "+y.toFixed(2)+" ";}
+  const bubble="M32 5 C18 5 6 16 6 30 C6 43 16 54 29 55 L31 66 L43 53 C52 48 58 40 58 30 C58 16 46 5 32 5 Z";
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 70"><path d="${bubble}" fill="none" stroke="#1e9df0" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><path d="${sp}" fill="none" stroke="#1e9df0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+function setFavicon(){try{const href="data:image/svg+xml,"+encodeURIComponent(brandLogoSVG());let l=document.querySelector('link[rel="icon"]');if(!l){l=document.createElement("link");l.rel="icon";(document.head||document.documentElement).appendChild(l);}l.type="image/svg+xml";l.href=href;}catch(e){}}
+setFavicon();
 
 let TIERS=[
   {key:"basic",name:"일반",emoji:"👤",color:"#9d97b5",min:0},
@@ -370,7 +384,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"onboarding",slide:0,
-  ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,drafts:{},
+  ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
     mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
@@ -669,20 +683,41 @@ function viewSettings(){
 /* ---------- creator: 자동화 (열혈톡 자동 알림) ---------- */
 function viewAutomation(){
   const a=state.automation,active=a.rules.filter(r=>r.on).length;
-  const rules=a.rules.map(r=>`<div class="autocard ${a.on&&r.on?"":"off"}">
-    <div class="ac-head"><div class="ac-ic">${r.emoji}</div><div style="flex:1"><div class="ac-name">${esc(r.name)}</div><div class="ac-desc">${esc(r.desc)}</div></div><div class="tgl ${r.on?"on":""}" data-act="autorule" data-v="${r.key}"></div></div>
+  const rules=a.rules.map(r=>{const ti=trigInfo(r.trigger||r.key);return `<div class="autocard ${a.on&&r.on?"":"off"}">
+    <div class="ac-head"><div class="ac-ic">${r.emoji}</div><div style="flex:1"><div class="ac-name">${esc(r.name)}</div><div class="ac-meta"><span>${ti.emoji} ${ti.label}</span> · <span>${targLabel(r.target||"all")}</span></div></div><div class="tgl ${r.on?"on":""}" data-act="autorule" data-v="${r.key}"></div></div>
     <div class="ac-tpl"><span class="ac-chan">🔔 열혈톡 푸시</span><div class="ac-msg">${esc(r.tpl)}</div></div>
-    <div class="ac-foot"><span class="ac-sent">누적 발송 ${r.sent.toLocaleString("ko-KR")}건</span><button class="ac-btn" data-act="autoedit" data-v="${r.key}">메시지 수정</button><button class="ac-btn primary" data-act="autotest" data-v="${r.key}">지금 테스트</button></div></div>`).join("");
+    <div class="ac-foot"><span class="ac-sent">누적 발송 ${r.sent.toLocaleString("ko-KR")}건</span><button class="ac-btn" data-act="autoedit" data-v="${r.key}">수정</button><button class="ac-btn primary" data-act="autotest" data-v="${r.key}">지금 테스트</button></div></div>`;}).join("");
   return `<div class="pad">
     <div class="card pad" style="display:flex;align-items:center;gap:12px"><div class="ac-ic" style="background:var(--accent-soft)">⚡</div><div style="flex:1"><b style="font-size:15px">열혈톡 자동 알림</b><p style="font-size:12px;color:var(--ink-3);margin:2px 0 0">이벤트 발생 시 <b>열혈톡 푸시</b>로 자동 발송돼요</p></div><div class="tgl ${a.on?"on":""}" data-act="autotoggle"></div></div>
     <div class="sechd" style="margin-top:18px">자동화 시나리오 · ${active}개 활성</div>${rules}
+    <button class="addauto" data-act="autonew">＋ 새 자동화 만들기</button>
     <div class="sechd" style="margin-top:18px">자동화 성과 <span class="r">지난 30일</span></div>
     <div class="perf3"><div><div class="k">발송 푸시</div><div class="v">${state.autoperf.sent}건</div><div class="dl">▲ 18%</div></div><div><div class="k">열람률</div><div class="v">${state.autoperf.open}%</div><div class="dl">▲ 12%</div></div><div><div class="k">후원 전환율</div><div class="v">${state.autoperf.conv}%</div><div class="dl">▲ 2.3%</div></div></div>
     <div class="sechd" style="margin-top:18px">📅 다가오는 기념일</div><div class="card pad">${state.events.map(e=>`<div class="evrow"><span>${e.emoji}</span><span><b>${e.name}</b> · ${e.label}</span><span class="dd">D-${e.d}</span></div>`).join("")}</div>
     <div class="hint">💡 모든 자동 알림은 카카오 알림톡이 아닌 <b>열혈톡 인앱 알림/푸시</b>로 발송됩니다.</div></div>`;
 }
-function autoEditSheet(key){const r=state.automation.rules.find(x=>x.key===key);
-  openSheet(`<h3 class="sh">${r.emoji} ${esc(r.name)} 메시지</h3><p class="sd">열혈톡 푸시로 발송될 메시지예요. <span class="mono">{닉네임}</span> <span class="mono">{등급}</span> 변수를 쓸 수 있어요.</p><textarea id="autotpl" rows="3">${esc(r.tpl)}</textarea><button class="btn" data-act="autosave" data-v="${key}">저장</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
+const TRIGGERS=[{k:"grade",emoji:"🎉",label:"등급 달성"},{k:"bday",emoji:"🎂",label:"생일"},{k:"anniv",emoji:"💝",label:"후원 기념일"},{k:"winback",emoji:"💤",label:"휴면 팬"},{k:"live",emoji:"🔴",label:"방송 시작"},{k:"first",emoji:"⭐",label:"첫 후원"},{k:"goal",emoji:"🎯",label:"후원 목표 달성"}];
+function trigInfo(k){return TRIGGERS.find(t=>t.k===k)||TRIGGERS[0];}
+function autoTargets(){const n=TIERS.length;return [["all","전체 팬"],["mid",TIERS[Math.max(1,n-2)].name+" 이상"],["top",TIERS[n-1].name+" 전용"]];}
+function targLabel(k){const t=autoTargets().find(x=>x[0]===k);return t?t[1]:"전체 팬";}
+function openAutoEditor(key){
+  if(key){const r=state.automation.rules.find(x=>x.key===key);state.autoEdit={key:r.key,name:r.name,trigger:r.trigger||r.key,target:r.target||"all",tpl:r.tpl,emoji:r.emoji};}
+  else{state.autoEdit={key:null,name:"",trigger:"grade",target:"all",tpl:"{닉네임}님, 안녕하세요! 💜",emoji:"🎉"};}
+  autoEditorSheet();
+}
+function captureAE(){const n=$("#aeName"),m=$("#aeMsg");if(n)state.autoEdit.name=n.value;if(m)state.autoEdit.tpl=m.value;}
+function autoEditorSheet(){
+  const e=state.autoEdit;
+  const trigs=TRIGGERS.map(t=>`<button class="chip ${e.trigger===t.k?"on":""}" data-act="ae-trig" data-v="${t.k}">${t.emoji} ${t.label}</button>`).join("");
+  const targs=autoTargets().map(([k,l])=>`<button class="chip ${e.target===k?"on":""}" data-act="ae-targ" data-v="${k}">${l}</button>`).join("");
+  openSheet(`<h3 class="sh">${e.key?"자동화 수정":"새 자동화 만들기"}</h3><p class="sd">🔔 조건이 충족되면 <b>열혈톡 푸시</b>로 자동 발송됩니다.</p>
+    <label class="ae-lb">이름</label><input id="aeName" value="${esc(e.name)}" placeholder="자동화 이름" autocomplete="off">
+    <label class="ae-lb">트리거 · 언제 발송</label><div class="chips wrap">${trigs}</div>
+    <label class="ae-lb">발송 대상</label><div class="chips wrap">${targs}</div>
+    <label class="ae-lb">메시지 (열혈톡 푸시)</label><textarea id="aeMsg" rows="3" placeholder="{닉네임} {등급} 변수를 쓸 수 있어요">${esc(e.tpl)}</textarea>
+    <button class="btn" data-act="ae-save">${e.key?"저장":"만들기"}</button>
+    ${e.key?`<button class="btn ghost" data-act="ae-del" style="color:var(--crit)">이 자동화 삭제</button>`:`<button class="btn ghost" data-act="closesheet">취소</button>`}`);
+}
 
 /* ---------- donator ---------- */
 function viewFollowing(){
@@ -861,8 +896,15 @@ $("#phone").addEventListener("click",e=>{
     case"autotoggle":state.automation.on=!state.automation.on;renderView();break;
     case"autorule":{const r=state.automation.rules.find(x=>x.key===v);if(r)r.on=!r.on;renderView();break;}
     case"autotest":{const r=state.automation.rules.find(x=>x.key===v);state.autoperf.sent++;toast(`🔔 '${r.name}' 테스트 푸시를 보냈어요`);renderView();break;}
-    case"autoedit":autoEditSheet(v);break;
-    case"autosave":{const r=state.automation.rules.find(x=>x.key===v),ta=$("#autotpl");if(r&&ta)r.tpl=ta.value;closeSheet();renderView();toast("메시지를 저장했어요");break;}
+    case"autonew":openAutoEditor(null);break;
+    case"autoedit":openAutoEditor(v);break;
+    case"ae-trig":{captureAE();const t=trigInfo(v);state.autoEdit.trigger=v;state.autoEdit.emoji=t.emoji;if(!state.autoEdit.name.trim())state.autoEdit.name=t.label+" 알림";autoEditorSheet();break;}
+    case"ae-targ":captureAE();state.autoEdit.target=v;autoEditorSheet();break;
+    case"ae-save":{captureAE();const e=state.autoEdit;if(!e.name.trim())e.name=trigInfo(e.trigger).label+" 알림";
+      if(e.key){const r=state.automation.rules.find(x=>x.key===e.key);Object.assign(r,{name:e.name,trigger:e.trigger,target:e.target,tpl:e.tpl,emoji:e.emoji});toast("자동화를 저장했어요");}
+      else{state.automation.rules.push({key:"c"+Date.now(),on:true,emoji:e.emoji,name:e.name,trigger:e.trigger,target:e.target,tpl:e.tpl,sent:0});toast("새 자동화를 만들었어요 ✨");}
+      state.autoEdit=null;closeSheet();renderView();break;}
+    case"ae-del":{state.automation.rules=state.automation.rules.filter(x=>x.key!==state.autoEdit.key);state.autoEdit=null;closeSheet();renderView();toast("자동화를 삭제했어요");break;}
     case"donsheet":donSheet(v);break;
     case"emoji":emojiSheet(v);break;
     case"sticker":{const[sid,em]=v.split("|");sendSticker(sid,em);break;}
