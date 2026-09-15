@@ -374,6 +374,7 @@ const won=n=>"₩"+Math.round(n).toLocaleString("ko-KR");
 const wonK=n=>n>=10000?(n/10000).toFixed(n%10000?1:0)+"만":n.toLocaleString("ko-KR");
 function ago(min){min=Math.round(min);if(min<1)return"방금";if(min<60)return min+"분 전";const h=Math.floor(min/60);if(h<24)return h+"시간 전";return Math.floor(h/24)+"일 전";}
 function nowT(){const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
+function fmtTime(ts){if(!ts)return "없음";const d=new Date(ts);return d.toLocaleString("ko-KR",{year:"2-digit",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});}
 /* ---------- 파비콘(투네이션 나선형 말풍선 로고) ---------- */
 function brandLogoSVG(){
   const cx=32,cy=30;let sp="";const steps=150,turns=2.5,r0=1.6,rmax=13.5;
@@ -410,7 +411,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   thread:thread||[{t:"day",text:"오늘"},{from:"in",text:"안녕하세요! 오늘도 응원할게요 😊",tm:"18:10"}],
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
-  role:"creator",live:false,screen:"onboarding",slide:0,theme:"system",
+  role:"creator",live:false,screen:"onboarding",slide:0,theme:"system",lastBackup:null,autoBackup:false,
   ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
@@ -492,6 +493,25 @@ let alertT;
 function showPresenceAlert(f){const el=$("#alertbar");if(!el)return;const t=tierOf(f.cum);
   el.innerHTML=`<div class="ab-av">${f.emoji}<span class="on-dot"></span></div><div class="ab-tx"><b>🟢 ${esc(f.name)} 접속</b><div class="ab-sub"><span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span> · 지금 온라인 · 누적 ${won(f.cum)}</div></div><button class="ab-go" data-act="alertopen" data-v="${f.id}">채팅 열기</button>`;
   el.classList.add("on");clearTimeout(alertT);alertT=setTimeout(()=>el.classList.remove("on"),4600);}
+/* ---------- 데이터 백업 ---------- */
+function snapshotData(){return {v:1,at:Date.now(),
+  tiers:TIERS,
+  fans:state.fans.map(f=>({id:f.id,name:f.name,emoji:f.emoji,cum:f.cum,seenMin:f.seenMin,online:f.online,temp:f.temp,count:f.count,memo:f.memo,tags:f.tags})),
+  automation:state.automation,alertRules:state.alertRules,goal:state.goal,theme:state.theme};}
+function restoreData(d){if(!d||!Array.isArray(d.tiers))throw new Error("형식 오류");
+  TIERS=d.tiers;
+  if(Array.isArray(d.fans))d.fans.forEach(fb=>{const f=fanById(fb.id);if(f)Object.assign(f,fb);});
+  if(d.automation)state.automation=d.automation;
+  if(d.alertRules)state.alertRules=d.alertRules;
+  if(d.goal)state.goal=d.goal;
+  if(d.theme)applyTheme(d.theme);}
+function doBackup(){try{const snap=snapshotData();localStorage.setItem("heyeol-backup",JSON.stringify(snap));localStorage.setItem("heyeol-backup-at",String(snap.at));state.lastBackup=snap.at;}catch(e){toast("백업 공간이 부족해요");return;}toast("✅ 백업 완료");renderView();}
+function restoreBackup(){try{const s=localStorage.getItem("heyeol-backup");if(!s){toast("저장된 백업이 없어요");return;}restoreData(JSON.parse(s));toast("↩︎ 백업에서 복원했어요");render();}catch(e){toast("복원에 실패했어요");}}
+function initBackupMeta(){try{const at=localStorage.getItem("heyeol-backup-at");if(at)state.lastBackup=parseInt(at);state.autoBackup=localStorage.getItem("heyeol-autobackup")==="1";}catch(e){}}
+function exportSheet(){const json=JSON.stringify(snapshotData(),null,2);
+  openSheet(`<h3 class="sh">데이터 내보내기</h3><p class="sd">아래 JSON을 복사해 안전한 곳에 보관하세요.</p><textarea id="expjson" rows="8" readonly>${esc(json)}</textarea><button class="btn" data-act="copyexp">전체 선택 · 복사</button><button class="btn ghost" data-act="closesheet">닫기</button>`);
+  const t=$("#expjson");if(t)t.onclick=()=>t.select();}
+function importSheet(){openSheet(`<h3 class="sh">데이터 가져오기</h3><p class="sd">백업 JSON을 붙여넣어 복원합니다. 현재 데이터를 덮어써요.</p><textarea id="impjson" rows="8" placeholder="여기에 JSON 붙여넣기"></textarea><button class="btn" data-act="doimport">복원하기</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 
 const CTABS=[["msg","💬","채팅"],["dono","🎁","후원톡"],["fans","👥","팬 관리"],["notif","🔔","알림"],["insights","📊","인사이트"]];
 const DTABS=[["following","💜","팔로잉"],["discover","🔍","탐색"],["dnotif","🔔","알림"],["me","🏅","내 정보"]];
@@ -531,6 +551,7 @@ function renderAppbar(){
   else if(state.sub==="settings"){h=`${back}<div><h1>설정</h1><div class="sub">등급 · 자동화 · 연동</div></div>`;}
   else if(state.sub==="automation"){h=`${back}<div><h1>자동화</h1><div class="sub">열혈톡 자동 알림</div></div>`;}
   else if(state.sub==="autostat"){const r=state.automation.rules.find(x=>x.key===state.param);h=`${back}<div><h1>성과 분석</h1><div class="sub">${r?esc(r.name):""}</div></div>`;}
+  else if(state.sub==="backup"){h=`${back}<div><h1>데이터 백업</h1><div class="sub">백업 · 복원</div></div>`;}
   else{
     const map={msg:["채팅","팬과의 1:1 대화"],dono:["후원톡","받은 후원 관리"],fans:["팬 관리","등급별 CRM"],notif:["알림","접속 · 후원 · 등급"],insights:["인사이트","크루 대시보드"],
       following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
@@ -548,6 +569,7 @@ function renderView(){
   if(state.sub==="settings"){v.innerHTML=viewSettings();return;}
   if(state.sub==="automation"){v.innerHTML=viewAutomation();return;}
   if(state.sub==="autostat"){v.innerHTML=viewAutoStat(state.param);return;}
+  if(state.sub==="backup"){v.innerHTML=viewBackup();return;}
   if(state.role==="creator")v.innerHTML={msg:viewChat,dono:viewDono,fans:viewFans,notif:viewNotif,insights:viewInsights}[state.ctab]();
   else v.innerHTML={following:viewFollowing,discover:viewDiscover,dnotif:viewDNotif,me:viewMe}[state.dtab]();
 }
@@ -708,7 +730,7 @@ function viewSettings(){
   const rules=[["presence","도네이터 접속 알림","단골·상위 등급 접속 시"],["dono","후원톡 알림","후원 도착 시 즉시"],["grade","등급 변동 알림","팬 등급 상승/강등"],["broadcast","방송 시작 알림","팬에게 발송"],["dnd","방해금지 (00–08시)","야간 푸시 묶음"]].map(([k,l,d])=>`<div class="setrow"><div class="sl"><b>${l}</b><p>${d}</p></div><div class="tgl ${state.alertRules[k]?"on":""}" data-act="rule" data-v="${k}"></div></div>`).join("");
   const active=state.automation.rules.filter(r=>r.on).length;
   return `<div class="pad">
-    <div class="sechd">화면 테마</div><div class="themeseg">
+    <div class="sechd">표시 테마</div><div class="themeseg">
       <button class="${state.theme==="system"?"on":""}" data-act="theme" data-v="system">🖥️ 시스템</button>
       <button class="${state.theme==="light"?"on":""}" data-act="theme" data-v="light">☀️ 라이트</button>
       <button class="${state.theme==="dark"?"on":""}" data-act="theme" data-v="dark">🌙 다크</button></div>
@@ -718,8 +740,24 @@ function viewSettings(){
       <button class="setrow" data-act="openauto" style="text-align:left;width:100%"><div class="ac-ic" style="width:36px;height:36px;font-size:17px;background:var(--accent-soft)">⚡</div><div class="sl"><b>열혈톡 자동 알림 관리</b><p>${state.automation.on?active+"개 시나리오 활성":"꺼짐"} · 열혈톡 푸시로 발송</p></div><span class="sv">›</span></button></div>
     <div class="sechd" style="margin-top:18px">알림 규칙</div><div class="rows">${rules}</div>
     <div class="sechd" style="margin-top:18px">투네이션 연동</div><div class="rows"><div class="setrow"><div class="sl"><b>후원 Webhook</b><p>실시간 후원 이벤트 수신</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div><div class="setrow"><div class="sl"><b>계정 SSO</b><p>투네이션 계정 연동</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div></div>
-    <button class="btn ghost" data-act="logout" style="color:var(--crit)">로그아웃</button>
-    <div class="hint">열혈톡 v0.5 프로토타입 · 1:1 채팅 · 등급 커스터마이즈 · Phase 1–2</div></div>`;
+    <div class="sechd" style="margin-top:18px">데이터</div><div class="rows"><button class="setrow" data-act="openbackup" style="width:100%;text-align:left"><div class="ac-ic" style="width:36px;height:36px;font-size:16px;background:var(--accent-soft)">💾</div><div class="sl"><b>데이터 백업 · 복원</b><p>${state.lastBackup?"마지막 백업 "+fmtTime(state.lastBackup):"백업 없음"}</p></div><span class="sv">›</span></button></div>
+    <button class="btn ghost" data-act="logout" style="color:var(--crit);margin-top:18px">로그아웃</button>
+    <div class="hint">열혈톡 v0.6 프로토타입 · 1:1 채팅 · 등급 커스터마이즈 · Phase 1–2</div></div>`;
+}
+
+/* ---------- creator: 데이터 백업 ---------- */
+function viewBackup(){
+  return `<div class="pad">
+    <div class="card pad"><div style="display:flex;align-items:center;gap:12px"><div class="ac-ic" style="background:var(--accent-soft)">💾</div><div style="flex:1"><b style="font-size:15px">데이터 백업</b><p style="font-size:12px;color:var(--ink-3);margin:2px 0 0">마지막 백업 · <b style="color:var(--ink-2)">${fmtTime(state.lastBackup)}</b></p></div></div>
+      <button class="btn" data-act="dobackup">지금 백업하기</button></div>
+    <div class="rows" style="margin-top:16px">
+      <div class="setrow"><div class="sl"><b>자동 백업</b><p>하루 1회 자동으로 백업</p></div><div class="tgl ${state.autoBackup?"on":""}" data-act="autobackup"></div></div>
+      <button class="setrow" data-act="restorebackup" style="width:100%;text-align:left"><div class="sl"><b>백업에서 복원</b><p>마지막 백업 시점으로 되돌리기</p></div><span class="sv">↩︎</span></button></div>
+    <div class="sechd" style="margin-top:18px">수동 백업 · 이전</div>
+    <div class="rows">
+      <button class="setrow" data-act="exportdata" style="width:100%;text-align:left"><div class="sl"><b>데이터 내보내기</b><p>백업 JSON 복사</p></div><span class="sv">↗</span></button>
+      <button class="setrow" data-act="importdata" style="width:100%;text-align:left"><div class="sl"><b>데이터 가져오기</b><p>JSON을 붙여넣어 복원</p></div><span class="sv">↙</span></button></div>
+    <div class="hint">💡 백업에는 팬·등급·자동화·설정이 포함됩니다. (프로토타입은 기기 로컬에 저장)</div></div>`;
 }
 
 /* ---------- creator: 자동화 (열혈톡 자동 알림) ---------- */
@@ -982,8 +1020,16 @@ $("#phone").addEventListener("click",e=>{
     case"dodonate":doDonate(v);break;
     case"closesheet":closeSheet();break;
     case"theme":applyTheme(v);render();break;
+    case"openbackup":state.sub="backup";state.param=null;render();break;
+    case"dobackup":doBackup();break;
+    case"restorebackup":restoreBackup();break;
+    case"autobackup":state.autoBackup=!state.autoBackup;try{localStorage.setItem("heyeol-autobackup",state.autoBackup?"1":"0");}catch(e){}if(state.autoBackup)doBackup();renderView();break;
+    case"exportdata":exportSheet();break;
+    case"importdata":importSheet();break;
+    case"copyexp":{const t=$("#expjson");if(t){t.select();try{document.execCommand("copy");toast("클립보드에 복사했어요");}catch(e){toast("텍스트를 길게 눌러 복사하세요");}}break;}
+    case"doimport":{const t=$("#impjson");try{restoreData(JSON.parse(t.value));closeSheet();render();toast("데이터를 복원했어요");}catch(e){toast("JSON 형식이 올바르지 않아요");}break;}
     case"alertopen":$("#alertbar").classList.remove("on");state.role="creator";state.sub="thread";state.param=v;render();break;
   }
 });
-initTheme();render();
+initTheme();initBackupMeta();render();
 </script>
