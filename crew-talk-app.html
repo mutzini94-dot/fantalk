@@ -610,7 +610,7 @@ function renderAppbar(){
     const map={msg:["채팅","팬과의 1:1 대화"],dono:["후원톡","받은 후원 관리"],fans:["팬 관리","등급별 CRM"],notif:["알림","접속 · 후원 · 등급"],insights:["인사이트","크루 대시보드"],
       following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
     const cur=state.role==="creator"?state.ctab:state.dtab,m=map[cur];let act="";
-    if(cur==="fans")act+=`<button class="act" data-act="segsheet" title="세그먼트 발송">✈️</button>`;
+    if(cur==="fans")act+=`<button class="act" data-act="segsheet" title="세그먼트 발송">📨</button>`;
     if(cur==="notif")act+=`<button class="act" data-act="winback" title="복귀 유도">💌</button>`;
     h=`<div><h1>${m[0]}</h1><div class="sub">${m[1]}</div></div><div class="sp"></div>${act}`;
   }
@@ -745,9 +745,9 @@ function viewFans(){
     <div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}${risk?' <span class="gp" style="--gc:var(--crit)">⚠️ 이탈위험</span>':""}</div><div class="pv">누적 ${won(f.cum)} · ${f.online?"<span style='color:var(--keep)'>● 온라인</span>":ago(f.seenMin)+" 접속"}</div></div>
     <div class="meta"><div class="tm">›</div></div></button>`;}).join("")||`<div class="empty">조건에 맞는 팬이 없어요.</div>`;
   return `<div class="pad"><div class="chips">${chips}</div>
-    <div class="sechd">${list.length}명 표시 · 총 ${state.fans.length}명 · 온라인 ${state.fans.filter(f=>f.online).length}<span class="r" data-act="segsheet">세그먼트 발송 ✈️</span></div>
+    <div class="sechd">${list.length}명 표시 · 총 ${state.fans.length}명 · 온라인 ${state.fans.filter(f=>f.online).length}<span class="r" data-act="segsheet">세그먼트 발송 📨</span></div>
     <div class="rows">${rows}</div>
-    <div class="hint">💡 필터로 세그먼트를 만들고 ✈️로 해당 그룹에게 단체 메시지를 보낼 수 있어요.</div></div>`;
+    <div class="hint">💡 필터로 세그먼트를 만들고 📨로 해당 그룹에게 단체 메시지를 보낼 수 있어요.</div></div>`;
 }
 function viewFan(id){
   const f=fanById(id),t=tierOf(f.cum),nt=nextTier(f.cum);
@@ -1021,7 +1021,7 @@ function liveTick(){
 let liveTimer;
 function toggleLive(){state.live=!state.live;if(state.live){liveTimer=setInterval(liveTick,3200);toast("⚡ 실시간 시뮬레이션 시작");}else{clearInterval(liveTimer);toast("실시간 시뮬레이션 정지");}render();}
 function segSheet(){const list=filterFans(),fl=getFilters().find(f=>f[0]===state.filter)[1];
-  openSheet(`<h3 class="sh">✈️ 세그먼트 발송</h3><p class="sd">현재 세그먼트 <b>「${fl}」 ${list.length}명</b>에게 단체 메시지를 보냅니다.</p><textarea id="segmsg" rows="3" placeholder="예: VVIP 여러분만을 위한 깜짝 이벤트 안내드려요! 🎉"></textarea><button class="btn" data-act="dosegsend">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
+  openSheet(`<h3 class="sh">📨 세그먼트 발송</h3><p class="sd">현재 세그먼트 <b>「${fl}」 ${list.length}명</b>에게 단체 메시지를 보냅니다.</p><textarea id="segmsg" rows="3" placeholder="예: VVIP 여러분만을 위한 깜짝 이벤트 안내드려요! 🎉"></textarea><button class="btn" data-act="dosegsend">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 function winbackSheet(){const list=state.fans.filter(f=>f.seenMin>=14*1440);
   openSheet(`<h3 class="sh">💌 복귀 유도 발송</h3><p class="sd">14일 이상 미접속한 팬 <b>${list.length}명</b>에게 복귀 리마인드를 보냅니다. (🔔 열혈톡 푸시 발송)</p><textarea id="wbmsg" rows="3">보고 싶어요! 오랜만에 방송에서 만나요 💜 복귀하시면 특별 혜택이 기다려요.</textarea><button class="btn" data-act="dowinback">${list.length}명에게 발송</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 function addTagSheet(id){openSheet(`<h3 class="sh"># 태그 추가</h3><p class="sd">${esc(fanById(id).name)}님에게 태그를 붙입니다.</p><input id="taginput" placeholder="예: 큰손, 생일3월" autocomplete="off"><button class="btn" data-act="doaddtag" data-v="${id}">추가</button>`);}
@@ -1067,7 +1067,7 @@ $("#phone").addEventListener("click",e=>{
     case"readall":state.notifs.forEach(n=>n.unread=false);render();toast("모든 알림을 읽음 처리했어요");break;
     case"dreadall":state.dnotifs.forEach(n=>n.unread=false);render();toast("모든 알림을 읽음 처리했어요");break;
     case"segsheet":segSheet();break;
-    case"dosegsend":closeSheet();toast(`✈️ ${filterFans().length}명에게 발송 완료`);break;
+    case"dosegsend":closeSheet();toast(`📨 ${filterFans().length}명에게 발송 완료`);break;
     case"winback":winbackSheet();break;
     case"dowinback":closeSheet();toast("💌 복귀 유도 발송 완료");break;
     case"addtag":addTagSheet(v);break;
