@@ -182,6 +182,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .dt-status.done{background:var(--keep-soft);color:var(--keep)}
 .dt-reply{margin-left:auto;font-size:12px;font-weight:700;color:var(--on-accent);background:var(--accent);border-radius:20px;padding:7px 15px}
 .dt-reply.ghost{background:var(--surface);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.dsum{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.dsum-c{background:var(--surface);padding:12px 12px}
+.dsum-c span{font-size:11px;color:var(--ink-3);display:block}
+.dsum-c b{font-size:17px;font-weight:700;margin-top:3px;display:block;letter-spacing:-.01em}
 .chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 12px;-webkit-overflow-scrolling:touch}
 .chips::-webkit-scrollbar{height:0}
 .chip{flex:0 0 auto;font-size:12px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);white-space:nowrap}
@@ -674,7 +678,7 @@ function donoFeed(){
   let list=[...state.dtalks];
   if(state.dtfilter==="wait")list=list.filter(d=>!d.answered);
   if(state.dtfilter==="amt")list.sort((a,b)=>b.amt-a.amt);else list.sort((a,b)=>a.min-b.min);
-  const today=state.dtalks.filter(d=>d.min<24*60),todaySum=today.reduce((a,d)=>a+d.amt,0),gp=Math.round(state.goal.cur/state.goal.target*100);
+  const today=state.dtalks.filter(d=>d.min<24*60),todaySum=today.reduce((a,d)=>a+d.amt,0),answered=state.dtalks.filter(d=>d.answered).length,unans=state.dtalks.filter(d=>!d.answered).length,totalCum=state.fans.reduce((a,f)=>a+f.cum,0);
   const chips=[["all","전체"],["wait","미답장"],["amt","고액순"]].map(([k,l])=>`<button class="chip ${state.dtfilter===k?"on":""}" data-act="dtfilter" data-v="${k}">${l}${k==="wait"&&state.dtalks.some(d=>!d.answered)?` (${state.dtalks.filter(d=>!d.answered).length})`:""}</button>`).join("");
   const cards=list.map(d=>{const f=fanById(d.fid);
     return `<div class="dtcard ${d.answered?"":"unans"}">
@@ -682,10 +686,11 @@ function donoFeed(){
       <div class="dt-msg">“${esc(d.text)}”${d.img?`<img class="dono-img" src="${d.img}" alt="첨부 이미지">`:""}</div>
       <div class="dt-foot">${d.answered?'<span class="dt-status done">✓ 답장 완료</span>':'<span class="dt-status wait">⏳ 답장 대기</span>'}<button class="dt-reply ${d.answered?"ghost":""}" data-act="dtreply" data-v="${d.id}">${d.answered?"채팅 열기":"답장하기"}</button></div>
     </div>`;}).join("")||`<div class="empty">해당하는 후원톡이 없어요.</div>`;
-  return `<div class="card pad" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start">
-      <div><div style="font-size:11.5px;color:var(--ink-3)">오늘 받은 후원톡</div><div style="font-size:21px;font-weight:700;margin-top:2px">${today.length}건 · ${won(todaySum)}</div></div>
-      <div style="text-align:right"><div style="font-size:11.5px;color:var(--ink-3)">이번 달 목표</div><div style="font-size:15px;font-weight:700;margin-top:2px" class="mono">${gp}%</div></div></div>
-    <div class="goalbar"><div class="goalfill" style="width:${gp}%"><span>${won(state.goal.cur)}</span></div></div></div>
+  return `<div class="card pad" style="margin-bottom:14px"><div class="dsum">
+      <div class="dsum-c"><span>누적 후원액</span><b class="mono">${won(totalCum)}</b></div>
+      <div class="dsum-c"><span>금일 후원액</span><b class="mono">${won(todaySum)}</b></div>
+      <div class="dsum-c"><span>응답</span><b style="color:var(--keep)">${answered}건</b></div>
+      <div class="dsum-c"><span>미응답</span><b style="color:var(--accent)">${unans}건</b></div></div></div>
     <div class="chips">${chips}</div>${cards}`;
 }
 
