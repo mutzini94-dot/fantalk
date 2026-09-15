@@ -888,7 +888,7 @@ function viewAchievements(){
   const items=state.achievements.map(a=>{const m=achMetric(a.metric),n=achEarnedCount(a);return `<div class="autocard">
     <div class="ac-head"><div class="ac-ic">${a.emoji}</div><div style="flex:1"><div class="ac-name">${esc(a.name)}</div><div class="ac-meta"><span>${esc(a.desc)}</span></div></div></div>
     <div class="ac-tpl"><div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--ink-3)">달성 조건</span><span class="mono" style="color:var(--ink)">${m.label} ${m.fmt(a.target)} 이상</span></div></div>
-    <div class="ac-foot"><span class="ac-sent">🏅 ${n}명 / ${total}명 달성</span><button class="ac-btn" data-act="achedit" data-v="${a.id}">수정</button></div></div>`;}).join("");
+    <div class="ac-foot"><span class="ac-sent" data-act="achfans" data-v="${a.id}" style="cursor:pointer;color:var(--accent);font-weight:600">🏅 ${n}명 / ${total}명 달성 ›</span><button class="ac-btn" data-act="achedit" data-v="${a.id}">수정</button></div></div>`;}).join("");
   return `<div class="pad">
     <div class="card pad" style="display:flex;align-items:center;gap:12px"><div class="ac-ic" style="background:var(--accent-soft)">🏆</div><div style="flex:1"><b style="font-size:15px">업적 관리</b><p style="font-size:12px;color:var(--ink-3);margin:2px 0 0">팬이 달성할 업적을 만들고 관리해요 · ${state.achievements.length}개</p></div></div>
     <div class="sechd" style="margin-top:16px">업적 목록</div>${items||'<div class="empty">등록된 업적이 없어요.</div>'}
@@ -896,6 +896,11 @@ function viewAchievements(){
     <div class="hint">💡 조건(지표)과 목표값을 정하면 팬이 조건을 충족할 때 업적을 획득해요. 팬별 달성 현황은 팬 프로필에서 확인할 수 있어요.</div></div>`;
 }
 const ACH_EMOJIS=["🏆","🎉","👑","💎","💰","🔥","🤖","🌡️","⭐","🥇","🎯","💜","👥","🚀","🌟","❤️"];
+function achFansSheet(id){const a=state.achievements.find(x=>x.id===id);if(!a)return;const m=achMetric(a.metric);
+  const achievers=state.fans.filter(f=>!f.blocked&&m.val(f)>=a.target).sort((x,y)=>m.val(y)-m.val(x));
+  const rows=achievers.map(f=>`<button class="fp-row" data-act="fan" data-v="${f.id}"><div class="av" style="width:38px;height:38px;font-size:18px;border-radius:11px">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div><div style="flex:1;text-align:left;min-width:0"><div style="font-weight:600;font-size:13.5px">${esc(f.name)} ${gpill(f.cum)}</div><div style="font-size:11px;color:var(--ink-3)">${m.label} ${m.fmt(m.val(f))}</div></div><span style="color:var(--ink-3)">›</span></button>`).join("")||`<div class="empty" style="padding:24px">아직 달성한 팬이 없어요.</div>`;
+  openSheet(`<h3 class="sh">${a.emoji} ${esc(a.name)}</h3><p class="sd">달성한 팬 <b style="color:var(--ink-2)">${achievers.length}명</b> · 조건 ${m.label} ${m.fmt(a.target)} 이상</p><div class="fanpick" style="max-height:340px">${rows}</div>`);
+}
 function openAchEditor(id){
   if(id){const a=state.achievements.find(x=>x.id===id);state.achEdit={id:a.id,emoji:a.emoji,name:a.name,desc:a.desc,metric:a.metric,target:a.target};}
   else state.achEdit={id:null,emoji:"⭐",name:"",desc:"",metric:"cum",target:100000};
@@ -1173,7 +1178,8 @@ $("#phone").addEventListener("click",e=>{
     case"dtab":state.dtab=v;state.sub=null;render();break;
     case"back":state.sub=null;state.param=null;state.replyTo=null;render();break;
     case"thread":state.replyTo=null;state.sub="thread";state.param=v;render();break;
-    case"fan":{const el=$("#alertbar");if(el)el.classList.remove("on");state.role="creator";state.sub="fan";state.param=v;render();break;}
+    case"fan":{const el=$("#alertbar");if(el)el.classList.remove("on");closeSheet();state.role="creator";state.sub="fan";state.param=v;render();break;}
+    case"achfans":achFansSheet(v);break;
     case"send":sendMsg(v);break;
     case"filter":state.filter=v;renderView();break;
     case"dfilter":state.dfilter=v;renderView();break;
