@@ -476,7 +476,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"onboarding",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],schedEdit:null,
-  ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,drafts:{},
+  ctab:"msg",msgtab:"chat",settab:"general",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
     mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
@@ -834,23 +834,32 @@ function viewSettings(){
   const tiers=[...TIERS].sort((a,b)=>b.min-a.min).map(t=>`<div class="tieredit" data-tierrow="${t.key}"><span class="te-emoji">${t.emoji}</span><input class="tn-name" value="${esc(t.name)}" placeholder="등급 이름" maxlength="10"><input class="tn-min mono" value="${t.min}" inputmode="numeric" placeholder="0"><button class="tdel" data-act="deltier" data-v="${t.key}" title="삭제">×</button></div>`).join("");
   const rules=[["presence","도네이터 접속 알림","단골·상위 등급 접속 시"],["dono","후원톡 알림","후원 도착 시 즉시"],["grade","등급 변동 알림","팬 등급 상승/강등"],["broadcast","방송 시작 알림","팬에게 발송"],["dnd","방해금지 (00–08시)","야간 푸시 묶음"]].map(([k,l,d])=>`<div class="setrow"><div class="sl"><b>${l}</b><p>${d}</p></div><div class="tgl ${state.alertRules[k]?"on":""}" data-act="rule" data-v="${k}"></div></div>`).join("");
   const active=state.automation.rules.filter(r=>r.on).length;
-  return `<div class="pad">
+  const tab=state.settab||"general";
+  const tabs=[["general","일반"],["grade","등급"],["crew","크루"],["data","데이터"]];
+  const tabbar=`<div class="subtabs">${tabs.map(([k,l])=>`<button class="${tab===k?"on":""}" data-act="settab" data-v="${k}">${l}</button>`).join("")}</div>`;
+  const ic=(e)=>`<div class="ac-ic" style="width:36px;height:36px;font-size:16px;background:var(--accent-soft)">${e}</div>`;
+  let body="";
+  if(tab==="general"){body=`
     <div class="sechd">표시 테마</div><div class="themeseg">
       <button class="${state.theme==="system"?"on":""}" data-act="theme" data-v="system">🖥️ 시스템</button>
       <button class="${state.theme==="light"?"on":""}" data-act="theme" data-v="light">☀️ 라이트</button>
       <button class="${state.theme==="dark"?"on":""}" data-act="theme" data-v="dark">🌙 다크</button></div>
-    <div class="sechd" style="margin-top:18px">크루 관리</div><div class="rows">
-      <button class="setrow" data-act="openach" style="width:100%;text-align:left"><div class="ac-ic" style="width:36px;height:36px;font-size:16px;background:var(--accent-soft)">🏆</div><div class="sl"><b>업적 / 도전과제</b><p>${crewAchievements().filter(a=>a.done).length}/${crewAchievements().length} 달성</p></div><span class="sv">›</span></button>
-      <button class="setrow" data-act="opensched" style="width:100%;text-align:left"><div class="ac-ic" style="width:36px;height:36px;font-size:16px;background:var(--accent-soft)">📅</div><div class="sl"><b>방송 스케줄</b><p>${state.schedule.length}개 일정</p></div><span class="sv">›</span></button></div>
-    <div class="sechd" style="margin-top:18px">VIP 등급 안내</div><div class="tiercards">${cards}</div>
-    <div class="sechd" style="margin-top:18px">등급 관리</div><div class="card pad"><p style="font-size:12px;color:var(--ink-3);margin:0 0 10px">등급 이름과 누적 후원 임계값(원)을 자유롭게 바꾸고, 등급을 추가·삭제할 수 있어요.</p>${tiers}<button class="btn ghost" data-act="addtier" style="margin-top:12px">+ 등급 추가</button><button class="btn" data-act="savetiers">저장 & 전체 재산정</button></div>
-    <div class="sechd" style="margin-top:18px">자동화</div><div class="rows">
-      <button class="setrow" data-act="openauto" style="text-align:left;width:100%"><div class="ac-ic" style="width:36px;height:36px;font-size:17px;background:var(--accent-soft)">⚡</div><div class="sl"><b>열혈톡 자동 알림 관리</b><p>${state.automation.on?active+"개 시나리오 활성":"꺼짐"} · 열혈톡 푸시로 발송</p></div><span class="sv">›</span></button></div>
     <div class="sechd" style="margin-top:18px">알림 규칙</div><div class="rows">${rules}</div>
-    <div class="sechd" style="margin-top:18px">투네이션 연동</div><div class="rows"><div class="setrow"><div class="sl"><b>후원 Webhook</b><p>실시간 후원 이벤트 수신</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div><div class="setrow"><div class="sl"><b>계정 SSO</b><p>투네이션 계정 연동</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div></div>
-    <div class="sechd" style="margin-top:18px">데이터</div><div class="rows"><button class="setrow" data-act="openbackup" style="width:100%;text-align:left"><div class="ac-ic" style="width:36px;height:36px;font-size:16px;background:var(--accent-soft)">💾</div><div class="sl"><b>데이터 백업 · 복원</b><p>${state.lastBackup?"마지막 백업 "+fmtTime(state.lastBackup):"백업 없음"}</p></div><span class="sv">›</span></button></div>
-    <button class="btn ghost" data-act="logout" style="color:var(--crit);margin-top:18px">로그아웃</button>
-    <div class="hint">열혈톡 v0.6 프로토타입 · 1:1 채팅 · 등급 커스터마이즈 · Phase 1–2</div></div>`;
+    <button class="btn ghost" data-act="logout" style="color:var(--crit);margin-top:18px">로그아웃</button>`;}
+  else if(tab==="grade"){body=`
+    <div class="sechd">VIP 등급 안내</div><div class="tiercards">${cards}</div>
+    <div class="sechd" style="margin-top:18px">등급 관리</div><div class="card pad"><p style="font-size:12px;color:var(--ink-3);margin:0 0 10px">등급 이름과 누적 후원 임계값(원)을 자유롭게 바꾸고, 등급을 추가·삭제할 수 있어요.</p>${tiers}<button class="btn ghost" data-act="addtier" style="margin-top:12px">+ 등급 추가</button><button class="btn" data-act="savetiers">저장 & 전체 재산정</button></div>`;}
+  else if(tab==="crew"){body=`
+    <div class="sechd">크루 관리</div><div class="rows">
+      <button class="setrow" data-act="openach" style="width:100%;text-align:left">${ic("🏆")}<div class="sl"><b>업적 / 도전과제</b><p>${crewAchievements().filter(a=>a.done).length}/${crewAchievements().length} 달성</p></div><span class="sv">›</span></button>
+      <button class="setrow" data-act="opensched" style="width:100%;text-align:left">${ic("📅")}<div class="sl"><b>방송 스케줄</b><p>${state.schedule.length}개 일정</p></div><span class="sv">›</span></button></div>
+    <div class="sechd" style="margin-top:18px">자동화</div><div class="rows">
+      <button class="setrow" data-act="openauto" style="text-align:left;width:100%">${ic("⚡")}<div class="sl"><b>열혈톡 자동 알림 관리</b><p>${state.automation.on?active+"개 시나리오 활성":"꺼짐"} · 열혈톡 푸시로 발송</p></div><span class="sv">›</span></button></div>`;}
+  else if(tab==="data"){body=`
+    <div class="sechd">투네이션 연동</div><div class="rows"><div class="setrow"><div class="sl"><b>후원 Webhook</b><p>실시간 후원 이벤트 수신</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div><div class="setrow"><div class="sl"><b>계정 SSO</b><p>투네이션 계정 연동</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div></div>
+    <div class="sechd" style="margin-top:18px">데이터 백업</div><div class="rows"><button class="setrow" data-act="openbackup" style="width:100%;text-align:left">${ic("💾")}<div class="sl"><b>데이터 백업 · 복원</b><p>${state.lastBackup?"마지막 백업 "+fmtTime(state.lastBackup):"백업 없음"}</p></div><span class="sv">›</span></button></div>`;}
+  return `<div class="pad">${tabbar}${body}
+    <div class="hint">열혈톡 v0.7 프로토타입 · 설정 탭</div></div>`;
 }
 
 /* ---------- creator: 업적 (크루 도전과제) ---------- */
@@ -1173,6 +1182,7 @@ $("#phone").addEventListener("click",e=>{
     case"dodonate":doDonate(v);break;
     case"closesheet":closeSheet();break;
     case"theme":applyTheme(v);render();break;
+    case"settab":state.settab=v;renderView();break;
     case"openbackup":state.sub="backup";state.param=null;render();break;
     case"openach":state.sub="achievements";state.param=null;render();break;
     case"opensched":state.sub="schedule";state.param=null;render();break;
