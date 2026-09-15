@@ -335,6 +335,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .bk-main p{margin:2px 0 0;font-size:11px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
 .bk-btn{font-size:11.5px;font-weight:700;padding:6px 11px;border-radius:20px;background:var(--accent-soft);color:var(--accent);flex:0 0 auto}
 .bk-btn.del{background:var(--surface-2);color:var(--crit)}
+.schrow{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line-2);width:100%;text-align:left}
+.schrow:last-child{border-bottom:none}
+.schrow:active{background:var(--surface-2)}
+.schrow.past{opacity:.5}
+.sch-date{width:54px;flex:0 0 auto;text-align:center;background:var(--surface-2);border-radius:10px;padding:7px 4px;border:1px solid var(--line)}
+.sch-date .d{font-size:15px;font-weight:800;font-family:"IBM Plex Mono",monospace}
+.sch-date .dd{font-size:9px;font-weight:700;margin-top:1px;font-family:"IBM Plex Mono",monospace}
+.sch-main{flex:1;min-width:0}
+.sch-main b{font-size:14px;font-weight:600}
+.sch-main .t{font-size:11.5px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;margin-top:2px}
+.sch-type{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;flex:0 0 auto}
 .mygradehero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 20px;box-shadow:var(--shadow)}
 .mygradehero .big{font-size:44px}.mygradehero .gn{font-size:22px;font-weight:700;margin-top:6px}
 .mygradehero .prog{margin-top:18px}.mygradehero .ptrack{height:14px;background:var(--surface-2);border-radius:8px;overflow:hidden;margin:8px 0;border:1px solid var(--line)}
@@ -464,7 +475,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   thread:thread||[{t:"day",text:"오늘"},{from:"in",text:"안녕하세요! 오늘도 응원할게요 😊",tm:"18:10"}],
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
-  role:"creator",live:false,screen:"onboarding",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],
+  role:"creator",live:false,screen:"onboarding",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],schedEdit:null,
   ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
@@ -508,6 +519,12 @@ let state={
   retention:{d30:43,trend:[31,34,33,38,40,41,43]},
   autoperf:{sent:142,open:72,conv:8.5},
   events:[{name:"별하늘",emoji:"🌙",label:"후원 1주년",d:11},{name:"해피",emoji:"🐻",label:"생일",d:5},{name:"코코",emoji:"🐱",label:"생일",d:12}],
+  schedule:[
+    {id:"s1",title:"엑셀방송",date:"2026-09-15",time:"21:00",type:"방송"},
+    {id:"s2",title:"휴방 안내",date:"2026-09-18",time:"19:00",type:"공지"},
+    {id:"s3",title:"후원 1주년 기념 방송",date:"2026-09-20",time:"20:00",type:"이벤트"},
+    {id:"s4",title:"신규 콘텐츠 공개",date:"2026-09-25",time:"21:00",type:"방송"},
+  ],
   /* ---------- donator side (내가 팔로우한 크리에이터들과의 1:1) ---------- */
   me:{name:"별하늘",emoji:"🌙"},
   creators:[
@@ -609,6 +626,8 @@ function renderAppbar(){
   else if(state.sub==="automation"){h=`${back}<div><h1>자동화</h1><div class="sub">열혈톡 자동 알림</div></div>`;}
   else if(state.sub==="autostat"){const r=state.automation.rules.find(x=>x.key===state.param);h=`${back}<div><h1>성과 분석</h1><div class="sub">${r?esc(r.name):""}</div></div>`;}
   else if(state.sub==="backup"){h=`${back}<div><h1>데이터 백업</h1><div class="sub">백업 · 복원</div></div>`;}
+  else if(state.sub==="achievements"){h=`${back}<div><h1>업적</h1><div class="sub">크루 도전과제</div></div>`;}
+  else if(state.sub==="schedule"){h=`${back}<div><h1>방송 스케줄</h1><div class="sub">일정 관리</div></div>`;}
   else{
     const map={msg:["채팅","팬과의 1:1 대화"],dono:["후원톡","받은 후원 관리"],fans:["팬 관리","등급별 CRM"],notif:["알림","접속 · 후원 · 등급"],insights:["인사이트","크루 대시보드"],
       following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
@@ -627,6 +646,8 @@ function renderView(){
   if(state.sub==="automation"){v.innerHTML=viewAutomation();return;}
   if(state.sub==="autostat"){v.innerHTML=viewAutoStat(state.param);return;}
   if(state.sub==="backup"){v.innerHTML=viewBackup();return;}
+  if(state.sub==="achievements"){v.innerHTML=viewAchievements();return;}
+  if(state.sub==="schedule"){v.innerHTML=viewSchedule();return;}
   if(state.role==="creator")v.innerHTML={msg:viewChat,dono:viewDono,fans:viewFans,notif:viewNotif,insights:viewInsights}[state.ctab]();
   else v.innerHTML={following:viewFollowing,discover:viewDiscover,dnotif:viewDNotif,me:viewMe}[state.dtab]();
 }
@@ -818,6 +839,9 @@ function viewSettings(){
       <button class="${state.theme==="system"?"on":""}" data-act="theme" data-v="system">🖥️ 시스템</button>
       <button class="${state.theme==="light"?"on":""}" data-act="theme" data-v="light">☀️ 라이트</button>
       <button class="${state.theme==="dark"?"on":""}" data-act="theme" data-v="dark">🌙 다크</button></div>
+    <div class="sechd" style="margin-top:18px">크루 관리</div><div class="rows">
+      <button class="setrow" data-act="openach" style="width:100%;text-align:left"><div class="ac-ic" style="width:36px;height:36px;font-size:16px;background:var(--accent-soft)">🏆</div><div class="sl"><b>업적 / 도전과제</b><p>${crewAchievements().filter(a=>a.done).length}/${crewAchievements().length} 달성</p></div><span class="sv">›</span></button>
+      <button class="setrow" data-act="opensched" style="width:100%;text-align:left"><div class="ac-ic" style="width:36px;height:36px;font-size:16px;background:var(--accent-soft)">📅</div><div class="sl"><b>방송 스케줄</b><p>${state.schedule.length}개 일정</p></div><span class="sv">›</span></button></div>
     <div class="sechd" style="margin-top:18px">VIP 등급 안내</div><div class="tiercards">${cards}</div>
     <div class="sechd" style="margin-top:18px">등급 관리</div><div class="card pad"><p style="font-size:12px;color:var(--ink-3);margin:0 0 10px">등급 이름과 누적 후원 임계값(원)을 자유롭게 바꾸고, 등급을 추가·삭제할 수 있어요.</p>${tiers}<button class="btn ghost" data-act="addtier" style="margin-top:12px">+ 등급 추가</button><button class="btn" data-act="savetiers">저장 & 전체 재산정</button></div>
     <div class="sechd" style="margin-top:18px">자동화</div><div class="rows">
@@ -828,6 +852,50 @@ function viewSettings(){
     <button class="btn ghost" data-act="logout" style="color:var(--crit);margin-top:18px">로그아웃</button>
     <div class="hint">열혈톡 v0.6 프로토타입 · 1:1 채팅 · 등급 커스터마이즈 · Phase 1–2</div></div>`;
 }
+
+/* ---------- creator: 업적 (크루 도전과제) ---------- */
+function crewAchievements(){
+  const fans=state.fans.length,vip=state.fans.filter(f=>isVIP(f.cum)).length,vvip=state.fans.filter(f=>tierIdx(tierOf(f.cum).key)>=tierIdx("vvip")).length,totalCum=state.fans.reduce((a,f)=>a+f.cum,0),avgTemp=Math.round(state.fans.reduce((a,f)=>a+f.temp,0)/state.fans.length),autoOn=state.automation.rules.filter(r=>r.on).length,donoN=state.dtalks.length;
+  return [
+    {emoji:"🎉",name:"첫 후원톡",desc:"첫 후원톡을 받았어요",done:donoN>=1,prog:donoN?100:0},
+    {emoji:"👥",name:"팬 10명",desc:"팬 10명 모으기",done:fans>=10,prog:Math.round(Math.min(100,fans/10*100))},
+    {emoji:"👑",name:"VIP 팬 5명",desc:"VIP 이상 팬 5명 확보",done:vip>=5,prog:Math.round(Math.min(100,vip/5*100))},
+    {emoji:"💎",name:"VVIP 팬 2명",desc:"VVIP 이상 팬 2명 확보",done:vvip>=2,prog:Math.round(Math.min(100,vvip/2*100))},
+    {emoji:"💰",name:"누적 후원 300만",desc:"크루 누적 후원 300만원",done:totalCum>=3000000,prog:Math.round(Math.min(100,totalCum/3000000*100))},
+    {emoji:"🏆",name:"누적 후원 1000만",desc:"크루 누적 후원 1000만원",done:totalCum>=10000000,prog:Math.round(Math.min(100,totalCum/10000000*100))},
+    {emoji:"🤖",name:"자동화 마스터",desc:"자동화 3개 이상 운영",done:autoOn>=3,prog:Math.round(Math.min(100,autoOn/3*100))},
+    {emoji:"🌡️",name:"찐팬 크루",desc:"평균 관계 온도 70 이상",done:avgTemp>=70,prog:Math.round(Math.min(100,avgTemp/70*100))},
+  ];
+}
+function viewAchievements(){const achs=crewAchievements(),done=achs.filter(a=>a.done).length;
+  return `<div class="pad">
+    <div class="dhero"><div class="dh-k">달성한 업적</div><div class="dh-v">${done} / ${achs.length}</div><div class="dh-d">크루 레벨 ${Math.max(1,Math.ceil(done/2))} · 계속 도전해보세요</div><span class="cw">🏆</span></div>
+    <div class="card pad" style="margin-top:14px"><div class="badgerow">${achs.filter(a=>a.done).map(a=>`<div class="badge-ic" title="${esc(a.name)}">${a.emoji}</div>`).join("")||'<span style="font-size:12px;color:var(--ink-3)">아직 달성한 업적이 없어요</span>'}</div>
+      <div class="achlist">${achs.map(a=>`<div class="ach ${a.done?"done":""}"><div class="ach-ic">${a.emoji}</div><div class="ach-main"><div class="ach-nm">${esc(a.name)}${a.done?' <span class="ach-chk">✓</span>':""}</div><div class="ach-ds">${esc(a.desc)}</div>${a.done?"":`<div class="ptrack" style="margin-top:6px"><div class="pfill" style="width:${a.prog}%;background:var(--accent)"></div></div>`}</div></div>`).join("")}</div></div>
+    <div class="hint">💡 팬을 모으고 관계를 다질수록 새로운 업적이 열려요.</div></div>`;
+}
+
+/* ---------- creator: 방송 스케줄 ---------- */
+function schedColor(t){return {"방송":"var(--accent)","이벤트":"var(--keep)","공지":"var(--warn)","기념일":"var(--info)"}[t]||"var(--accent)";}
+function ddText(dateStr){const today=new Date();today.setHours(0,0,0,0);const d=new Date(dateStr+"T00:00:00");const diff=Math.round((d-today)/86400000);if(isNaN(diff))return "";if(diff===0)return "D-DAY";if(diff>0)return "D-"+diff;return "종료";}
+function mmdd(dateStr){const p=(dateStr||"").split("-");return p.length>=3?p[1]+"."+p[2]:dateStr;}
+function viewSchedule(){
+  const list=[...state.schedule].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const rows=list.map(s=>{const c=schedColor(s.type),past=ddText(s.date)==="종료";return `<button class="schrow${past?" past":""}" data-act="sched-edit" data-v="${s.id}"><div class="sch-date"><div class="d">${mmdd(s.date)}</div><div class="dd" style="color:${past?"var(--ink-3)":"var(--accent)"}">${ddText(s.date)}</div></div><div class="sch-main"><b>${esc(s.title)}</b><div class="t">${s.time} · ${s.type}</div></div><span class="sch-type" style="background:color-mix(in srgb,${c} 15%,transparent);color:${c}">${s.type}</span></button>`;}).join("")||`<div class="empty">등록된 일정이 없어요.</div>`;
+  return `<div class="pad"><button class="addauto" data-act="sched-new">＋ 일정 추가</button>
+    <div class="sechd" style="margin-top:16px">방송 스케줄 <span class="r">${list.length}개</span></div>
+    <div class="rows">${rows}</div>
+    <div class="hint">💡 등록한 일정은 방송 시작 알림·기념일 자동화와 연동할 수 있어요.</div></div>`;
+}
+function captureSched(){const t=$("#scTitle"),d=$("#scDate"),tm=$("#scTime");if(t)state.schedEdit.title=t.value;if(d)state.schedEdit.date=d.value;if(tm)state.schedEdit.time=tm.value;}
+function schedEditorSheet(){const e=state.schedEdit;const chips=["방송","이벤트","공지","기념일"].map(t=>`<button class="chip ${e.type===t?"on":""}" data-act="sched-type" data-v="${t}">${t}</button>`).join("");
+  openSheet(`<h3 class="sh">${e.id?"일정 수정":"새 일정 추가"}</h3><p class="sd">방송·이벤트 일정을 등록해요.</p>
+    <label class="ae-lb">제목</label><input id="scTitle" value="${esc(e.title)}" placeholder="예: 엑셀방송" autocomplete="off">
+    <label class="ae-lb">날짜</label><input id="scDate" type="date" value="${e.date}">
+    <label class="ae-lb">시간</label><input id="scTime" type="time" value="${e.time}">
+    <label class="ae-lb">유형</label><div class="chips wrap">${chips}</div>
+    <button class="btn" data-act="sched-save">${e.id?"저장":"추가"}</button>
+    ${e.id?`<button class="btn ghost" data-act="sched-del" style="color:var(--crit)">일정 삭제</button>`:`<button class="btn ghost" data-act="closesheet">취소</button>`}`);}
 
 /* ---------- creator: 데이터 백업 ---------- */
 function viewBackup(){
@@ -1106,6 +1174,13 @@ $("#phone").addEventListener("click",e=>{
     case"closesheet":closeSheet();break;
     case"theme":applyTheme(v);render();break;
     case"openbackup":state.sub="backup";state.param=null;render();break;
+    case"openach":state.sub="achievements";state.param=null;render();break;
+    case"opensched":state.sub="schedule";state.param=null;render();break;
+    case"sched-new":state.schedEdit={id:null,title:"",date:"2026-09-20",time:"21:00",type:"방송"};schedEditorSheet();break;
+    case"sched-edit":{const s=state.schedule.find(x=>x.id===v);state.schedEdit={id:s.id,title:s.title,date:s.date,time:s.time,type:s.type};schedEditorSheet();break;}
+    case"sched-type":captureSched();state.schedEdit.type=v;schedEditorSheet();break;
+    case"sched-save":{captureSched();const e=state.schedEdit;if(!e.title.trim())e.title="새 일정";if(e.id){Object.assign(state.schedule.find(x=>x.id===e.id),{title:e.title,date:e.date,time:e.time,type:e.type});toast("일정을 저장했어요");}else{state.schedule.push({id:"sc"+Date.now(),title:e.title,date:e.date,time:e.time,type:e.type});toast("일정을 추가했어요");}state.schedEdit=null;closeSheet();renderView();break;}
+    case"sched-del":state.schedule=state.schedule.filter(x=>x.id!==state.schedEdit.id);state.schedEdit=null;closeSheet();renderView();toast("일정을 삭제했어요");break;
     case"dobackup":doBackup();break;
     case"restorebkp":restoreBkp(parseInt(v));break;
     case"delbkp":delBkp(parseInt(v));break;
