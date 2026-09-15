@@ -118,6 +118,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .row .meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex:0 0 auto}
 .row .tm{font-size:10.5px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
 .gp{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:20px;background:color-mix(in srgb,var(--gc,var(--accent)) 15%,transparent);color:var(--gc,var(--accent));white-space:nowrap}
+.fanlink{cursor:pointer;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 40%,transparent);text-decoration-thickness:1px;text-underline-offset:3px}
+.fanlink:active{opacity:.55}
 .cnt{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:var(--on-accent);font-size:10px;font-weight:700;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace}
 .follow{font-size:12px;font-weight:700;padding:8px 15px;border-radius:20px;background:var(--accent);color:var(--on-accent);flex:0 0 auto}
 .follow.on{background:var(--surface-2);color:var(--ink-3);border:1px solid var(--line)}
@@ -395,6 +397,7 @@ function tierOf(a){let t=TIERS[0];for(const x of TIERS)if(a>=x.min)t=x;return t;
 function tierIdx(k){return TIERS.findIndex(t=>t.key===k);}
 function nextTier(a){const i=tierIdx(tierOf(a).key);return TIERS[i+1]||null;}
 function gpill(a){const t=tierOf(a);return `<span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span>`;}
+function fanLink(f){return `<span class="fanlink" data-act="fan" data-v="${f.id}">${esc(f.name)}</span>`;}
 const isVIP=a=>tierIdx(tierOf(a).key)>=1;
 const GRADE_COLORS=["#9d97b5","#a78bfa","#8b6ef0","#7c5ce6","#6d47d9","#5b34c4"];
 function readTierRows(){const rows=[...document.querySelectorAll("[data-tierrow]")];if(!rows.length)return;
@@ -436,9 +439,9 @@ let state={
     {id:"d6",fid:"f3",amt:10000,text:"이모티콘 감사해요 ㅋㅋㅋ",min:400,answered:true},
   ],
   notifs:[
-    {type:"dono",title:"<b>👑 VVIP '별하늘'</b>님이 ₩50,000 후원",sub:"1:1 채팅 · 후원톡 도착",min:7,unread:true},
-    {type:"presence",title:"<b>👑 VVIP '해피'</b>님이 접속했어요",sub:"최근 후원 ₩540,000 · 15분 만의 접속",min:15,unread:true},
-    {type:"grade",title:"<b>'도현'</b>님이 👑 VIP로 등급 상승",sub:"누적 ₩100,000 달성 · 🔔 열혈톡 푸시 자동 발송됨",min:120,unread:false},
+    {type:"dono",fid:"f1",title:"<b>👑 VVIP '별하늘'</b>님이 ₩50,000 후원",sub:"1:1 채팅 · 후원톡 도착",min:7,unread:true},
+    {type:"presence",fid:"f5",title:"<b>👑 VVIP '해피'</b>님이 접속했어요",sub:"최근 후원 ₩540,000 · 15분 만의 접속",min:15,unread:true},
+    {type:"grade",fid:"f7",title:"<b>'도현'</b>님이 👑 VIP로 등급 상승",sub:"누적 ₩100,000 달성 · 🔔 열혈톡 푸시 자동 발송됨",min:120,unread:false},
     {type:"system",title:"이번 달 후원 목표 <b>82%</b> 달성",sub:"₩4,100,000 / ₩5,000,000",min:200,unread:false},
   ],
   goal:{cur:4100000,target:5000000},
@@ -491,7 +494,7 @@ function initTheme(){let t="system";try{t=localStorage.getItem("heyeol-theme")||
 /* ---------- 열혈 도네이터 접속 헤즈업 알림 ---------- */
 let alertT;
 function showPresenceAlert(f){const el=$("#alertbar");if(!el)return;const t=tierOf(f.cum);
-  el.innerHTML=`<div class="ab-av">${f.emoji}<span class="on-dot"></span></div><div class="ab-tx"><b>🟢 ${esc(f.name)} 접속</b><div class="ab-sub"><span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span> · 지금 온라인 · 누적 ${won(f.cum)}</div></div><button class="ab-go" data-act="alertopen" data-v="${f.id}">채팅 열기</button>`;
+  el.innerHTML=`<div class="ab-av" data-act="fan" data-v="${f.id}" style="cursor:pointer">${f.emoji}<span class="on-dot"></span></div><div class="ab-tx" data-act="fan" data-v="${f.id}" style="cursor:pointer"><b>🟢 ${esc(f.name)} 접속</b><div class="ab-sub"><span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span> · 지금 온라인 · 누적 ${won(f.cum)}</div></div><button class="ab-go" data-act="alertopen" data-v="${f.id}">채팅 열기</button>`;
   el.classList.add("on");clearTimeout(alertT);alertT=setTimeout(()=>el.classList.remove("on"),4600);}
 /* ---------- 데이터 백업 ---------- */
 function snapshotData(){return {v:1,at:Date.now(),
@@ -546,7 +549,8 @@ function renderAppbar(){
     const p=state.role==="creator"?fanById(state.param):creById(state.param);
     const grade=state.role==="creator"?tierOf(p.cum):tierOf(p.myCum);
     const status=p.online?'<span style="color:var(--keep)">● 온라인</span>':ago(p.seenMin||60)+" 전 접속";
-    h=`${back}<div class="hav">${p.emoji}${p.online?'<span class="on-dot"></span>':""}</div><div><h1 style="font-size:17px">${esc(p.name)}</h1><div class="sub"><span class="gp" style="--gc:${grade.color}">${grade.emoji} ${grade.name}</span> ${status}</div></div>`;
+    const isFan=state.role==="creator";const nameH=isFan?`<span class="fanlink" data-act="fan" data-v="${p.id}">${esc(p.name)}</span>`:esc(p.name);const havA=isFan?`data-act="fan" data-v="${p.id}" style="cursor:pointer"`:"";
+    h=`${back}<div class="hav" ${havA}>${p.emoji}${p.online?'<span class="on-dot"></span>':""}</div><div><h1 style="font-size:17px">${nameH}</h1><div class="sub"><span class="gp" style="--gc:${grade.color}">${grade.emoji} ${grade.name}</span> ${status}</div></div>`;
   }else if(state.sub==="fan"){h=`${back}<div><h1>VIP 후원자 정보</h1><div class="sub">${esc(fanById(state.param).name)}</div></div>`;}
   else if(state.sub==="settings"){h=`${back}<div><h1>설정</h1><div class="sub">등급 · 자동화 · 연동</div></div>`;}
   else if(state.sub==="automation"){h=`${back}<div><h1>자동화</h1><div class="sub">열혈톡 자동 알림</div></div>`;}
@@ -623,7 +627,7 @@ function msgInbox(){
   const list=[...state.fans].sort((a,b)=>(b.unread-a.unread)||(a.seenMin-b.seenMin));
   const rows=list.map(f=>`<button class="row" data-act="thread" data-v="${f.id}">
     <div class="av">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div>
-    <div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}</div><div class="pv">${esc(threadPreview(f.thread,true))}</div></div>
+    <div class="main"><div class="tt">${fanLink(f)} ${gpill(f.cum)}</div><div class="pv">${esc(threadPreview(f.thread,true))}</div></div>
     <div class="meta"><div class="tm">${threadTime(f.thread)||ago(f.seenMin)}</div>${f.unread?`<span class="cnt">${f.unread}</span>`:""}</div></button>`).join("");
   return `<div class="sechd">1:1 채팅 <span class="r" data-act="tab" data-v="fans">팬 관리 ›</span></div>
     <div class="rows">${rows}</div>
@@ -637,7 +641,7 @@ function donoFeed(){
   const chips=[["all","전체"],["wait","미답장"],["amt","고액순"]].map(([k,l])=>`<button class="chip ${state.dtfilter===k?"on":""}" data-act="dtfilter" data-v="${k}">${l}${k==="wait"&&state.dtalks.some(d=>!d.answered)?` (${state.dtalks.filter(d=>!d.answered).length})`:""}</button>`).join("");
   const cards=list.map(d=>{const f=fanById(d.fid);
     return `<div class="dtcard ${d.answered?"":"unans"}">
-      <div class="dt-top"><div class="av">${f.emoji}</div><div style="flex:1;min-width:0"><div class="nm">${esc(f.name)} ${gpill(f.cum)}</div><div class="tm">${ago(d.min)}</div></div><div class="dt-amt">${won(d.amt)}</div></div>
+      <div class="dt-top"><div class="av">${f.emoji}</div><div style="flex:1;min-width:0"><div class="nm">${fanLink(f)} ${gpill(f.cum)}</div><div class="tm">${ago(d.min)}</div></div><div class="dt-amt">${won(d.amt)}</div></div>
       <div class="dt-msg">“${esc(d.text)}”${d.img?`<img class="dono-img" src="${d.img}" alt="첨부 이미지">`:""}</div>
       <div class="dt-foot">${d.answered?'<span class="dt-status done">✓ 답장 완료</span>':'<span class="dt-status wait">⏳ 답장 대기</span>'}<button class="dt-reply ${d.answered?"ghost":""}" data-act="dtreply" data-v="${d.id}">${d.answered?"채팅 열기":"답장하기"}</button></div>
     </div>`;}).join("")||`<div class="empty">해당하는 후원톡이 없어요.</div>`;
@@ -693,7 +697,7 @@ function viewFan(id){
 /* ---------- creator: notif / insights / settings ---------- */
 function viewNotif(){
   const ic={presence:"🟢",dono:"🎁",grade:"⬆️",system:"🎯"};
-  const rows=state.notifs.map(n=>`<div class="nrow ${n.unread?"unread":""}"><div class="nic ${n.type}">${ic[n.type]}</div><div style="flex:1"><div class="nt">${n.title}</div><div class="ntm">${esc(n.sub)} · ${ago(n.min)}</div></div></div>`).join("")||`<div class="empty">알림이 없어요.</div>`;
+  const rows=state.notifs.map(n=>{const o=n.fid?`<button class="nrow ${n.unread?"unread":""}" data-act="fan" data-v="${n.fid}" style="width:100%;text-align:left">`:`<div class="nrow ${n.unread?"unread":""}">`,c=n.fid?"</button>":"</div>";return `${o}<div class="nic ${n.type}">${ic[n.type]}</div><div style="flex:1"><div class="nt">${n.title}</div><div class="ntm">${esc(n.sub)} · ${ago(n.min)}</div></div>${c}`;}).join("")||`<div class="empty">알림이 없어요.</div>`;
   return `<div class="pad"><div class="sechd">알림 <span class="r" data-act="readall">모두 읽음</span></div><div class="rows">${rows}</div>
     <div class="card pad" style="margin-top:14px"><div style="font-weight:700;font-size:14px">💌 복귀 유도 발송</div><p style="font-size:12.5px;color:var(--ink-3);margin:6px 0 0">14일 이상 미접속한 팬 <b>${state.fans.filter(f=>f.seenMin>=14*1440).length}명</b>에게 복귀 리마인드 쪽지를 보낼 수 있어요.</p><button class="btn" data-act="winback">복귀 유도 메시지 작성</button></div></div>`;
 }
@@ -806,7 +810,7 @@ function viewAutoStat(key){
       <div class="funnel"><div class="fn-row"><span>발송</span><div class="fn-bar" style="width:100%"><b>${r.sent}</b></div></div>
         <div class="fn-row"><span>열람</span><div class="fn-bar" style="width:${Math.max(14,r.open)}%"><b>${opened}</b></div></div>
         <div class="fn-row"><span>후원</span><div class="fn-bar conv" style="width:${Math.max(12,Math.round(r.open*r.conv/100))}%"><b>${converted}</b></div></div></div></div>
-    ${targetFans.length?`<div class="chartcard"><h3>발송 대상</h3><div class="cs">특정 팬 ${targetFans.length}명</div>${targetFans.map(f=>`<div class="evrow"><span>${f.emoji}</span><span><b>${esc(f.name)}</b> ${gpill(f.cum)}</span></div>`).join("")}</div>`:""}
+    ${targetFans.length?`<div class="chartcard"><h3>발송 대상</h3><div class="cs">특정 팬 ${targetFans.length}명</div>${targetFans.map(f=>`<div class="evrow"><span>${f.emoji}</span><span><b>${fanLink(f)}</b> ${gpill(f.cum)}</span></div>`).join("")}</div>`:""}
     <div class="hint">🔔 이 자동화는 열혈톡 푸시로 발송됩니다.</div></div>`;
 }
 function autoEditorSheet(){
@@ -918,10 +922,10 @@ function liveTick(){
       const t2=["대박이에요 🔥","오늘도 최고!","힘내세요 💪","콘텐츠 미쳤다ㅋㅋ","항상 응원합니다"];const tx=t2[Math.floor(Math.random()*t2.length)];
       f.thread.push({from:"dono",amt,text:tx,tm:nowT()});if(!open)f.unread++;state.goal.cur+=amt;
       state.dtalks.unshift({id:"d"+Date.now(),fid:f.id,amt,text:tx,min:0,answered:false});if(state.dtalks.length>60)state.dtalks.length=60;
-      state.notifs.unshift({type:"dono",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 ${won(amt)} 후원`,sub:"1:1 채팅 · 후원톡 도착",min:0,unread:true});
-      const after=tierOf(f.cum).key;if(tierIdx(after)>tierIdx(before)){const t=tierOf(f.cum);f.thread.push({from:"sys",text:`🎉 ${f.name}님이 ${t.emoji} ${t.name} 등급으로 올라섰어요!`});state.notifs.unshift({type:"grade",title:`<b>'${f.name}'</b>님이 ${t.emoji}${t.name}로 등급 상승`,sub:`누적 ${won(f.cum)} · ${state.automation.on&&state.automation.rules.find(r=>r.key==="grade").on?"🔔 열혈톡 푸시 자동 발송":"알림"}`,min:0,unread:true});if(state.automation.on&&state.automation.rules.find(r=>r.key==="grade").on)state.autoperf.sent++;}
+      state.notifs.unshift({type:"dono",fid:f.id,title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 ${won(amt)} 후원`,sub:"1:1 채팅 · 후원톡 도착",min:0,unread:true});
+      const after=tierOf(f.cum).key;if(tierIdx(after)>tierIdx(before)){const t=tierOf(f.cum);f.thread.push({from:"sys",text:`🎉 ${f.name}님이 ${t.emoji} ${t.name} 등급으로 올라섰어요!`});state.notifs.unshift({type:"grade",fid:f.id,title:`<b>'${f.name}'</b>님이 ${t.emoji}${t.name}로 등급 상승`,sub:`누적 ${won(f.cum)} · ${state.automation.on&&state.automation.rules.find(r=>r.key==="grade").on?"🔔 열혈톡 푸시 자동 발송":"알림"}`,min:0,unread:true});if(state.automation.on&&state.automation.rules.find(r=>r.key==="grade").on)state.autoperf.sent++;}
     }else if(r<0.72){const t2=["안녕하세요~","오늘 방송 언제해요?","저 왔어요!","화이팅!!","이번 콘텐츠 기대돼요","답장 기다릴게요 ㅎㅎ"];f.thread.push({from:"in",text:t2[Math.floor(Math.random()*t2.length)],tm:nowT()});if(!open)f.unread++;
-    }else if(r<0.9){if(!f.online){f.online=true;f.seenMin=0;if(isVIP(f.cum)){state.notifs.unshift({type:"presence",title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 접속했어요`,sub:`누적 ${won(f.cum)} · 열혈 도네이터 접속`,min:0,unread:true});if(state.alertRules.presence)showPresenceAlert(f);}}
+    }else if(r<0.9){if(!f.online){f.online=true;f.seenMin=0;if(isVIP(f.cum)){state.notifs.unshift({type:"presence",fid:f.id,title:`<b>${tierOf(f.cum).emoji} ${tierOf(f.cum).name} '${f.name}'</b>님이 접속했어요`,sub:`누적 ${won(f.cum)} · 열혈 도네이터 접속`,min:0,unread:true});if(state.alertRules.presence)showPresenceAlert(f);}}
     }else{if(f.online&&Math.random()<0.5){f.online=false;f.seenMin=1;}}
     if(state.notifs.length>40)state.notifs.length=40;state.fans.forEach(x=>{if(x.thread.length>50)x.thread.splice(1,x.thread.length-50);});
   }else{
@@ -977,7 +981,7 @@ $("#phone").addEventListener("click",e=>{
     case"dtab":state.dtab=v;state.sub=null;render();break;
     case"back":state.sub=null;state.param=null;state.replyTo=null;render();break;
     case"thread":state.replyTo=null;state.sub="thread";state.param=v;render();break;
-    case"fan":state.sub="fan";state.param=v;render();break;
+    case"fan":{const el=$("#alertbar");if(el)el.classList.remove("on");state.role="creator";state.sub="fan";state.param=v;render();break;}
     case"send":sendMsg(v);break;
     case"filter":state.filter=v;renderView();break;
     case"dfilter":state.dfilter=v;renderView();break;
