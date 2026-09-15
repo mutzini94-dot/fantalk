@@ -140,6 +140,20 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .composer input{flex:1;border:1px solid var(--line);background:var(--surface-2);border-radius:22px;padding:10px 14px;font-size:14px;font-family:inherit;color:var(--ink);min-width:0}
 .composer .send{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-size:17px;flex:0 0 auto}
 .composer .dbtn{width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:19px;flex:0 0 auto;border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
+.composer .attach{width:36px;height:36px;border-radius:50%;background:var(--surface-2);color:var(--ink-2);font-size:16px;flex:0 0 auto;display:grid;place-items:center;border:1px solid var(--line);cursor:pointer}
+.msg-img{display:block;max-width:190px;max-height:220px;border-radius:11px;margin-bottom:3px;object-fit:cover}
+.b.out .msg-img{border:1px solid rgba(255,255,255,.25)}
+.sticker{font-size:56px;line-height:1;padding:2px 4px}
+.sticker.out{align-self:flex-end}.sticker.in{align-self:flex-start}
+.dono-img{display:block;max-width:100%;border-radius:10px;margin-top:8px}
+.emoji-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.emoji-btn{font-size:29px;padding:8px 0;border-radius:12px;background:var(--surface-2)}
+.emoji-btn:active{background:var(--accent-soft)}
+.emoji-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.emoji-mini{font-size:19px;width:40px;height:40px;border-radius:11px;background:var(--surface-2);border:1px solid var(--line)}
+.dono-thumb-wrap{position:relative;display:inline-block;margin-top:12px}
+.dono-thumb{max-width:120px;max-height:120px;border-radius:12px;display:block;border:1px solid var(--line)}
+.thumb-x{position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:15px;box-shadow:var(--shadow)}
 .subtabs{display:flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:14px}
 .subtabs button{flex:1;padding:9px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:5px}
 .subtabs button.on{background:var(--surface);color:var(--accent);box-shadow:var(--shadow)}
@@ -334,7 +348,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"onboarding",slide:0,
-  ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,drafts:{},
+  ctab:"msg",msgtab:"chat",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
     mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
@@ -454,7 +468,13 @@ function renderView(){
 }
 
 /* ---------- shared thread ---------- */
-function threadPreview(msgs){const last=[...msgs].reverse().find(x=>x.from);if(!last)return"대화를 시작해보세요";return last.from==="dono"?"🎁 후원톡 "+won(last.amt):(last.from==="out"?"나: ":"")+last.text;}
+function threadPreview(msgs,hideDono){const arr=hideDono?msgs.filter(x=>x.from&&x.from!=="dono"&&x.from!=="sys"):msgs;const last=[...arr].reverse().find(x=>x.from);
+  if(!last)return hideDono?"후원톡을 받았어요 🎁":"대화를 시작해보세요";
+  if(last.from==="dono")return "🎁 후원톡 "+won(last.amt);
+  const pre=last.from==="out"?"나: ":"";
+  if(last.sticker)return pre+last.sticker;
+  if(last.img)return pre+"📷 사진";
+  return pre+(last.text||"");}
 function threadTime(msgs){const last=[...msgs].reverse().find(x=>x.from);return last?last.tm||"":"";}
 function viewThread(id){
   const p=state.role==="creator"?fanById(id):creById(id);
@@ -463,16 +483,29 @@ function viewThread(id){
   const body=msgs.map(m=>{
     if(m.t==="day")return `<div class="day">${esc(m.text)}</div>`;
     if(m.from==="sys")return `<div class="sysmsg">${m.text}</div>`;
-    if(m.from==="dono"){const inc=state.role==="creator";const g=state.role==="creator"?tierOf(p.cum):tierOf(p.myCum);
-      return `<div class="dono ${inc?"inc":""}"><div class="top"><div class="amt">${won(m.amt)}</div><div class="bg">${g.emoji} 후원톡</div></div><div class="tx">${esc(m.text)}</div></div>`;}
-    if(m.from==="out")return `<div class="b out">${esc(m.text)}<div class="tm">${m.tm||nowT()}</div></div>`;
-    return `<div class="b in">${esc(m.text)}<div class="tm">${m.tm||nowT()}</div></div>`;
+    if(m.from==="dono"){if(state.role==="creator")return "";const g=tierOf(p.myCum);
+      return `<div class="dono"><div class="top"><div class="amt">${won(m.amt)}</div><div class="bg">${g.emoji} 후원톡</div></div>${m.text?`<div class="tx">${esc(m.text)}</div>`:""}${m.img?`<img class="dono-img" src="${m.img}" alt="첨부 이미지">`:""}</div>`;}
+    const side=m.from==="out"?"out":"in";
+    if(m.sticker)return `<div class="sticker ${side}">${m.sticker}</div>`;
+    let inner="";if(m.img)inner+=`<img class="msg-img" src="${m.img}" alt="이미지">`;if(m.text)inner+=esc(m.text);
+    return `<div class="b ${side}">${inner}<div class="tm">${m.tm||nowT()}</div></div>`;
   }).join("");
   const draft=state.drafts[id]||"";
   const dbtn=state.role==="donator"?`<button class="dbtn" data-act="donsheet" data-v="${id}" title="후원톡">🎁</button>`:"";
-  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="composer">${dbtn}<input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="send" data-v="${id}">➤</button></div></div>`;
+  const attach=`<button class="attach" data-act="emoji" data-v="${id}" title="스티커">😊</button><label class="attach" for="imgfile" title="이미지 첨부">🖼️</label><input type="file" id="imgfile" accept="image/*" hidden>`;
+  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="composer">${attach}${dbtn}<input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="send" data-v="${id}">➤</button></div></div>`;
 }
-function bindComposer(){const ci=$("#ci");if(ci){ci.oninput=e=>{state.drafts[state.param]=e.target.value;};ci.onkeydown=e=>{if(e.key==="Enter")sendMsg(state.param);};}}
+function bindComposer(){const ci=$("#ci");if(ci){ci.oninput=e=>{state.drafts[state.param]=e.target.value;};ci.onkeydown=e=>{if(e.key==="Enter")sendMsg(state.param);};}
+  const im=$("#imgfile");if(im)im.onchange=e=>handleImg(e,state.param,false);}
+function handleImg(e,id,isDono){const file=e.target.files&&e.target.files[0];if(!file)return;
+  if(file.size>4*1024*1024){toast("이미지는 4MB 이하만 첨부할 수 있어요");e.target.value="";return;}
+  const r=new FileReader();r.onload=()=>{
+    if(isDono){const cur=$("#donmsg");if(cur)state.drafts.donmsg=cur.value;state.donImg=r.result;donSheet(id);}
+    else{const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];p.thread.push({from:"out",img:r.result,tm:nowT()});if(state.role==="creator")state.dtalks.forEach(d=>{if(d.fid===id)d.answered=true;});renderView();toast("📷 이미지를 보냈어요");}
+  };r.readAsDataURL(file);}
+const STICKERS=["❤️","🎉","👍","🔥","😂","😍","🥹","👏","💜","🙏","💪","✨","🎁","🌟","😭","🤩","🥳","😎"];
+function emojiSheet(id){openSheet(`<h3 class="sh">스티커 보내기</h3><div class="emoji-grid">${STICKERS.map(s=>`<button class="emoji-btn" data-act="sticker" data-v="${id}|${s}">${s}</button>`).join("")}</div>`);}
+function sendSticker(id,emoji){const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];p.thread.push({from:"out",sticker:emoji,tm:nowT()});if(state.role==="creator")state.dtalks.forEach(d=>{if(d.fid===id)d.answered=true;});closeSheet();renderView();}
 
 /* ---------- creator: 쪽지 inbox ---------- */
 function viewMsgTab(){
@@ -486,7 +519,7 @@ function msgInbox(){
   const list=[...state.fans].sort((a,b)=>(b.unread-a.unread)||(a.seenMin-b.seenMin));
   const rows=list.map(f=>`<button class="row" data-act="thread" data-v="${f.id}">
     <div class="av">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div>
-    <div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}</div><div class="pv">${esc(threadPreview(f.thread))}</div></div>
+    <div class="main"><div class="tt">${esc(f.name)} ${gpill(f.cum)}</div><div class="pv">${esc(threadPreview(f.thread,true))}</div></div>
     <div class="meta"><div class="tm">${threadTime(f.thread)||ago(f.seenMin)}</div>${f.unread?`<span class="cnt">${f.unread}</span>`:""}</div></button>`).join("");
   return `<div class="sechd">1:1 채팅 <span class="r" data-act="tab" data-v="fans">팬 관리 ›</span></div>
     <div class="rows">${rows}</div>
@@ -501,7 +534,7 @@ function donoFeed(){
   const cards=list.map(d=>{const f=fanById(d.fid);
     return `<div class="dtcard ${d.answered?"":"unans"}">
       <div class="dt-top"><div class="av">${f.emoji}</div><div style="flex:1;min-width:0"><div class="nm">${esc(f.name)} ${gpill(f.cum)}</div><div class="tm">${ago(d.min)}</div></div><div class="dt-amt">${won(d.amt)}</div></div>
-      <div class="dt-msg">“${esc(d.text)}”</div>
+      <div class="dt-msg">“${esc(d.text)}”${d.img?`<img class="dono-img" src="${d.img}" alt="첨부 이미지">`:""}</div>
       <div class="dt-foot">${d.answered?'<span class="dt-status done">✓ 답장 완료</span>':'<span class="dt-status wait">⏳ 답장 대기</span>'}<button class="dt-reply ${d.answered?"ghost":""}" data-act="dtreply" data-v="${d.id}">${d.answered?"채팅 열기":"답장하기"}</button></div>
     </div>`;}).join("")||`<div class="empty">해당하는 후원톡이 없어요.</div>`;
   return `<div class="card pad" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -685,7 +718,8 @@ function sendMsg(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if
 function doDonate(id){
   const amt=state.donPreset,msg=($("#donmsg")?$("#donmsg").value.trim():"")||"응원합니다!",c=creById(id),before=tierOf(c.myCum).key;
   c.myCum+=amt;c.myTemp=Math.min(100,(c.myTemp||0)+1);if(!c.thread)c.thread=[{t:"day",text:"오늘"}];
-  c.thread.push({from:"dono",amt,text:msg,tm:nowT()});
+  const talk={from:"dono",amt,text:msg,tm:nowT()};if(state.donImg)talk.img=state.donImg;c.thread.push(talk);
+  state.donImg=null;state.drafts.donmsg=null;
   state.myDonHist.unshift({d:"오늘",a:amt,c:c.name});
   const after=tierOf(c.myCum).key;closeSheet();
   if(tierIdx(after)>tierIdx(before)){const t=tierOf(c.myCum);c.thread.push({from:"sys",text:`🎉 ${c.name}님과 ${t.emoji} ${t.name} 등급이 되었어요!`});toast(`🎉 ${c.name}님과 ${t.emoji} ${t.name} 등급 달성!`);}
@@ -727,11 +761,19 @@ function winbackSheet(){const list=state.fans.filter(f=>f.seenMin>=14*1440);
 function addTagSheet(id){openSheet(`<h3 class="sh"># 태그 추가</h3><p class="sd">${esc(fanById(id).name)}님에게 태그를 붙입니다.</p><input id="taginput" placeholder="예: 큰손, 생일3월" autocomplete="off"><button class="btn" data-act="doaddtag" data-v="${id}">추가</button>`);}
 function donSheet(id){const c=creById(id),presets=[5000,10000,30000,50000,100000,500000],nt=nextTier(c.myCum),toNext=nt?nt.min-c.myCum:0;
   const pad=presets.map(p=>`<button class="${state.donPreset===p?"on":""}" data-act="preset" data-v="${p}">${wonK(p)}</button>`).join("");
+  const msg=state.drafts.donmsg!=null?state.drafts.donmsg:"항상 응원해요! 오늘도 화이팅 💪";
+  const emojiRow=`<div class="emoji-row">${["❤️","🎉","🔥","💜","👍","😍","🙏","✨"].map(s=>`<button class="emoji-mini" data-act="donemoji" data-v="${s}">${s}</button>`).join("")}</div>`;
+  const thumb=state.donImg?`<div class="dono-thumb-wrap"><img class="dono-thumb" src="${state.donImg}"><button class="thumb-x" data-act="rmdonimg">×</button></div>`:"";
   openSheet(`<h3 class="sh">🎁 ${esc(c.name)}님께 후원톡</h3><p class="sd">현재 ${tierOf(c.myCum).emoji} ${tierOf(c.myCum).name} · 누적 ${won(c.myCum)}</p>
     <div class="donpad">${pad}</div>
-    <textarea id="donmsg" rows="2" style="margin-top:14px" placeholder="후원과 함께 전할 메시지">항상 응원해요! 오늘도 화이팅 💪</textarea>
+    <textarea id="donmsg" rows="2" style="margin-top:14px" placeholder="후원과 함께 전할 메시지">${esc(msg)}</textarea>
+    ${emojiRow}
+    <label class="btn ghost" for="donimgfile" style="cursor:pointer;margin-top:10px">🖼️ 사진 첨부</label><input type="file" id="donimgfile" accept="image/*" hidden>
+    ${thumb}
     <button class="btn" data-act="dodonate" data-v="${id}">${won(state.donPreset)} 후원톡 보내기</button>
-    ${nt&&toNext>0?`<p style="font-size:12px;color:var(--ink-3);text-align:center;margin:10px 0 0">${won(toNext)} 더 후원하면 ${nt.emoji} ${nt.name}! ${state.donPreset>=toNext?"<b style='color:var(--accent)'>이번 후원으로 승급 🎉</b>":""}</p>`:""}`);}
+    ${nt&&toNext>0?`<p style="font-size:12px;color:var(--ink-3);text-align:center;margin:10px 0 0">${won(toNext)} 더 후원하면 ${nt.emoji} ${nt.name}! ${state.donPreset>=toNext?"<b style='color:var(--accent)'>이번 후원으로 승급 🎉</b>":""}</p>`:""}`);
+  const ta=$("#donmsg");if(ta)ta.oninput=e=>state.drafts.donmsg=e.target.value;
+  const f=$("#donimgfile");if(f)f.onchange=e=>handleImg(e,id,true);}
 
 $("#phone").addEventListener("click",e=>{
   const el=e.target.closest("[data-act]");if(!el)return;const act=el.dataset.act,v=el.dataset.v;
@@ -771,7 +813,11 @@ $("#phone").addEventListener("click",e=>{
     case"rule":state.alertRules[v]=!state.alertRules[v];renderView();break;
     case"kakao":state.kakao[v]=!state.kakao[v];renderView();break;
     case"donsheet":donSheet(v);break;
-    case"preset":state.donPreset=parseInt(v);if($("#sheet").classList.contains("on")&&state.sub==="thread")donSheet(state.param);break;
+    case"emoji":emojiSheet(v);break;
+    case"sticker":{const[sid,em]=v.split("|");sendSticker(sid,em);break;}
+    case"donemoji":{const ta=$("#donmsg");if(ta){ta.value+=v;state.drafts.donmsg=ta.value;ta.focus();}break;}
+    case"rmdonimg":state.donImg=null;{const ta=$("#donmsg");if(ta)state.drafts.donmsg=ta.value;}donSheet(state.param);break;
+    case"preset":{const ta=$("#donmsg");if(ta)state.drafts.donmsg=ta.value;}state.donPreset=parseInt(v);if($("#sheet").classList.contains("on")&&state.sub==="thread")donSheet(state.param);break;
     case"dodonate":doDonate(v);break;
     case"closesheet":closeSheet();break;
   }
