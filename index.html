@@ -416,7 +416,7 @@ function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clea
 function openSheet(h){$("#sheet").innerHTML='<div class="grip"></div>'+h;$("#sheet").classList.add("on");$("#sheetBg").classList.add("on");}
 function closeSheet(){$("#sheet").classList.remove("on");$("#sheetBg").classList.remove("on");}
 
-const CTABS=[["msg","💬","채팅"],["fans","👥","팬 관리"],["notif","🔔","알림"],["insights","📊","인사이트"],["settings","⚙️","설정"]];
+const CTABS=[["msg","💬","채팅"],["dono","🎁","후원톡"],["fans","👥","팬 관리"],["notif","🔔","알림"],["insights","📊","인사이트"]];
 const DTABS=[["following","💜","팔로잉"],["discover","🔍","탐색"],["dnotif","🔔","알림"],["me","🏅","내 정보"]];
 
 function render(){
@@ -430,11 +430,12 @@ function render(){
 }
 function renderTabbar(){
   const tabs=state.role==="creator"?CTABS:DTABS,cur=state.role==="creator"?state.ctab:state.dtab;
-  const cUnread=state.fans.reduce((a,f)=>a+f.unread,0),cNotif=state.notifs.filter(n=>n.unread).length;
+  const cUnread=state.fans.reduce((a,f)=>a+f.unread,0),cNotif=state.notifs.filter(n=>n.unread).length,cUnans=state.dtalks.filter(d=>!d.answered).length;
   const dUnread=state.creators.filter(c=>c.followed).reduce((a,c)=>a+c.unread,0),dNotif=state.dnotifs.filter(n=>n.unread).length;
   $("#tabbar").innerHTML=tabs.map(([k,ic,l])=>{
     let b="";
     if(k==="msg"&&cUnread)b=`<span class="badge">${cUnread}</span>`;
+    if(k==="dono"&&cUnans)b=`<span class="badge">${cUnans}</span>`;
     if(k==="notif"&&cNotif)b=`<span class="badge">${cNotif}</span>`;
     if(k==="following"&&dUnread)b=`<span class="badge">${dUnread}</span>`;
     if(k==="dnotif"&&dNotif)b=`<span class="badge">${dNotif}</span>`;
@@ -449,12 +450,14 @@ function renderAppbar(){
     const status=p.online?'<span style="color:var(--keep)">● 온라인</span>':ago(p.seenMin||60)+" 전 접속";
     h=`${back}<div class="hav">${p.emoji}${p.online?'<span class="on-dot"></span>':""}</div><div><h1 style="font-size:17px">${esc(p.name)}</h1><div class="sub"><span class="gp" style="--gc:${grade.color}">${grade.emoji} ${grade.name}</span> ${status}</div></div>`;
   }else if(state.sub==="fan"){h=`${back}<div><h1>VIP 후원자 정보</h1><div class="sub">${esc(fanById(state.param).name)}</div></div>`;}
+  else if(state.sub==="settings"){h=`${back}<div><h1>설정</h1><div class="sub">등급 · 자동화 · 연동</div></div>`;}
   else{
-    const map={msg:["채팅","팬과의 1:1 대화"],fans:["팬 관리","등급별 CRM"],notif:["알림","접속 · 후원 · 등급"],insights:["인사이트","크루 대시보드"],settings:["설정","등급 · 자동화 · 연동"],
+    const map={msg:["채팅","팬과의 1:1 대화"],dono:["후원톡","받은 후원 관리"],fans:["팬 관리","등급별 CRM"],notif:["알림","접속 · 후원 · 등급"],insights:["인사이트","크루 대시보드"],
       following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
     const cur=state.role==="creator"?state.ctab:state.dtab,m=map[cur];let act="";
-    if(cur==="fans")act=`<button class="act" data-act="segsheet" title="세그먼트 발송">✈️</button>`;
-    if(cur==="notif")act=`<button class="act" data-act="winback" title="복귀 유도">💌</button>`;
+    if(cur==="fans")act+=`<button class="act" data-act="segsheet" title="세그먼트 발송">✈️</button>`;
+    if(cur==="notif")act+=`<button class="act" data-act="winback" title="복귀 유도">💌</button>`;
+    if(state.role==="creator")act+=`<button class="act" data-act="opensettings" title="설정">⚙️</button>`;
     h=`<div><h1>${m[0]}</h1><div class="sub">${m[1]}</div></div><div class="sp"></div>${act}`;
   }
   $("#appbar").className="appbar";$("#appbar").innerHTML=h;
@@ -463,7 +466,8 @@ function renderView(){
   const v=$("#view");
   if(state.sub==="thread"){v.innerHTML=viewThread(state.param);v.scrollTop=v.scrollHeight;bindComposer();return;}
   if(state.sub==="fan"){v.innerHTML=viewFan(state.param);return;}
-  if(state.role==="creator")v.innerHTML={msg:viewMsgTab,fans:viewFans,notif:viewNotif,insights:viewInsights,settings:viewSettings}[state.ctab]();
+  if(state.sub==="settings"){v.innerHTML=viewSettings();return;}
+  if(state.role==="creator")v.innerHTML={msg:viewChat,dono:viewDono,fans:viewFans,notif:viewNotif,insights:viewInsights}[state.ctab]();
   else v.innerHTML={following:viewFollowing,discover:viewDiscover,dnotif:viewDNotif,me:viewMe}[state.dtab]();
 }
 
@@ -508,13 +512,8 @@ function emojiSheet(id){openSheet(`<h3 class="sh">스티커 보내기</h3><div c
 function sendSticker(id,emoji){const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];p.thread.push({from:"out",sticker:emoji,tm:nowT()});if(state.role==="creator")state.dtalks.forEach(d=>{if(d.fid===id)d.answered=true;});closeSheet();renderView();}
 
 /* ---------- creator: 쪽지 inbox ---------- */
-function viewMsgTab(){
-  const unread=state.fans.reduce((a,f)=>a+f.unread,0),unans=state.dtalks.filter(d=>!d.answered).length;
-  const seg=`<div class="subtabs">
-    <button class="${state.msgtab==="chat"?"on":""}" data-act="msgtab" data-v="chat">💬 채팅${unread?` <span class="sb">${unread}</span>`:""}</button>
-    <button class="${state.msgtab==="dono"?"on":""}" data-act="msgtab" data-v="dono">🎁 후원톡${unans?` <span class="sb">${unans}</span>`:""}</button></div>`;
-  return `<div class="pad">${seg}${state.msgtab==="chat"?msgInbox():donoFeed()}</div>`;
-}
+function viewChat(){return `<div class="pad">${msgInbox()}</div>`;}
+function viewDono(){return `<div class="pad">${donoFeed()}</div>`;}
 function msgInbox(){
   const list=[...state.fans].sort((a,b)=>(b.unread-a.unread)||(a.seenMin-b.seenMin));
   const rows=list.map(f=>`<button class="row" data-act="thread" data-v="${f.id}">
@@ -786,7 +785,7 @@ $("#phone").addEventListener("click",e=>{
     case"role":state.role=v;state.sub=null;state.param=null;if(v==="donator")state.dtab="following";else state.ctab="msg";render();break;
     case"live":toggleLive();break;
     case"tab":if(state.role==="creator")state.ctab=v;else state.dtab=v;state.sub=null;state.param=null;render();break;
-    case"msgtab":state.msgtab=v;renderView();break;
+    case"opensettings":state.sub="settings";state.param=null;render();break;
     case"dtfilter":state.dtfilter=v;renderView();break;
     case"dtreply":{const d=state.dtalks.find(x=>x.id===v);if(d){d.answered=true;state.sub="thread";state.param=d.fid;}render();break;}
     case"dtab":state.dtab=v;state.sub=null;render();break;
