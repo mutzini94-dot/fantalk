@@ -1221,7 +1221,7 @@ function viewFollowing(){
     <div class="meta"><div class="tm">${threadTime(c.thread)}</div>${c.unread?`<span class="cnt">${c.unread}</span>`:""}</div></button>`).join("");
   return `<div class="pad">
     ${creatorRail(list)}
-    <div class="sechd">응원하는 크리에이터 ${list.length}<span class="r" data-act="dtab" data-v="discover">더 찾기 🔍</span></div>
+    <div class="sechd">대화중인 크리에이터 ${list.length}<span class="r" data-act="dtab" data-v="discover">더 찾기 🔍</span></div>
     <div class="rows">${rows}</div>
     <div class="hint">💡 크리에이터를 선택하면 1:1 채팅으로 소통하고, 🎁 후원톡을 보낼 수 있어요.</div></div>`;
 }
