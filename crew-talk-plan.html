@@ -282,6 +282,7 @@ footer{padding-block:40px 60px}
 footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monospace;text-align:center}
 
 .note{font-size:12.5px;color:var(--ink-3);margin-top:14px;font-family:"IBM Plex Mono",monospace}
+.donebadge{font-size:10.5px;font-weight:600;color:var(--keep);background:var(--keep-soft);padding:2px 8px;border-radius:6px;margin-left:8px;font-family:"IBM Plex Mono",monospace;letter-spacing:.04em;vertical-align:middle}
 </style>
 
 <header class="cover">
@@ -290,16 +291,19 @@ footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monos
     <h1><span class="accent">열혈톡</span><br>크리에이터–도네이터 다이렉트 소통 앱</h1>
     <p class="sub">엑셀방송 크루가 <b>열혈시청자와 폰으로 직접 이어지는</b> 관계 관리 앱. 실시간 채팅, 후원톡, 팬 등급 관리, 접속 알림을 하나로 묶어 방송 밖에서도 팬덤을 유지·성장시킨다.</p>
     <div class="defn">
-      <span class="tagchip">실시간 채팅</span>
+      <span class="tagchip">1:1 채팅</span>
+      <span class="tagchip">등급 전용방</span>
       <span class="tagchip">후원톡</span>
       <span class="tagchip">팬 등급 관리 <span class="plus">CRM</span></span>
+      <span class="tagchip">자동화 <span class="plus">인앱 푸시</span></span>
+      <span class="tagchip">인사이트</span>
       <span class="tagchip">접속 알림</span>
     </div>
     <div class="docmeta">
       <div><span class="k">문서</span><span class="v">기획서 (PRD)</span></div>
-      <div><span class="k">버전</span><span class="v mono">v0.1</span></div>
-      <div><span class="k">작성일</span><span class="v mono">2026.09.14</span></div>
-      <div><span class="k">상태</span><span class="v live">초안 · Draft</span></div>
+      <div><span class="k">버전</span><span class="v mono">v0.3</span></div>
+      <div><span class="k">갱신일</span><span class="v mono">2026.09.16</span></div>
+      <div><span class="k">상태</span><span class="v live">프로토타입 구현 반영</span></div>
       <div><span class="k">플랫폼</span><span class="v">iOS · Android</span></div>
     </div>
   </div>
@@ -396,6 +400,87 @@ footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monos
   </div>
 </div></section>
 
+<!-- 04.5 구현 현황 -->
+<section id="simpl"><div class="wrap">
+  <div class="eyebrow">현재 구현 <span class="en">Built So Far</span></div>
+  <h2 class="sec-h">프로토타입으로 구현된 것들</h2>
+  <p class="dek">본 기획서의 <b>Phase 1–2 범위 대부분</b>이 단일 HTML 인터랙티브 프로토타입으로 구현되었다. 크리에이터↔도네이터 역할 전환, LIVE 시뮬레이션으로 아래 흐름을 실제로 체험할 수 있다. (배포: <span class="mono">github.com/mutzini94-dot/fantalk</span>)</p>
+
+  <div class="grid g2">
+    <div class="card"><h4>로그인 · 세션 <span class="donebadge">구현</span></h4>
+      <ul class="flist" style="margin-top:14px">
+        <li><span class="ck">✓</span><span>투네이션 아이디/비밀번호 로그인 (온보딩 제거)</span></li>
+        <li><span class="ck">✓</span><span>30분 로그인 세션 유지</span></li>
+      </ul></div>
+
+    <div class="card"><h4>1:1 채팅 <span class="donebadge">구현</span></h4>
+      <ul class="flist" style="margin-top:14px">
+        <li><span class="ck">✓</span><span>도네이터별 1:1 대화, 프로필에 등급·누적후원 상시 노출</span></li>
+        <li><span class="ck">✓</span><span><b>도네이터 아바타 레일</b> — 최근 대화순, 가로 스와이프</span></li>
+        <li><span class="ck">✓</span><span>전체/안읽음 필터, 이름·대화내용 검색</span></li>
+        <li><span class="ck">✓</span><span>이미지·아이콘 첨부, 접속 알림·차단 토글</span></li>
+      </ul></div>
+
+    <div class="card"><h4>등급 전용 채팅방 <span class="donebadge">구현</span></h4>
+      <ul class="flist" style="margin-top:14px">
+        <li><span class="ck">✓</span><span>특정 등급 이상만 입장 가능한 그룹 채팅방</span></li>
+        <li><span class="ck">✓</span><span>방 개설·관리(이름·최소 등급), 등급 미달 시 잠금 안내</span></li>
+        <li><span class="ck">✓</span><span>도네이터는 크리에이터 프로필에서 방 목록·입장</span></li>
+      </ul></div>
+
+    <div class="card"><h4>후원톡 <span class="donebadge">구현</span></h4>
+      <ul class="flist" style="margin-top:14px">
+        <li><span class="ck">✓</span><span>후원 강조 카드, 금액 표시</span></li>
+        <li><span class="ck">✓</span><span>상단 요약 — 누적/금일 후원액, 응답/미응답</span></li>
+        <li><span class="ck">✓</span><span>후원톡 답장, 이미지 첨부</span></li>
+      </ul></div>
+
+    <div class="card"><h4>팬 등급 관리 (CRM) <span class="donebadge">구현</span></h4>
+      <ul class="flist" style="margin-top:14px">
+        <li><span class="ck">✓</span><span>일반/VIP/VVIP/SVIP 자동 산정, 등급 이름·임계값 커스터마이즈</span></li>
+        <li><span class="ck">✓</span><span>팬 프로필(누적후원·관계온도·메모·태그·이력), 세그먼트 필터·발송</span></li>
+        <li><span class="ck">✓</span><span>공유용 팬카드, 차단 기능, <b>실제 프로필 이미지 아바타</b>·프로필 바텀시트</span></li>
+      </ul></div>
+
+    <div class="card"><h4>자동화 <span class="donebadge">구현</span></h4>
+      <ul class="flist" style="margin-top:14px">
+        <li><span class="ck">✓</span><span><b>열혈톡 인앱 푸시</b>로 발송 (카카오 알림톡 대체)</span></li>
+        <li><span class="ck">✓</span><span>규칙 생성/수정, 트리거(등급달성·생일·복귀 등)</span></li>
+        <li><span class="ck">✓</span><span>대상 지정(전체·등급·특정 도네이터), 규칙별 성과 분석</span></li>
+      </ul></div>
+
+    <div class="card"><h4>업적 · 스케줄 · 명예의 전당 <span class="donebadge">구현</span></h4>
+      <ul class="flist" style="margin-top:14px">
+        <li><span class="ck">✓</span><span>업적 — 크루 정의 도전과제, 팬별 달성·달성자 목록 (도네이터는 내 업적 확인)</span></li>
+        <li><span class="ck">✓</span><span>방송 스케줄 등록·관리</span></li>
+        <li><span class="ck">✓</span><span>명예의 전당 — 최고 후원자 순위</span></li>
+      </ul></div>
+
+    <div class="card"><h4>접속 알림 <span class="donebadge">구현</span></h4>
+      <ul class="flist" style="margin-top:14px">
+        <li><span class="ck">✓</span><span>열혈팬 접속 시 헤드업 배너 알림</span></li>
+        <li><span class="ck">✓</span><span>팬별 접속 알림 on/off, 복귀 유도 발송</span></li>
+      </ul></div>
+
+    <div class="card"><h4>인사이트 대시보드 <span class="donebadge">구현</span></h4>
+      <ul class="flist" style="margin-top:14px">
+        <li><span class="ck">✓</span><span>VIP 후원자 수(목록 링크), 관계 온도(설명 툴팁), 이탈 위험 VIP</span></li>
+        <li><span class="ck">✓</span><span>등급 분포, D30 리텐션, 자동화 성과, 후원 목표</span></li>
+      </ul></div>
+
+    <div class="card"><h4>설정 · 디자인 <span class="donebadge">구현</span></h4>
+      <ul class="flist" style="margin-top:14px">
+        <li><span class="ck">✓</span><span>표시테마 라이트/다크, 데이터 백업·복원</span></li>
+        <li><span class="ck">✓</span><span><b>Mono Slate 디자인 톤</b> — 모노크롬 + 잉크 액센트, 폰 프레임 UI</span></li>
+      </ul></div>
+  </div>
+
+  <div class="callout">
+    <div class="ci">🧪</div>
+    <div><h4>프로토타입의 한계</h4><p>현재는 <b>프론트엔드 프로토타입</b>으로, 데이터는 로컬 시드/시뮬레이션이다. 실서비스는 실시간 서버(WebSocket), 푸시(FCM/APNs), 투네이션 후원 Webhook, 계정 SSO 연동이 남아 있다. 아래 §07–§11에서 실서비스 설계와 로드맵을 다룬다.</p></div>
+  </div>
+</div></section>
+
 <!-- 05 핵심 기능 -->
 <section id="s5"><div class="wrap">
   <div class="eyebrow">05 · 핵심 기능 <span class="en">Features</span></div>
@@ -420,9 +505,9 @@ footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monos
         <h5>미리보기</h5>
         <div class="mock">
           <div class="sys">— 오늘 —</div>
-          <div class="m in"><div class="who">열혈팬_민수 · 💎다이아</div>오늘 방송 대박이었어요!! 🔥</div>
-          <div class="m out">민수님 항상 감사해요 ㅎㅎ 다음 콘텐츠도 기대해주세요</div>
-          <div class="m in"><div class="who">별밤 · 🥈실버</div>저도 곧 다이아 갈게요!</div>
+          <div class="m in"><div class="who">별하늘 · 👑 VVIP</div>오늘 방송 대박이었어요!! 🔥</div>
+          <div class="m out">별하늘님 항상 감사해요 ㅎㅎ 다음 콘텐츠도 기대해주세요</div>
+          <div class="m in"><div class="who">해피 · 👑 VIP</div>저도 곧 VVIP 갈게요!</div>
         </div>
       </div>
     </div>
@@ -446,11 +531,11 @@ footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monos
         <h5>미리보기</h5>
         <div class="mock">
           <div class="dono">
-            <div class="amt">₩50,000 후원 <span class="badge">TOP FAN</span></div>
+            <div class="amt">₩50,000 후원 <span class="badge">SVIP</span></div>
             <div class="txt">"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜"</div>
           </div>
-          <div class="m out">헉 민수님 감사합니다!! 오늘 지목 콘텐츠 갑니다 🎉</div>
-          <div class="sys">후원 목표 82% · ₩820,000 / ₩1,000,000</div>
+          <div class="m out">헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갑니다 🎉</div>
+          <div class="sys">누적 후원 ₩12,400,000 · 금일 ₩820,000</div>
         </div>
       </div>
     </div>
@@ -487,6 +572,7 @@ footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monos
           <li><span class="ck">✓</span><span><b>도네이터 접속 알림</b> — 지정/상위 등급 팬이 접속하면 크루에게 푸시.</span></li>
           <li><span class="ck">✓</span><span><b>크루 접속 알림</b> — 팔로우한 크루가 접속하면 팬에게 푸시(옵트인).</span></li>
           <li><span class="ck">✓</span><span><b>이벤트 알림</b> — 후원톡 도착, 등급 상승, 방송 시작, 목표 달성.</span></li>
+          <li><span class="ck">✓</span><span><b>열혈톡 인앱 푸시</b> — 카카오 알림톡 대신 앱 내 푸시로 자동 발송(자동화 §04.5).</span></li>
           <li><span class="ck">✓</span><span><b>복귀 유도</b> — 미접속 열혈팬에게 크루 발송 리마인드.</span></li>
           <li><span class="ck">✓</span><span><b>세분화 설정</b> — 등급·채널·이벤트별 알림 on/off, 방해금지 시간.</span></li>
         </ul>
@@ -494,8 +580,8 @@ footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monos
       <div>
         <h5>미리보기</h5>
         <div class="mock">
-          <div class="m in" style="max-width:100%"><div class="who">🔔 지금</div><b>💎 다이아 팬 '민수'</b>님이 접속했어요.<br><span style="color:var(--ink-3);font-size:11px">최근 후원 ₩50,000 · 3일 만의 접속</span></div>
-          <div class="m in" style="max-width:100%"><div class="who">🔔 방금</div><b>등급 상승</b> — '별밤'님이 🥇골드로 올라섰어요.</div>
+          <div class="m in" style="max-width:100%"><div class="who">🔔 지금</div><b>👑 VVIP 팬 '별하늘'</b>님이 접속했어요.<br><span style="color:var(--ink-3);font-size:11px">최근 후원 ₩50,000 · 3일 만의 접속</span></div>
+          <div class="m in" style="max-width:100%"><div class="who">🔔 방금</div><b>등급 상승</b> — '해피'님이 👑 VIP로 올라섰어요.</div>
         </div>
       </div>
     </div>
@@ -505,31 +591,26 @@ footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monos
 <!-- 06 등급 시스템 -->
 <section id="s6"><div class="wrap">
   <div class="eyebrow">06 · 팬 등급 시스템 <span class="en">Grade System</span></div>
-  <h2 class="sec-h">열혈네이션을 계승한 5단계 티어</h2>
-  <p class="dek">누적 후원액을 기준으로 자동 산정하되, 크루가 임계값과 명칭을 커스터마이즈할 수 있게 한다. 아래는 <b>기본 프리셋</b> 예시.</p>
+  <h2 class="sec-h">일반부터 SVIP까지, 4단계 티어</h2>
+  <p class="dek">누적 후원액을 기준으로 자동 산정하되, 크루가 임계값과 명칭을 커스터마이즈할 수 있게 한다. 아래는 프로토타입에 <b>구현된 기본 프리셋</b>이다.</p>
   <div class="ladder">
     <div class="tier" style="--tc:#b8860b">
-      <div class="tname"><span class="tdot"></span>👑 열혈 (VIP)</div>
+      <div class="tname"><span class="tdot"></span>👑 SVIP</div>
       <div class="tdesc">크루의 최상위 후원자. 전용방·최우선 답장·전용 배지·오프라인 이벤트 초대.</div>
       <div class="tthr">₩1,000,000+<small>누적 후원</small></div>
     </div>
-    <div class="tier" style="--tc:#5aa9e6">
-      <div class="tname"><span class="tdot"></span>💎 다이아</div>
-      <div class="tdesc">핵심 단골. 등급 전용방 입장, 후원톡 상단 고정 우대.</div>
-      <div class="tthr">₩300,000+<small>누적 후원</small></div>
+    <div class="tier" style="--tc:#7a5af0">
+      <div class="tname"><span class="tdot"></span>👑 VVIP</div>
+      <div class="tdesc">핵심 단골. 등급 전용방 입장, 후원톡 상단 우대.</div>
+      <div class="tthr">₩500,000+<small>누적 후원</small></div>
     </div>
-    <div class="tier" style="--tc:#e6b93e">
-      <div class="tname"><span class="tdot"></span>🥇 골드</div>
-      <div class="tdesc">활발한 후원자. 골드 배지, 이벤트 우선 알림.</div>
+    <div class="tier" style="--tc:#5aa9e6">
+      <div class="tname"><span class="tdot"></span>👑 VIP</div>
+      <div class="tdesc">활발한 후원자. VIP 배지, 이벤트 우선 알림, 세그먼트 우대 대상.</div>
       <div class="tthr">₩100,000+<small>누적 후원</small></div>
     </div>
     <div class="tier" style="--tc:#9aa4b4">
-      <div class="tname"><span class="tdot"></span>🥈 실버</div>
-      <div class="tdesc">단골로 성장 중. 실버 배지, 크루 채널 참여.</div>
-      <div class="tthr">₩30,000+<small>누적 후원</small></div>
-    </div>
-    <div class="tier" style="--tc:#b08968">
-      <div class="tname"><span class="tdot"></span>🥉 브론즈</div>
+      <div class="tname"><span class="tdot"></span>👤 일반</div>
       <div class="tdesc">신규·라이트 팬. 기본 채팅·팔로우.</div>
       <div class="tthr">₩0+<small>가입 기본</small></div>
     </div>
@@ -547,21 +628,22 @@ footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monos
   <h2 class="sec-h">역할이 화면을 결정한다</h2>
   <p class="dek">하단 탭 구조를 역할별로 다르게 구성한다. 크리에이터는 관리에, 도네이터는 소통에 최적화.</p>
 
-  <h3 style="font-size:15px;margin:26px 0 0;color:var(--ink-2)">크리에이터 앱 — 하단 탭</h3>
+  <h3 style="font-size:15px;margin:26px 0 0;color:var(--ink-2)">크리에이터 앱 — 하단 탭 <span class="mono" style="font-size:12px;color:var(--ink-3)">(프로토타입 구현 기준)</span></h3>
   <div class="ia">
-    <div class="ia-row"><div class="nav"><span class="em">💬</span>채팅</div><div class="desc">크루 채널 · 1:1 · 등급 전용방 · 후원톡 트레이</div></div>
-    <div class="ia-row"><div class="nav"><span class="em">👥</span>팬 관리</div><div class="desc">등급별 팬 리스트 · 프로필 카드 · 세그먼트 · 메모/태그</div></div>
-    <div class="ia-row"><div class="nav"><span class="em">🔔</span>알림</div><div class="desc">접속 · 후원톡 · 등급 변동 · 복귀 유도 발송</div></div>
-    <div class="ia-row"><div class="nav"><span class="em">📊</span>인사이트</div><div class="desc">후원 추이 · 등급 분포 · 리텐션 · 후원 목표</div></div>
-    <div class="ia-row"><div class="nav"><span class="em">⚙️</span>설정</div><div class="desc">등급 정책 · 크루원 권한 · 알림 규칙 · 투네이션 연동</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">💬</span>채팅</div><div class="desc">1:1 · 등급 전용방 · 도네이터 레일(최근 대화순) · 검색</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">🎁</span>후원톡</div><div class="desc">후원 카드 · 상단 요약(누적/금일·응답/미응답) · 답장</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">👥</span>팬 관리</div><div class="desc">등급 CRM · 세그먼트 · 업적 · 자동화 · 복귀유도</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">📅</span>스케줄</div><div class="desc">방송 일정 등록 · 관리</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">📊</span>인사이트</div><div class="desc">관계온도 · 이탈위험 · 등급분포 · 리텐션 · 자동화 성과 · 명예의 전당</div></div>
   </div>
+  <p class="note">※ 상단 바에 LIVE 토글 · <b>🔔 알림</b>(접속·후원·등급) · <b>⚙️ 설정</b>(등급 설정 · 백업 · 표시테마) 배치.</p>
 
   <h3 style="font-size:15px;margin:28px 0 0;color:var(--ink-2)">도네이터 앱 — 하단 탭</h3>
   <div class="ia">
-    <div class="ia-row"><div class="nav"><span class="em">🏠</span>팬 라운지</div><div class="desc">팔로우한 크루 · 온라인 상태 · 공지</div></div>
-    <div class="ia-row"><div class="nav"><span class="em">💬</span>채팅</div><div class="desc">크루 채널 · 1:1 · 입장 가능한 등급방</div></div>
-    <div class="ia-row"><div class="nav"><span class="em">💝</span>후원</div><div class="desc">후원톡 보내기 · 후원 목표 · 내 후원 이력</div></div>
-    <div class="ia-row"><div class="nav"><span class="em">🏅</span>내 등급</div><div class="desc">현재 티어 · 다음 등급까지 · 혜택 · 배지</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">💜</span>팔로잉</div><div class="desc">팔로우한 크루 · 1:1 채팅 · 후원톡 · 입장 가능한 등급방</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">🔍</span>탐색</div><div class="desc">크리에이터 발견 · 팔로우</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">🔔</span>알림</div><div class="desc">크리에이터 소식 · 접속 · 이벤트</div></div>
+    <div class="ia-row"><div class="nav"><span class="em">🏅</span>내 정보</div><div class="desc">현재 티어 · 다음 등급까지 · 내 업적 · 후원 이력</div></div>
   </div>
 
   <h3 style="font-size:15px;margin:30px 0 0;color:var(--ink-2)">핵심 플로우 — 후원톡 → 관계 강화</h3>
@@ -653,6 +735,7 @@ footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monos
       </tbody>
     </table>
   </div>
+  <p class="note">※ 현재 프로토타입은 <b>단일 크리에이터(오너) 기준</b>으로 구현되었다. 매니저(크루원) 권한 위임·분담은 차기 범위로 둔다.</p>
 </div></section>
 
 <!-- 11 로드맵 -->
@@ -675,8 +758,12 @@ footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monos
     </div>
     <div class="phase later">
       <div class="ptag"><div class="pn">Phase 3</div><div class="pd">차기</div><div class="pgoal">확장</div></div>
-      <div><h4>확장 & 실험</h4><p class="pscope">유료 멤버십, 이벤트/미션, 크루 간 협업, 방송 플랫폼 오버레이 연동.</p><div class="chips"><span>멤버십</span><span>미션</span><span>오버레이</span><span>다크 라운지</span></div></div>
+      <div><h4>확장 & 실험</h4><p class="pscope">유료 멤버십, 이벤트/미션, 크루 간 협업, 방송 플랫폼 오버레이 연동, 매니저(크루원) 권한 분담.</p><div class="chips"><span>멤버십</span><span>미션</span><span>오버레이</span><span>권한 분담</span></div></div>
     </div>
+  </div>
+  <div class="callout" style="margin-top:26px">
+    <div class="ci">✅</div>
+    <div><h4>현재 상태 — v0.3 프로토타입</h4><p>Phase 1–2의 기능 범위(4대 기능 + 자동화·업적·스케줄·인사이트·백업·표시테마)가 <b>인터랙티브 프로토타입으로 대부분 구현</b>되었다(§04.5 참조). 남은 과제는 프론트엔드 프로토타입을 <b>실시간 서버·푸시·투네이션 후원 Webhook·계정 SSO</b>에 연결하는 실서비스화다.</p></div>
   </div>
 </div></section>
 
@@ -710,12 +797,12 @@ footer .fn{color:var(--ink-3);font-size:12.5px;font-family:"IBM Plex Mono",monos
   </div>
   <div class="callout" style="margin-top:28px">
     <div class="ci">📌</div>
-    <div><h4>다음 단계</h4><p>①제품명·등급 프리셋 확정 → ②투네이션 인증·후원 Webhook 스펙 확인 → ③Phase 0 데이터 모델 & 프로토타입 착수. 본 문서는 초안(v0.1)이며 이해관계자 리뷰 후 갱신한다.</p></div>
+    <div><h4>다음 단계</h4><p>①프로토타입(v0.3) 사용자 검증 → ②투네이션 인증·후원 Webhook 스펙 확정 → ③실시간 서버·푸시 연동으로 실서비스화 착수. 본 문서는 프로토타입 구현 내용을 반영한 v0.3이며 이해관계자 리뷰 후 갱신한다.</p></div>
   </div>
 </div></section>
 
 </main>
 
 <footer><div class="wrap">
-  <div class="fn">열혈톡 · 크리에이터–도네이터 소통 앱 기획서 v0.1 · TOONATION · 2026.09.14 · 초안</div>
+  <div class="fn">열혈톡 · 크리에이터–도네이터 소통 앱 기획서 v0.3 · TOONATION · 2026.09.16 · 프로토타입 구현 반영</div>
 </div></footer>
