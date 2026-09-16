@@ -125,6 +125,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .fanlink{cursor:pointer;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 40%,transparent);text-decoration-thickness:1px;text-underline-offset:3px}
 .fanlink:active{opacity:.55}
 .ic-send{width:1em;height:1em;vertical-align:-.13em;display:inline-block}
+.appbar .act .ic-block{width:18px;height:18px;display:block}
 .appbar .act .ic-send{width:17px;height:17px}
 .cnt{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:var(--on-accent);font-size:10px;font-weight:700;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace}
 .follow{font-size:12px;font-weight:700;padding:8px 15px;border-radius:20px;background:var(--accent);color:var(--on-accent);flex:0 0 auto}
@@ -476,6 +477,7 @@ function nextTier(a){const i=tierIdx(tierOf(a).key);return TIERS[i+1]||null;}
 function gpill(a){const t=tierOf(a);return `<span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span>`;}
 function fanLink(f){return `<span class="fanlink" data-act="fan" data-v="${f.id}">${esc(f.name)}</span>`;}
 const SEND_ICON='<svg class="ic-send" viewBox="-20 -20 552 552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M476 3.2 12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 429l124.6 52.2c14.2 6 30.4-2.9 32.8-18.1l72-432C544.1 15.3 522.7-11.4 476 3.2z"/></svg>';
+const BLOCK_ICON='<svg class="ic-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="5.8" y1="5.8" x2="18.2" y2="18.2"/></svg>';
 const isVIP=a=>tierIdx(tierOf(a).key)>=1;
 const GRADE_COLORS=["#9d97b5","#a78bfa","#8b6ef0","#7c5ce6","#6d47d9","#5b34c4"];
 function readTierRows(){const rows=[...document.querySelectorAll("[data-tierrow]")];if(!rows.length)return;
@@ -647,7 +649,7 @@ function renderAppbar(){
     const grade=state.role==="creator"?tierOf(p.cum):tierOf(p.myCum);
     const status=p.online?'<span style="color:var(--keep)">● 온라인</span>':ago(p.seenMin||60)+" 전 접속";
     const isFan=state.role==="creator";const nameH=isFan?`<span class="fanlink" data-act="fan" data-v="${p.id}">${esc(p.name)}</span>`:esc(p.name);const havA=isFan?`data-act="fan" data-v="${p.id}" style="cursor:pointer"`:"";
-    const tacts=isFan?`<div class="sp"></div><button class="act ${p.watch?"on":""}" data-act="watchtgl" data-v="${p.id}" title="${p.watch?"접속 알림 끄기":"접속 알림 켜기"}">${p.watch?"🔔":"🔕"}</button><button class="act ${p.blocked?"on-crit":""}" data-act="blocktgl" data-v="${p.id}" title="${p.blocked?"차단 해제":"차단하기"}">${p.blocked?"🔒":"🔓"}</button>`:"";
+    const tacts=isFan?`<div class="sp"></div><button class="act ${p.watch?"on":""}" data-act="watchtgl" data-v="${p.id}" title="${p.watch?"접속 알림 끄기":"접속 알림 켜기"}">${p.watch?"🔔":"🔕"}</button><button class="act ${p.blocked?"on-crit":""}" data-act="blocktgl" data-v="${p.id}" title="${p.blocked?"차단 해제":"차단하기"}">${BLOCK_ICON}</button>`:"";
     h=`${back}<div class="hav" ${havA}>${p.emoji}${p.online?'<span class="on-dot"></span>':""}</div><div><h1 style="font-size:17px">${nameH}</h1><div class="sub"><span class="gp" style="--gc:${grade.color}">${grade.emoji} ${grade.name}</span> ${status}</div></div>${tacts}`;
   }else if(state.sub==="fan"){h=`${back}<div><h1>VIP 후원자 정보</h1><div class="sub">${esc(fanById(state.param).name)}</div></div>`;}
   else if(state.sub==="settings"){h=`${back}<div><h1>설정</h1><div class="sub">등급 · 자동화 · 연동</div></div>`;}
