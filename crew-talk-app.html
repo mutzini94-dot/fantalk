@@ -507,6 +507,7 @@ let TIERS=[
 ];
 function tierOf(a){let t=TIERS[0];for(const x of TIERS)if(a>=x.min)t=x;return t;}
 function tierIdx(k){return TIERS.findIndex(t=>t.key===k);}
+function tinfo(k){return TIERS.find(t=>t.key===k)||TIERS[0];}
 function nextTier(a){const i=tierIdx(tierOf(a).key);return TIERS[i+1]||null;}
 function gpill(a){const t=tierOf(a);return `<span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span>`;}
 function fanLink(f){return `<span class="fanlink" data-act="fan" data-v="${f.id}">${esc(f.name)}</span>`;}
@@ -588,6 +589,11 @@ let state={
     {id:"s3",title:"후원 1주년 기념 방송",date:"2026-09-20",time:"20:00",type:"이벤트"},
     {id:"s4",title:"신규 콘텐츠 공개",date:"2026-09-25",time:"21:00",type:"방송"},
   ],
+  roomEdit:{name:"",minTier:"vvip"},
+  rooms:[
+    {id:"r1",name:"VVIP 라운지",minTier:"vvip",emoji:"💜",thread:[{t:"day",text:"오늘"},{from:"out",text:"VVIP 여러분만의 공간이에요 💜 편하게 얘기해요!",tm:"18:00"},{from:"f1",text:"오 전용방 좋다!!",tm:"18:02"},{from:"f5",text:"여기서만 보는 소식 기대할게요 🙌",tm:"18:05"}]},
+    {id:"r2",name:"SVIP 전용방",minTier:"svip",emoji:"👑",thread:[{t:"day",text:"오늘"},{from:"out",text:"최상위 SVIP 전용방입니다 👑 특별한 혜택 여기서 먼저 공개할게요!",tm:"15:00"},{from:"f2",text:"기대됩니다 ㅎㅎ",tm:"15:10"}]},
+  ],
   /* ---------- donator side (내가 팔로우한 크리에이터들과의 1:1) ---------- */
   me:{name:"별하늘",emoji:"🌙"},
   creators:[
@@ -624,7 +630,8 @@ function creatorProfileSheet(id){const c=creById(id);if(!c)return;state.cprofPar
   const cats=(c.cat||"").split(/[·,]/).map(s=>s.trim()).filter(Boolean);
   let content="";
   if(tab==="intro")content=`<div class="sechd" style="margin:14px 2px 6px">소개</div><p class="cprof-intro">${desc}</p>
-    <div class="sechd" style="margin:16px 2px 8px">주요 콘텐츠</div><div class="cprof-chips">${(cats.length?cats:["토크"]).map(x=>`<span>${esc(x)}</span>`).join("")}</div>`;
+    <div class="sechd" style="margin:16px 2px 8px">주요 콘텐츠</div><div class="cprof-chips">${(cats.length?cats:["토크"]).map(x=>`<span>${esc(x)}</span>`).join("")}</div>
+    ${c.id==="c1"&&state.rooms.length?`<div class="sechd" style="margin:16px 2px 8px">등급 전용 채팅방</div><div class="rows">${state.rooms.map(r=>{const ti=tinfo(r.minTier),myTier=tierOf(c.myCum),ok=tierIdx(myTier.key)>=tierIdx(r.minTier);return `<button class="row" data-act="room" data-v="${r.id}"><div class="av">${r.emoji}</div><div class="main"><div class="tt">${esc(r.name)} <span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+</span></div><div class="pv">${ok?"<span style='color:var(--keep)'>● 입장 가능</span>":"🔒 "+ti.name+" 이상 입장"}</div></div><div class="meta"><div class="tm">${ok?"›":"🔒"}</div></div></button>`;}).join("")}</div>`:""}`;
   else if(tab==="sched")content=`<div class="sechd" style="margin:14px 2px 8px">방송 일정</div><div class="rows">${state.schedule.slice(0,4).map(s=>`<div class="schrow"><div class="sch-date"><div class="d">${mmdd(s.date)}</div><div class="dd" style="color:var(--accent)">${ddText(s.date)}</div></div><div class="sch-main"><b>${esc(s.title)}</b><div class="t">${s.time} · ${s.type}</div></div></div>`).join("")}</div>`;
   else if(tab==="goods")content=`<div class="sechd" style="margin:14px 2px 8px">굿즈</div><div class="goods-grid">${[["🧢","로고 캡","25,000원"],["👕","시그니처 티","32,000원"],["🎧","헤드셋 스티커","8,000원"],["📓","팬 다이어리","15,000원"]].map(g=>`<div class="goods-card"><div class="goods-ic">${g[0]}</div><div class="goods-nm">${g[1]}</div><div class="goods-price">${g[2]}</div></div>`).join("")}</div>`;
   else content=`<div class="sechd" style="margin:14px 2px 8px">후원 랭킹</div><div class="rows">${[["🌙","별하늘","1,240,000원"],["⭐","밤톨","980,000원"],["🐻","해피","540,000원"],["🦊","라온","320,000원"],["🐰","두부왕","210,000원"]].map((r,i)=>`<div class="rk-row"><div class="rk-n">${["🥇","🥈","🥉"][i]||"<span class='mono'>"+(i+1)+"</span>"}</div><div class="av" style="width:36px;height:36px;font-size:18px;border-radius:11px">${r[0]}</div><div style="flex:1;font-weight:600;font-size:13.5px">${r[1]}</div><div class="mono" style="font-weight:700;font-size:12.5px">${r[2]}</div></div>`).join("")}</div>`;
@@ -715,6 +722,7 @@ function renderAppbar(){
   else if(state.sub==="schedule"){h=`${back}<div><h1>방송 스케줄</h1><div class="sub">일정 관리</div></div>`;}
   else if(state.sub==="notif"){h=`${back}<div><h1>알림</h1><div class="sub">접속 · 후원 · 등급</div></div>`;}
   else if(state.sub==="halloffame"){h=`${back}<div><h1>명예의 전당</h1><div class="sub">최고의 후원자</div></div>`;}
+  else if(state.sub==="room"){const r=state.rooms.find(x=>x.id===state.param);const ti=r?tinfo(r.minTier):null;h=`${back}<div><h1 style="font-size:17px">${r?esc(r.name):"채팅방"}</h1><div class="sub">${ti?`<span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+ 전용</span> · ${r?roomMembers(r):0}명`:""}</div></div>`;}
   else if(state.role==="creator"&&state.ctab==="msg"){
     cls="appbar compact";
     if(state.searchOpen)h=`<button class="hicon" data-act="chatsearchclose" title="닫기">‹</button><input id="chatSearch" class="searchbar" placeholder="도네이터·대화내용 검색" value="${esc(state.searchQuery||"")}" autocomplete="off"><button class="hicon" data-act="chatsearchclear" title="지우기">✕</button>`;
@@ -733,6 +741,7 @@ function renderAppbar(){
 function bindChatSearch(){const i=$("#chatSearch");if(i)i.oninput=e=>{state.searchQuery=e.target.value;renderView();};}
 function renderView(){
   const v=$("#view");
+  if(state.sub==="room"){v.innerHTML=viewRoom(state.param);v.scrollTop=v.scrollHeight;const ci=$("#ci");if(ci){ci.oninput=e=>{state.drafts["room:"+state.param]=e.target.value;};ci.onkeydown=e=>{if(e.key==="Enter")roomSend(state.param);};}return;}
   if(state.sub==="thread"){v.innerHTML=viewThread(state.param);v.scrollTop=v.scrollHeight;bindComposer();return;}
   if(state.sub==="fan"){v.innerHTML=viewFan(state.param);return;}
   if(state.sub==="settings"){v.innerHTML=viewSettings();return;}
@@ -790,7 +799,37 @@ function emojiSheet(id){openSheet(`<h3 class="sh">스티커 보내기</h3><div c
 function sendSticker(id,emoji){const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];p.thread.push({from:"out",sticker:emoji,tm:nowT()});if(state.role==="creator")state.dtalks.forEach(d=>{if(d.fid===id)d.answered=true;});state.replyTo=null;closeSheet();renderView();}
 
 /* ---------- creator: 쪽지 inbox ---------- */
-function viewChat(){return `<div class="pad">${msgInbox()}</div>`;}
+function viewChat(){return `<div class="pad">${roomsSection()}${msgInbox()}</div>`;}
+function roomMembers(r){return state.fans.filter(f=>!f.blocked&&tierIdx(tierOf(f.cum).key)>=tierIdx(r.minTier)).length;}
+function roomsSection(){
+  if(state.searchOpen&&(state.searchQuery||"").trim())return "";
+  const rows=state.rooms.map(r=>{const ti=tinfo(r.minTier);return `<button class="row" data-act="room" data-v="${r.id}"><div class="av">${r.emoji}</div><div class="main"><div class="tt">${esc(r.name)} <span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+</span></div><div class="pv">최소 ${ti.name} 이상 · ${roomMembers(r)}명 입장 가능</div></div><div class="meta"><div class="tm">${threadTime(r.thread)}</div></div></button>`;}).join("")||'<div class="empty" style="padding:18px">개설된 방이 없어요.</div>';
+  return `<div class="sechd">등급 전용 채팅방 <span class="r" data-act="roomnew">＋ 방 개설</span></div><div class="rows" style="margin-bottom:16px">${rows}</div>`;
+}
+function viewRoom(id){
+  const r=state.rooms.find(x=>x.id===id);if(!r)return `<div class="empty">방을 찾을 수 없어요.</div>`;const ti=tinfo(r.minTier);
+  if(state.role==="donator"){const myTier=tierOf((creById("c1")||{myCum:0}).myCum);
+    if(tierIdx(myTier.key)<tierIdx(r.minTier))return `<div class="chatwrap"><div class="msgs"><div class="empty">🔒 ${ti.emoji} <b>${ti.name}</b> 등급부터 입장할 수 있어요.<br><br>지금 내 등급: ${myTier.emoji} ${myTier.name}<br><br>더 응원해서 등급을 올려보세요!</div></div></div>`;}
+  const body=(r.thread||[]).map(m=>{
+    if(m.t==="day")return `<div class="day">${esc(m.text)}</div>`;
+    if(m.from==="sys")return `<div class="sysmsg">${m.text}</div>`;
+    let side,who="";
+    if(m.from==="out"){if(state.role==="creator")side="out";else{side="in";who="🎙️ 열혈크루";}}
+    else if(m.from==="me"){if(state.role==="creator"){side="in";who="🌙 "+esc(state.me.name);}else side="out";}
+    else{const f=fanById(m.from)||{emoji:"👤",name:"팬",cum:0};side="in";who=`${f.emoji} ${esc(f.name)} ${gpill(f.cum)}`;}
+    return side==="out"?`<div class="b out">${esc(m.text)}<div class="tm">${m.tm||nowT()}</div></div>`:`<div class="b in"><div class="who">${who}</div>${esc(m.text)}<div class="tm">${m.tm||nowT()}</div></div>`;
+  }).join("");
+  const draft=state.drafts["room:"+id]||"";
+  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="footwrap"><div class="composer"><input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="roomsend" data-v="${id}">➤</button></div></div></div>`;
+}
+function roomSend(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if(!tx)return;state.drafts["room:"+id]="";const r=state.rooms.find(x=>x.id===id);if(!r)return;
+  r.thread.push({from:state.role==="creator"?"out":"me",text:tx,tm:nowT()});renderView();}
+function roomNewSheet(){const e=state.roomEdit;
+  const chips=[...TIERS].map(t=>`<button class="chip ${e.minTier===t.key?"on":""}" data-act="roomtier" data-v="${t.key}">${t.emoji} ${t.name}${tierIdx(t.key)?"+":""}</button>`).join("");
+  openSheet(`<h3 class="sh">등급 전용 채팅방 개설</h3><p class="sd">선택한 등급 이상만 입장할 수 있어요.</p>
+    <label class="ae-lb">방 이름</label><input id="roomName" value="${esc(e.name)}" placeholder="예: VVIP 라운지" autocomplete="off" maxlength="16">
+    <label class="ae-lb">최소 입장 등급</label><div class="chips wrap">${chips}</div>
+    <button class="btn" data-act="roomsave">개설하기</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 function viewDono(){return `<div class="pad">${donoFeed()}</div>`;}
 function msgInbox(){
   const all=state.fans.filter(f=>!f.blocked),totalUnread=all.reduce((a,f)=>a+f.unread,0),mf=state.msgFilter||"all";
@@ -1357,6 +1396,11 @@ $("#phone").addEventListener("click",e=>{
     case"opennotif":state.role="creator";state.sub="notif";state.param=null;render();break;
     case"openhof":state.sub="halloffame";state.param=null;render();break;
     case"hofcrit":state.hofCriteria=v;renderView();break;
+    case"room":closeSheet();state.sub="room";state.param=v;render();break;
+    case"roomnew":state.roomEdit={name:"",minTier:"vvip"};roomNewSheet();break;
+    case"roomtier":{const n=$("#roomName");if(n)state.roomEdit.name=n.value;state.roomEdit.minTier=v;roomNewSheet();break;}
+    case"roomsave":{const n=$("#roomName");const nm=(n?n.value:"").trim()||(tinfo(state.roomEdit.minTier).name+" 전용방");const t=tinfo(state.roomEdit.minTier);state.rooms.push({id:"rm"+Date.now(),name:nm,minTier:state.roomEdit.minTier,emoji:t.emoji,thread:[{t:"day",text:"오늘"},{from:"out",text:`${nm} 방을 개설했어요! ${t.emoji} ${t.name} 이상 팬만의 공간이에요.`,tm:nowT()}]});closeSheet();state.ctab="msg";state.sub=null;render();toast("등급 전용 채팅방을 개설했어요 🎉");break;}
+    case"roomsend":roomSend(v);break;
     case"creatorprofile":state.cprofTab="intro";creatorProfileSheet(v);break;
     case"cproftab":state.cprofTab=v;creatorProfileSheet(state.cprofParam);break;
     case"cprofchat":closeSheet();state.role="donator";state.sub="thread";state.param=v;render();break;
