@@ -101,6 +101,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .tabbar{flex:0 0 auto;display:flex;background:var(--surface);border-top:1px solid var(--line);padding:7px 6px calc(7px + env(safe-area-inset-bottom))}
 .tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;border-radius:12px;color:var(--ink-3)}
 .tabbar button .ti{font-size:20px;line-height:1;position:relative}
+.tabbar button .ti .ti-svg{width:23px;height:23px;display:block}
 .tabbar button .tl{font-size:10px;font-weight:600}
 .tabbar button.on{color:var(--accent)}
 .tabbar .badge{position:absolute;top:-4px;right:-9px;min-width:15px;height:15px;padding:0 4px;border-radius:8px;background:var(--accent);color:var(--on-accent);font-size:9px;font-weight:700;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace}
@@ -700,7 +701,8 @@ function exportSheet(){const json=JSON.stringify(snapshotData(),null,2);
 function importSheet(){openSheet(`<h3 class="sh">데이터 가져오기</h3><p class="sd">백업 JSON을 붙여넣어 복원합니다. 현재 데이터를 덮어써요.</p><textarea id="impjson" rows="8" placeholder="여기에 JSON 붙여넣기"></textarea><button class="btn" data-act="doimport">복원하기</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 
 const CTABS=[["msg","💬","채팅"],["dono","🎁","후원톡"],["fans","👥","팬 관리"],["schedule","📅","스케줄"],["insights","📊","인사이트"]];
-const DTABS=[["following","💜","팔로잉"],["discover","🔍","탐색"],["dnotif","🔔","알림"],["me","🏅","내 정보"]];
+const FOLLOW_ICON='<svg class="ti-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="152" y="208" width="352" height="272" rx="116" fill="#b9c6cd"/><path d="M470 455l42 55-104-34z" fill="#b9c6cd"/><rect x="10" y="28" width="398" height="300" rx="128" fill="#29a3ea"/><path d="M92 300 30 424l156-72z" fill="#29a3ea"/><circle cx="114" cy="178" r="31" fill="#fff"/><circle cx="214" cy="178" r="31" fill="#fff"/><circle cx="314" cy="178" r="31" fill="#fff"/></svg>';
+const DTABS=[["following",FOLLOW_ICON,"팔로잉"],["discover","🔍","탐색"],["dnotif","🔔","알림"],["me","🏅","내 정보"]];
 
 function render(){
   const chrome=state.screen==="app";
