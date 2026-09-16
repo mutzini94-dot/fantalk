@@ -886,7 +886,7 @@ function viewRoom(id){
   return `<div class="chatwrap"><div class="msgs">${body}</div><div class="footwrap"><div class="composer"><input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="roomsend" data-v="${id}">➤</button></div></div></div>`;
 }
 function roomSend(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if(!tx)return;state.drafts["room:"+id]="";const r=state.rooms.find(x=>x.id===id);if(!r)return;
-  r.thread.push({from:state.role==="creator"?"out":"me",text:tx,tm:nowT()});renderView();}
+  r.thread.push({from:state.role==="creator"?"out":"me",text:tx,tm:nowT()});renderView();{const ci2=$("#ci");if(ci2)ci2.focus();}}
 function roomNewSheet(){const e=state.roomEdit;
   const chips=[...TIERS].map(t=>`<button class="chip ${e.minTier===t.key?"on":""}" data-act="roomtier" data-v="${t.key}">${t.emoji} ${t.name}${tierIdx(t.key)?"+":""}</button>`).join("");
   openSheet(`<h3 class="sh">등급 전용 채팅방 개설</h3><p class="sd">선택한 등급 이상만 입장할 수 있어요.</p>
@@ -1368,7 +1368,7 @@ function sendMsg(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if
   const p=state.role==="creator"?fanById(id):creById(id);if(!p.thread)p.thread=[{t:"day",text:"오늘"}];
   p.thread.push({from:"out",text:tx,tm:nowT()});
   if(state.role==="creator")state.dtalks.forEach(d=>{if(d.fid===id)d.answered=true;});
-  state.replyTo=null;renderView();renderTabbar();}
+  state.replyTo=null;renderView();renderTabbar();{const ci2=$("#ci");if(ci2)ci2.focus();}}
 function doDonate(id){
   const amt=state.donPreset,msg=($("#donmsg")?$("#donmsg").value.trim():"")||"응원합니다!",c=creById(id),before=tierOf(c.myCum).key;
   c.myCum+=amt;c.myTemp=Math.min(100,(c.myTemp||0)+1);if(!c.thread)c.thread=[{t:"day",text:"오늘"}];
