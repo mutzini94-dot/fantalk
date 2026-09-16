@@ -1215,10 +1215,13 @@ function creatorRail(list){
 function viewFollowing(){
   const list=state.creators.filter(c=>c.followed).sort((a,b)=>(b.unread-a.unread)||(b.online-a.online));
   if(!list.length)return `<div class="empty">아직 팔로우한 크리에이터가 없어요.<br><br><button class="btn" style="max-width:200px;margin:0 auto" data-act="dtab" data-v="discover">🔍 크리에이터 탐색하기</button></div>`;
-  const rows=list.map(c=>`<button class="row" data-act="thread" data-v="${c.id}">
+  const rows=list.map(c=>{const t=tierOf(c.myCum),nt=nextTier(c.myCum),prog=nt?Math.min(100,Math.round((c.myCum-t.min)/(nt.min-t.min)*100)):100;
+    return `<button class="row" data-act="thread" data-v="${c.id}">
     <div class="av" data-act="creatorprofile" data-v="${c.id}" style="cursor:pointer">${AV(c)}${c.online?'<span class="on-dot"></span>':""}</div>
-    <div class="main"><div class="tt">${esc(c.name)} ${VERIFIED} ${gpill(c.myCum)}</div><div class="pv">${c.online?"<span style='color:var(--keep)'>● 방송중 · </span>":""}${esc(threadPreview(c.thread))}</div></div>
-    <div class="meta"><div class="tm">${threadTime(c.thread)}</div>${c.unread?`<span class="cnt">${c.unread}</span>`:""}</div></button>`).join("");
+    <div class="main"><div class="tt">${esc(c.name)} ${VERIFIED} ${gpill(c.myCum)}</div><div class="pv">${c.online?"<span style='color:var(--keep)'>● 방송중 · </span>":""}${esc(threadPreview(c.thread))}</div>
+      <div class="pv" style="margin-top:4px;font-size:11px;color:var(--ink-3)">누적 ${won(c.myCum)}${nt?` · ${nt.name}까지 ${prog}%`:" · 최고 등급"}</div>
+      <div class="ptrack" style="margin-top:5px"><div class="pfill" style="width:${prog}%;background:${(nt||t).color}"></div></div></div>
+    <div class="meta"><div class="tm">${threadTime(c.thread)}</div>${c.unread?`<span class="cnt">${c.unread}</span>`:""}</div></button>`;}).join("");
   return `<div class="pad">
     ${creatorRail(list)}
     <div class="sechd">대화중인 크리에이터 ${list.length}<span class="r" data-act="dtab" data-v="discover">더 찾기 🔍</span></div>
