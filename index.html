@@ -1119,6 +1119,8 @@ function viewDNotif(){
 function viewMe(){
   const followed=state.creators.filter(c=>c.followed);
   const totalCum=followed.reduce((a,c)=>a+c.myCum,0);
+  const maxTemp=followed.length?Math.max(...followed.map(c=>c.myTemp||0)):0;
+  const achs=fanAchievements({cum:totalCum,count:state.myDonHist.length,temp:maxTemp});const achDone=achs.filter(a=>a.done).length;
   const rows=followed.sort((a,b)=>b.myCum-a.myCum).map(c=>{const t=tierOf(c.myCum),nt=nextTier(c.myCum),prog=nt?Math.min(100,Math.round((c.myCum-t.min)/(nt.min-t.min)*100)):100;
     return `<button class="row" data-act="thread" data-v="${c.id}"><div class="av">${c.emoji}</div>
       <div class="main"><div class="tt">${esc(c.name)} ${gpill(c.myCum)}</div>
@@ -1128,6 +1130,9 @@ function viewMe(){
     <div class="dhero"><div style="display:flex;align-items:center;gap:13px;position:relative"><div class="dcav">${state.me.emoji}</div>
       <div><div style="font-size:19px;font-weight:700">${esc(state.me.name)}</div><div style="font-size:12px;opacity:.88;margin-top:2px">${followed.length}명의 크리에이터를 응원 중</div></div></div>
       <div class="dstats"><div><div class="k">💜 팔로잉</div><div class="v">${followed.length}명</div></div><div><div class="k">💰 총 후원</div><div class="v">${won(totalCum)}</div></div><div><div class="k">🎁 후원 횟수</div><div class="v">${state.myDonHist.length}회</div></div></div><span class="cw">👑</span></div>
+    <div class="sechd" style="margin-top:18px">🏆 내 업적 <span class="r">${achDone}/${achs.length} 획득</span></div>
+    <div class="card pad"><div class="badgerow">${achs.filter(a=>a.done).map(a=>`<div class="badge-ic" title="${esc(a.name)}">${a.emoji}</div>`).join("")||'<span style="font-size:12px;color:var(--ink-3)">아직 획득한 업적이 없어요</span>'}</div>
+      <div class="achlist">${achs.map(a=>`<div class="ach ${a.done?"done":""}"><div class="ach-ic">${a.emoji}</div><div class="ach-main"><div class="ach-nm">${esc(a.name)}${a.done?' <span class="ach-chk">✓</span>':""}</div><div class="ach-ds">${esc(a.desc)}</div>${a.done?"":`<div class="ptrack" style="margin-top:6px"><div class="pfill" style="width:${a.prog}%;background:var(--accent)"></div></div>`}</div></div>`).join("")}</div></div>
     <div class="sechd" style="margin-top:18px">크리에이터별 내 등급</div><div class="rows">${rows}</div>
     <div class="sechd" style="margin-top:18px">최근 후원 이력</div><div class="card pad">${state.myDonHist.map(h=>`<div class="histrow"><span>${esc(h.c)} · ${h.d}</span><span class="a">+${won(h.a)}</span></div>`).join("")}</div>
     <button class="btn ghost" data-act="logout" style="color:var(--crit)">로그아웃</button>
