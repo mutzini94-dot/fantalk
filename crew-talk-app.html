@@ -286,6 +286,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .setrow:last-child{border-bottom:none}.setrow.sub{padding-left:24px}
 .setrow .sl{flex:1}.setrow .sl b{font-size:14px;font-weight:600}.setrow .sl p{margin:2px 0 0;font-size:11.5px;color:var(--ink-3)}
 .setrow .sv{font-size:12.5px;color:var(--ink-2);font-family:"IBM Plex Mono",monospace}
+.wl-row{display:flex;align-items:center;gap:12px;padding:11px 2px;border-bottom:1px solid var(--line-2)}
+.wl-row:last-child{border-bottom:none}
+.wl-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:15px;font-weight:700;flex:0 0 auto}
+.wl-ic.in{background:var(--keep-soft);color:var(--keep)}
+.wl-ic.use{background:var(--accent-soft);color:var(--accent)}
+.wl-main{flex:1;min-width:0}
+.wl-lb{font-size:13.5px;font-weight:600}
+.wl-dt{font-size:11px;color:var(--ink-3);margin-top:1px}
+.wl-amt{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:13.5px;white-space:nowrap}
+.wl-amt.plus{color:var(--keep)}
 .tgl{width:44px;height:26px;border-radius:14px;background:var(--surface-3);position:relative;flex:0 0 auto;transition:.2s}
 .tgl.on{background:var(--keep)}
 .tgl::after{content:"";position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
@@ -640,6 +650,15 @@ let state={
     {type:"grade",title:"<b>🍳 미미</b>님과 👑 VVIP 등급 유지 중",sub:"누적 ₩720,000",min:300,unread:false},
   ],
   myDonHist:[{d:"오늘",a:50000,c:"열혈크루"},{d:"2025.09.09",a:186000,c:"미미"},{d:"2025.09.02",a:155000,c:"열혈크루"},{d:"2025.08.20",a:124000,c:"소이"}],
+  wallet:{balance:82000,hist:[
+    {type:"use",amt:50000,label:"열혈크루 후원톡",date:"오늘 18:07"},
+    {type:"charge",amt:100000,label:"신용카드 충전",date:"오늘 18:00"},
+    {type:"use",amt:30000,label:"미미 후원톡",date:"09.12 21:30"},
+    {type:"use",amt:20000,label:"소이 후원톡",date:"09.09 22:05"},
+    {type:"charge",amt:50000,label:"카카오페이 충전",date:"09.09 21:50"},
+    {type:"bonus",amt:2000,label:"첫 충전 보너스 캐시",date:"09.05 12:01"},
+    {type:"charge",amt:30000,label:"신용카드 충전",date:"09.05 12:00"},
+  ]},
 };
 const fanById=id=>state.fans.find(f=>f.id===id);
 const creById=id=>state.creators.find(c=>c.id===id);
@@ -741,6 +760,7 @@ function renderAppbar(){
   }else if(state.sub==="fan"){h=`${back}<div><h1>VIP 후원자 정보</h1><div class="sub">${esc(fanById(state.param).name)}</div></div>`;}
   else if(state.sub==="settings"){h=`${back}<div><h1>설정</h1><div class="sub">등급 · 자동화 · 연동</div></div>`;}
   else if(state.sub==="dsettings"){h=`${back}<div><h1>설정</h1><div class="sub">테마 · 알림 · 계정</div></div>`;}
+  else if(state.sub==="wallet"){h=`${back}<div><h1>내 충전지갑</h1><div class="sub">충전 · 사용 내역</div></div>`;}
   else if(state.sub==="automation"){h=`${back}<div><h1>자동화</h1><div class="sub">열혈톡 자동 알림</div></div>`;}
   else if(state.sub==="autostat"){const r=state.automation.rules.find(x=>x.key===state.param);h=`${back}<div><h1>성과 분석</h1><div class="sub">${r?esc(r.name):""}</div></div>`;}
   else if(state.sub==="backup"){h=`${back}<div><h1>데이터 백업</h1><div class="sub">백업 · 복원</div></div>`;}
@@ -773,6 +793,7 @@ function renderView(){
   if(state.sub==="fan"){v.innerHTML=viewFan(state.param);return;}
   if(state.sub==="settings"){v.innerHTML=viewSettings();return;}
   if(state.sub==="dsettings"){v.innerHTML=viewDSettings();return;}
+  if(state.sub==="wallet"){v.innerHTML=viewWallet();return;}
   if(state.sub==="automation"){v.innerHTML=viewAutomation();return;}
   if(state.sub==="autostat"){v.innerHTML=viewAutoStat(state.param);return;}
   if(state.sub==="backup"){v.innerHTML=viewBackup();return;}
@@ -1081,6 +1102,20 @@ function viewDSettings(){
     <button class="btn ghost" data-act="logout" style="color:var(--crit);margin-top:18px">로그아웃</button>
     <div class="hint">열혈톡 v0.8 프로토타입 · 도네이터 설정</div></div>`;
 }
+function viewWallet(){
+  const w=state.wallet;
+  const charged=w.hist.filter(h=>h.type!=="use").reduce((a,h)=>a+h.amt,0);
+  const used=w.hist.filter(h=>h.type==="use").reduce((a,h)=>a+h.amt,0);
+  const rows=w.hist.map(h=>{const use=h.type==="use";const ic=use?"🎁":h.type==="bonus"?"✨":"＋";
+    return `<div class="wl-row"><div class="wl-ic ${use?"use":"in"}">${ic}</div><div class="wl-main"><div class="wl-lb">${esc(h.label)}</div><div class="wl-dt">${h.date}</div></div><div class="wl-amt ${use?"":"plus"}">${use?"-":"+"}${won(h.amt)}</div></div>`;}).join("");
+  return `<div class="pad">
+    <div class="dhero"><div class="dh-k">💰 충전 잔액</div><div class="dh-v">${won(w.balance)}</div><div class="dh-d">사용 가능한 충전 캐시</div><span class="cw">💰</span></div>
+    <button class="btn" data-act="walletcharge" style="margin-top:12px">＋ 캐시 충전하기</button>
+    <div class="metgrid"><div class="metcard"><div class="k">총 충전</div><div class="v">${won(charged)}</div></div><div class="metcard"><div class="k">총 사용</div><div class="v">${won(used)}</div></div></div>
+    <div class="sechd" style="margin-top:18px">충전 · 사용 내역</div>
+    <div class="card pad" style="padding:4px 14px">${rows}</div>
+    <div class="hint">충전 캐시는 후원톡·후원 시 사용됩니다.</div></div>`;
+}
 
 /* ---------- creator: 업적 (크루 도전과제) ---------- */
 const ACH_METRICS=[
@@ -1290,6 +1325,7 @@ function viewMe(){
     <div class="dhero"><div style="display:flex;align-items:center;gap:13px;position:relative"><div class="dcav">${state.me.emoji}</div>
       <div><div style="font-size:19px;font-weight:700">${esc(state.me.name)}</div><div style="font-size:12px;opacity:.88;margin-top:2px">${followed.length}명의 크리에이터를 응원 중</div></div></div>
       <div class="dstats"><div><div class="k">💜 팔로잉</div><div class="v">${followed.length}명</div></div><div><div class="k">💰 총 후원</div><div class="v">${won(totalCum)}</div></div><div><div class="k">🎁 후원 횟수</div><div class="v">${state.myDonHist.length}회</div></div></div><span class="cw">👑</span></div>
+    <button class="card pad" data-act="openwallet" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;margin-top:14px"><div class="ac-ic" style="width:38px;height:38px;font-size:18px;background:var(--accent-soft)">💰</div><div style="flex:1"><b style="font-size:15px">내 충전지갑</b><p style="font-size:12px;color:var(--ink-3);margin:2px 0 0">잔액 ${won(state.wallet.balance)} · 충전/사용 내역</p></div><span class="sv">›</span></button>
     <div class="sechd" style="margin-top:18px">🏆 내 업적 <span class="r">${achDone}/${achs.length} 획득</span></div>
     <div class="card pad"><div class="badgerow">${achs.filter(a=>a.done).map(a=>`<div class="badge-ic" title="${esc(a.name)}">${a.emoji}</div>`).join("")||'<span style="font-size:12px;color:var(--ink-3)">아직 획득한 업적이 없어요</span>'}</div>
       <div class="achlist">${achs.map(a=>`<div class="ach ${a.done?"done":""}"><div class="ach-ic">${a.emoji}</div><div class="ach-main"><div class="ach-nm">${esc(a.name)}${a.done?' <span class="ach-chk">✓</span>':""}</div><div class="ach-ds">${esc(a.desc)}</div>${a.done?"":`<div class="ptrack" style="margin-top:6px"><div class="pfill" style="width:${a.prog}%;background:var(--accent)"></div></div>`}</div></div>`).join("")}</div></div>
@@ -1403,6 +1439,8 @@ $("#phone").addEventListener("click",e=>{
     case"tab":if(state.role==="creator")state.ctab=v;else state.dtab=v;state.sub=null;state.param=null;state.searchOpen=false;state.searchQuery="";render();break;
     case"opensettings":state.sub=state.role==="creator"?"settings":"dsettings";state.param=null;render();break;
     case"drule":state.dAlerts[v]=!state.dAlerts[v];renderView();break;
+    case"openwallet":state.sub="wallet";state.param=null;render();break;
+    case"walletcharge":toast("💰 충전 페이지로 이동해요 (프로토타입)");break;
     case"dtfilter":state.dtfilter=v;renderView();break;
     case"dtreply":{const d=state.dtalks.find(x=>x.id===v);if(d){d.answered=true;state.replyTo={fid:d.fid,amt:d.amt,text:d.text};state.sub="thread";state.param=d.fid;}render();break;}
     case"clearreply":state.replyTo=null;renderView();break;
