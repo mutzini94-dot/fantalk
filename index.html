@@ -731,7 +731,7 @@ function renderAppbar(){
     const grade=state.role==="creator"?tierOf(p.cum):tierOf(p.myCum);
     const status=p.online?'<span style="color:var(--keep)">● 온라인</span>':ago(p.seenMin||60)+" 전 접속";
     const isFan=state.role==="creator";const nameH=isFan?`<span class="fanlink" data-act="fan" data-v="${p.id}">${esc(p.name)}</span>`:`<span data-act="creatorprofile" data-v="${p.id}" style="cursor:pointer">${esc(p.name)}</span> ${VERIFIED}`;const havA=isFan?`data-act="fan" data-v="${p.id}" style="cursor:pointer"`:`data-act="creatorprofile" data-v="${p.id}" style="cursor:pointer"`;
-    const tacts=isFan?`<div class="sp"></div><button class="act ${p.watch?"on":""}" data-act="watchtgl" data-v="${p.id}" title="${p.watch?"접속 알림 끄기":"접속 알림 켜기"}">${p.watch?"🔔":"🔕"}</button><button class="act ${p.blocked?"on-crit":""}" data-act="blocktgl" data-v="${p.id}" title="${p.blocked?"차단 해제":"차단하기"}">${BLOCK_ICON}</button>`:"";
+    const tacts=isFan?`<div class="sp"></div><button class="act ${p.watch?"on":""}" data-act="watchtgl" data-v="${p.id}" title="${p.watch?"접속 알림 끄기":"접속 알림 켜기"}">${p.watch?"🔔":"🔕"}</button><button class="act ${p.blocked?"on-crit":""}" data-act="blocktgl" data-v="${p.id}" title="${p.blocked?"차단 해제":"차단하기"}">${BLOCK_ICON}</button>`:`<div class="sp"></div><button class="act ${p.notify!==false?"on":""}" data-act="cnotify" data-v="${p.id}" title="${p.notify!==false?"알림 끄기":"알림 켜기"}">${p.notify!==false?"🔔":"🔕"}</button><button class="act ${p.followed?"on":""}" data-act="cfollow" data-v="${p.id}" title="${p.followed?"언팔로우":"팔로우"}">${p.followed?"💜":"🤍"}</button>`;
     h=`${back}<div class="hav" ${havA}>${AV(p)}${p.online?'<span class="on-dot"></span>':""}</div><div><h1 style="font-size:17px">${nameH}</h1><div class="sub"><span class="gp" style="--gc:${grade.color}">${grade.emoji} ${grade.name}</span> ${status}</div></div>${tacts}`;
   }else if(state.sub==="fan"){h=`${back}<div><h1>VIP 후원자 정보</h1><div class="sub">${esc(fanById(state.param).name)}</div></div>`;}
   else if(state.sub==="settings"){h=`${back}<div><h1>설정</h1><div class="sub">등급 · 자동화 · 연동</div></div>`;}
@@ -1389,6 +1389,8 @@ $("#phone").addEventListener("click",e=>{
     case"savememo":fanById(v).memo=$("#memo").value;toast("메모를 저장했어요");break;
     case"benefit":toast("🎁 맞춤 혜택 설정 (프로토타입)");break;
     case"watchtgl":{const f=fanById(v);f.watch=!f.watch;toast(f.watch?`🔔 ${f.name}님 접속 알림을 켰어요`:"접속 알림을 껐어요");render();break;}
+    case"cnotify":{const c=creById(v);c.notify=c.notify===false;toast(c.notify?`🔔 ${c.name}님 알림을 켰어요`:"알림을 껐어요");render();break;}
+    case"cfollow":{const c=creById(v);c.followed=!c.followed;if(c.followed&&!c.thread.length)c.thread=[{t:"day",text:"오늘"},{from:"in",text:"안녕하세요! 팔로우 감사해요 😊",tm:nowT()}];toast(c.followed?`💜 ${c.name}님을 팔로우했어요`:`${c.name}님 팔로우를 취소했어요`);render();break;}
     case"blocktgl":{const f=fanById(v);f.blocked=!f.blocked;if(f.blocked)f.watch=false;toast(f.blocked?`🚫 ${f.name}님을 차단했어요`:`${f.name}님 차단을 해제했어요`);render();break;}
     case"achnew":openAchEditor(null);break;
     case"achedit":openAchEditor(v);break;
