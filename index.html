@@ -207,6 +207,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .chips::-webkit-scrollbar{height:0}
 .chip{flex:0 0 auto;font-size:12px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);white-space:nowrap}
 .chip.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.chip-badge{display:inline-grid;place-items:center;min-width:18px;height:16px;padding:0 5px;border-radius:8px;background:var(--crit);color:#fff;font-size:10px;font-weight:700;font-family:"IBM Plex Mono",monospace;vertical-align:middle;margin-left:2px}
 .field{margin-top:14px}
 .field label{font-size:11px;font-weight:600;font-family:"IBM Plex Mono",monospace;letter-spacing:.06em;color:var(--ink-3);text-transform:uppercase}
 .field textarea{width:100%;margin-top:6px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;font-size:13.5px;font-family:inherit;color:var(--ink);resize:none;min-height:60px}
@@ -495,7 +496,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"login",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],schedEdit:null,
-  ctab:"msg",msgtab:"chat",settab:"general",fantab:"list",hofCriteria:"cum",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,fanReturn:null,autoEdit:null,achEdit:null,drafts:{},
+  ctab:"msg",msgtab:"chat",msgFilter:"all",settab:"general",fantab:"list",hofCriteria:"cum",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,fanReturn:null,autoEdit:null,achEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
     mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
@@ -731,13 +732,15 @@ function sendSticker(id,emoji){const p=state.role==="creator"?fanById(id):creByI
 function viewChat(){return `<div class="pad">${msgInbox()}</div>`;}
 function viewDono(){return `<div class="pad">${donoFeed()}</div>`;}
 function msgInbox(){
-  const list=state.fans.filter(f=>!f.blocked).sort((a,b)=>(b.unread-a.unread)||(a.seenMin-b.seenMin));
+  const all=state.fans.filter(f=>!f.blocked),totalUnread=all.reduce((a,f)=>a+f.unread,0),mf=state.msgFilter||"all";
+  let list=all.slice().sort((a,b)=>(b.unread-a.unread)||(a.seenMin-b.seenMin));
+  if(mf==="unread")list=list.filter(f=>f.unread>0);
+  const chips=`<div class="chips" style="padding:2px 0 12px"><button class="chip ${mf==="all"?"on":""}" data-act="msgfilter" data-v="all">전체</button><button class="chip ${mf==="unread"?"on":""}" data-act="msgfilter" data-v="unread">안읽음${totalUnread?` <span class="chip-badge">${totalUnread}</span>`:""}</button></div>`;
   const rows=list.map(f=>`<button class="row" data-act="thread" data-v="${f.id}">
     <div class="av">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div>
     <div class="main"><div class="tt">${fanLink(f)} ${gpill(f.cum)}</div><div class="pv">${esc(threadPreview(f.thread,true))}</div></div>
-    <div class="meta"><div class="tm">${threadTime(f.thread)||ago(f.seenMin)}</div>${f.unread?`<span class="cnt">${f.unread}</span>`:""}</div></button>`).join("");
-  return `<div class="sechd">1:1 채팅 <span class="r" data-act="tab" data-v="fans">팬 관리 ›</span></div>
-    <div class="rows">${rows}</div>
+    <div class="meta"><div class="tm">${threadTime(f.thread)||ago(f.seenMin)}</div>${f.unread?`<span class="cnt">${f.unread}</span>`:""}</div></button>`).join("")||`<div class="empty">${mf==="unread"?"안읽은 채팅이 없어요.":"채팅이 없어요."}</div>`;
+  return `${chips}<div class="rows">${rows}</div>
     <div class="hint">💡 팬 한 명 한 명과 1:1 채팅으로 소통해요. 상단 <b>LIVE</b>를 켜면 실시간으로 채팅·후원톡이 들어옵니다.</div>`;
 }
 function donoFeed(){
@@ -1277,6 +1280,7 @@ $("#phone").addEventListener("click",e=>{
     case"theme":applyTheme(v);render();break;
     case"settab":state.settab=v;renderView();break;
     case"fantab":state.fantab=v;renderView();break;
+    case"msgfilter":state.msgFilter=v;renderView();break;
     case"opennotif":state.role="creator";state.sub="notif";state.param=null;render();break;
     case"openhof":state.sub="halloffame";state.param=null;render();break;
     case"hofcrit":state.hofCriteria=v;renderView();break;
