@@ -495,7 +495,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"login",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],schedEdit:null,
-  ctab:"msg",msgtab:"chat",settab:"general",fantab:"list",hofCriteria:"cum",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,autoEdit:null,achEdit:null,drafts:{},
+  ctab:"msg",msgtab:"chat",settab:"general",fantab:"list",hofCriteria:"cum",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,fanReturn:null,autoEdit:null,achEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
     mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
@@ -1221,9 +1221,9 @@ $("#phone").addEventListener("click",e=>{
     case"dtreply":{const d=state.dtalks.find(x=>x.id===v);if(d){d.answered=true;state.replyTo={fid:d.fid,amt:d.amt,text:d.text};state.sub="thread";state.param=d.fid;}render();break;}
     case"clearreply":state.replyTo=null;renderView();break;
     case"dtab":state.dtab=v;state.sub=null;render();break;
-    case"back":state.sub=null;state.param=null;state.replyTo=null;render();break;
-    case"thread":state.replyTo=null;state.sub="thread";state.param=v;render();break;
-    case"fan":{const el=$("#alertbar");if(el)el.classList.remove("on");closeSheet();state.role="creator";state.sub="fan";state.param=v;render();break;}
+    case"back":if(state.sub==="fan"&&state.fanReturn){const t=state.fanReturn;state.fanReturn=null;state.sub="thread";state.param=t;render();break;}state.sub=null;state.param=null;state.replyTo=null;state.fanReturn=null;render();break;
+    case"thread":state.replyTo=null;state.fanReturn=null;state.sub="thread";state.param=v;render();break;
+    case"fan":{const el=$("#alertbar");if(el)el.classList.remove("on");closeSheet();state.fanReturn=state.sub==="thread"?state.param:null;state.role="creator";state.sub="fan";state.param=v;render();break;}
     case"achfans":achFansSheet(v);break;
     case"send":sendMsg(v);break;
     case"filter":state.filter=v;renderView();break;
