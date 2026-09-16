@@ -707,7 +707,7 @@ function render(){
   $("#topbar").style.display=chrome?"":"none";$("#appbar").style.display=chrome?"":"none";$("#tabbar").style.display=chrome?"":"none";
   if(state.screen==="login"){$("#view").innerHTML=viewLogin();const u=$("#luser");if(u)u.onkeydown=e=>{if(e.key==="Enter")doLogin();};const p=$("#lpw");if(p)p.onkeydown=e=>{if(e.key==="Enter")doLogin();};return;}
   document.querySelectorAll("#roleseg button").forEach(b=>b.classList.toggle("on",b.dataset.v===state.role));
-  $("#liveLabel").textContent=state.live?"LIVE ●":"LIVE";document.querySelector(".livebtn").classList.toggle("on",state.live);
+  $("#liveLabel").textContent=state.live?"LIVE ●":"LIVE";const lb=document.querySelector(".livebtn");lb.classList.toggle("on",state.live);lb.style.display=state.role==="creator"?"":"none";
   $("#gearbtn").style.display=state.role==="creator"?"":"none";
   $("#notifbtn").style.display=state.role==="creator"?"":"none";
   const un=state.notifs.filter(n=>n.unread).length,nb=$("#notifBadge");if(nb){nb.textContent=un||"";nb.classList.toggle("on",un>0&&state.role==="creator");}
