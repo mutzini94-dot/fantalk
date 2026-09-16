@@ -72,6 +72,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .livebtn{flex:0 0 auto;display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;padding:6px 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)}
 .livebtn.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .iconbtn{flex:0 0 auto;width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);display:grid;place-items:center;font-size:15px}
+.walletbtn{flex:0 0 auto;display:flex;align-items:center;gap:5px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:700;padding:6px 11px;border-radius:9px;border:1px solid color-mix(in srgb,var(--accent) 22%,var(--line));background:var(--accent-soft);color:var(--accent)}
+.walletbtn .wb-ic{font-size:13px}
+.walletbtn:active{transform:scale(.97)}
 .ntb-badge{position:absolute;top:-4px;right:-4px;min-width:15px;height:15px;padding:0 4px;border-radius:8px;background:var(--accent);color:var(--on-accent);font-size:9px;font-weight:700;place-items:center;font-family:"IBM Plex Mono",monospace;display:none;line-height:1}
 .ntb-badge.on{display:grid}
 .livebtn .d{width:7px;height:7px;border-radius:50%;background:var(--ink-3)}
@@ -499,6 +502,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       <div class="roleseg" id="roleseg" style="margin-left:0"><button data-act="role" data-v="creator">크리에이터</button><button data-act="role" data-v="donator">도네이터</button></div>
       <button class="livebtn" data-act="live" style="margin-left:auto"><span class="d"></span><span id="liveLabel">LIVE</span></button>
       <button class="iconbtn" id="notifbtn" data-act="opennotif" title="알림" style="position:relative">🔔<span class="ntb-badge" id="notifBadge"></span></button>
+      <button class="walletbtn" id="walletbtn" data-act="openwallet" title="내 충전지갑" style="margin-left:auto"><span class="wb-ic">💰</span><span id="walletBal">₩0</span></button>
       <button class="iconbtn" id="gearbtn" data-act="opensettings" title="설정">⚙️</button>
     </div>
     <div id="appbar"></div>
@@ -732,6 +736,7 @@ function render(){
   $("#liveLabel").textContent=state.live?"LIVE ●":"LIVE";const lb=document.querySelector(".livebtn");lb.classList.toggle("on",state.live);lb.style.display=state.role==="creator"?"":"none";
   $("#gearbtn").style.display="";
   $("#notifbtn").style.display=state.role==="creator"?"":"none";
+  {const wb=$("#walletbtn");if(wb){wb.style.display=state.role==="donator"?"":"none";const wbal=$("#walletBal");if(wbal)wbal.textContent=won(state.wallet.balance);}}
   const un=state.notifs.filter(n=>n.unread).length,nb=$("#notifBadge");if(nb){nb.textContent=un||"";nb.classList.toggle("on",un>0&&state.role==="creator");}
   renderTabbar();renderAppbar();renderView();
 }
