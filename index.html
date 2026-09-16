@@ -440,6 +440,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .ob{height:100%;display:flex;flex-direction:column;background:radial-gradient(120% 68% at 50% -5%,var(--accent-soft) 0%,var(--surface) 58%)}
 .ob .top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 30px;min-height:0;overflow-y:auto}
 .logo-lg{width:74px;height:74px;border-radius:22px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-size:38px;box-shadow:0 14px 32px color-mix(in srgb,var(--accent) 42%,transparent);flex:0 0 auto}
+.login-mark{width:118px;height:auto;display:block;margin:0 auto}
 .ob h1{font-size:29px;font-weight:700;letter-spacing:-.03em;margin:22px 0 0}
 .ob .desc{font-size:15px;color:var(--ink-2);margin:14px 0 0;line-height:1.6;max-width:28ch}
 .ob .illus{margin-top:32px;width:150px;height:150px;border-radius:34px;display:grid;place-items:center;font-size:66px;position:relative;flex:0 0 auto;background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 24%,var(--surface)),color-mix(in srgb,var(--accent-2) 12%,var(--surface)));border:1px solid var(--line);box-shadow:var(--shadow-lg),inset 0 2px 22px rgba(255,255,255,.28)}
@@ -1347,8 +1348,9 @@ function viewOnboarding(){
   return `<div class="ob"><div class="top"><div class="logo-lg">${s.ic}</div><h1>${esc(s.h)}</h1><div class="desc">${esc(s.d).replace(/\n/g,"<br>")}</div><div class="illus">${s.il}</div><div class="dots">${dots}</div></div>
     <div class="bottom"><button class="cta" data-act="obnext">${last?"시작하기":"다음"} →</button><button class="link" data-act="gologin">이미 계정이 있어요 · 로그인</button></div></div>`;
 }
+const LOGO_MARK='<svg class="login-mark" viewBox="0 0 268 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TooNation"><rect x="8" y="49" width="72" height="22" rx="11" fill="#4a8cf5"/><rect x="33" y="24" width="22" height="72" rx="11" fill="#4a8cf5"/><circle cx="146" cy="60" r="30" fill="none" stroke="#a6c8f7" stroke-width="17"/><circle cx="224" cy="60" r="30" fill="none" stroke="#4a8cf5" stroke-width="17"/></svg>';
 function viewLogin(){
-  return `<div class="login"><div class="lh"><div class="logo-lg" style="margin:0 auto">👑</div><h1>열혈톡 시작하기</h1><div class="sub">투네이션 계정으로 로그인하세요</div></div>
+  return `<div class="login"><div class="lh">${LOGO_MARK}<h1 style="margin-top:20px">열혈톡 시작하기</h1><div class="sub">투네이션 계정으로 로그인하세요</div></div>
     <div class="fields" style="margin-top:26px"><input type="text" id="luser" placeholder="투네이션 아이디" autocomplete="username" autocapitalize="off" spellcheck="false"><input type="password" id="lpw" placeholder="비밀번호" autocomplete="current-password"><button class="cta" data-act="dologin" style="margin-top:2px">로그인</button></div>
     <div class="foot">데모 계정 · 아이디 <b style="color:var(--ink-2)">toonation</b> / 비밀번호 <b style="color:var(--ink-2)">1234</b></div></div>`;
 }
