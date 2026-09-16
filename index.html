@@ -1423,7 +1423,7 @@ $("#phone").addEventListener("click",e=>{
     case"railall":state.msgFilter="all";if(state.searchOpen){state.searchOpen=false;state.searchQuery="";}renderView();break;
     case"chatsearch":state.searchOpen=true;state.searchQuery="";render();{const i=$("#chatSearch");if(i)i.focus();}break;
     case"chatsearchclose":state.searchOpen=false;state.searchQuery="";render();break;
-    case"chatsearchclear":state.searchQuery="";render();{const i=$("#chatSearch");if(i)i.focus();}break;
+    case"chatsearchclear":if((state.searchQuery||"")!==""){state.searchQuery="";render();{const i=$("#chatSearch");if(i)i.focus();}}else{state.searchOpen=false;render();}break;
     case"opennotif":state.role="creator";state.sub="notif";state.param=null;render();break;
     case"openhof":state.sub="halloffame";state.param=null;render();break;
     case"gotovip":state.ctab="fans";state.fantab="list";state.filter="vip";state.sub=null;render();break;
