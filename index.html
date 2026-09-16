@@ -5,45 +5,45 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
-  --bg:#f4f4f8; --surface:#ffffff; --surface-2:#f2f2f7; --surface-3:#e8e8ef;
-  --ink:#1b1b28; --ink-2:#6b6b7e; --ink-3:#9c9caf;
-  --line:#ececf2; --line-2:#f5f5f9;
-  --accent:#7b6ef5; --accent-2:#9a8ff8; --accent-soft:#eeecfd; --on-accent:#ffffff;
-  --crit:#e04b57; --crit-soft:#fdeaec;
-  --warn:#b57e12; --warn-soft:#fbf1dc;
-  --keep:#1f9e6a; --keep-soft:#e2f5ec;
-  --info:#4a9eff; --info-soft:#e9f2ff;
-  --grid:#eeedf5;
-  --hero-a:#201d3a; --hero-b:#3a3178; --hero-c:#7b6ef5;
-  --shadow:0 1px 2px rgba(30,25,70,.05),0 8px 22px rgba(30,25,70,.07);
-  --shadow-lg:0 2px 8px rgba(30,25,70,.08),0 24px 50px rgba(30,25,70,.14);
+  --bg:#fbfbfc; --surface:#ffffff; --surface-2:#f4f4f6; --surface-3:#e9e9ec;
+  --ink:#16161a; --ink-2:#68686f; --ink-3:#9a9aa2;
+  --line:#ececef; --line-2:#f4f4f6;
+  --accent:#16161a; --accent-2:#3a3a42; --accent-soft:#f0f0f2; --on-accent:#ffffff;
+  --crit:#d1444f; --crit-soft:#fbeaec;
+  --warn:#96702a; --warn-soft:#f4efe4;
+  --keep:#2f8f66; --keep-soft:#e6f2ec;
+  --info:#4d6a94; --info-soft:#eef1f6;
+  --grid:#eeeeef;
+  --hero-a:#16161a; --hero-b:#2a2a32; --hero-c:#45454f;
+  --shadow:0 1px 2px rgba(20,20,28,.05),0 8px 22px rgba(20,20,28,.06);
+  --shadow-lg:0 2px 8px rgba(20,20,28,.08),0 24px 50px rgba(20,20,28,.12);
   --radius:16px; --radius-sm:11px;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#14141f; --surface:#1e1e2c; --surface-2:#262636; --surface-3:#313144;
-  --ink:#eeeef6; --ink-2:#a6a6bc; --ink-3:#6f6f86;
-  --line:#2c2c3e; --line-2:#232331;
-  --accent:#8f83f7; --accent-2:#a99ffb; --accent-soft:#272248; --on-accent:#151520;
-  --crit:#ff7a86; --crit-soft:#331820;
-  --warn:#e6b34a; --warn-soft:#2c2410;
-  --keep:#48d69a; --keep-soft:#0f2a1f;
-  --info:#6bb2ff; --info-soft:#152438;
-  --grid:#2b2b40;
-  --hero-a:#201d3a; --hero-b:#37307a; --hero-c:#7b6ef5;
+  --bg:#0e0e11; --surface:#18181c; --surface-2:#202025; --surface-3:#2a2a30;
+  --ink:#f2f2f4; --ink-2:#a0a0aa; --ink-3:#68686f;
+  --line:#2a2a30; --line-2:#202025;
+  --accent:#f2f2f4; --accent-2:#c9c9cf; --accent-soft:#26262c; --on-accent:#16161a;
+  --crit:#f0787f; --crit-soft:#2e1a1c;
+  --warn:#d6a94f; --warn-soft:#2a2314;
+  --keep:#4fc793; --keep-soft:#0f261d;
+  --info:#7d9dce; --info-soft:#182231;
+  --grid:#26262c;
+  --hero-a:#14141a; --hero-b:#22222a; --hero-c:#3a3a45;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 26px rgba(0,0,0,.45);
   --shadow-lg:0 2px 10px rgba(0,0,0,.5),0 28px 60px rgba(0,0,0,.6);
 }}
 :root[data-theme="dark"]{
-  --bg:#14141f; --surface:#1e1e2c; --surface-2:#262636; --surface-3:#313144;
-  --ink:#eeeef6; --ink-2:#a6a6bc; --ink-3:#6f6f86;
-  --line:#2c2c3e; --line-2:#232331;
-  --accent:#8f83f7; --accent-2:#a99ffb; --accent-soft:#272248; --on-accent:#151520;
-  --crit:#ff7a86; --crit-soft:#331820;
-  --warn:#e6b34a; --warn-soft:#2c2410;
-  --keep:#48d69a; --keep-soft:#0f2a1f;
-  --info:#6bb2ff; --info-soft:#152438;
-  --grid:#2b2b40;
-  --hero-a:#201d3a; --hero-b:#37307a; --hero-c:#7b6ef5;
+  --bg:#0e0e11; --surface:#18181c; --surface-2:#202025; --surface-3:#2a2a30;
+  --ink:#f2f2f4; --ink-2:#a0a0aa; --ink-3:#68686f;
+  --line:#2a2a30; --line-2:#202025;
+  --accent:#f2f2f4; --accent-2:#c9c9cf; --accent-soft:#26262c; --on-accent:#16161a;
+  --crit:#f0787f; --crit-soft:#2e1a1c;
+  --warn:#d6a94f; --warn-soft:#2a2314;
+  --keep:#4fc793; --keep-soft:#0f261d;
+  --info:#7d9dce; --info-soft:#182231;
+  --grid:#26262c;
+  --hero-a:#14141a; --hero-b:#22222a; --hero-c:#3a3a45;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 26px rgba(0,0,0,.45);
   --shadow-lg:0 2px 10px rgba(0,0,0,.5),0 28px 60px rgba(0,0,0,.6);
 }
@@ -325,7 +325,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .ach.done .ach-nm{color:var(--ink)}
 .ach-chk{color:var(--keep);font-weight:700}
 .ach-ds{font-size:11.5px;color:var(--ink-3);margin-top:1px}
-.fancard{position:relative;overflow:hidden;border-radius:18px;padding:18px;color:#fff;background:linear-gradient(140deg,color-mix(in srgb,var(--tc) 55%,#1a1430) 0%,var(--tc) 135%);box-shadow:var(--shadow-lg)}
+.fancard{position:relative;overflow:hidden;border-radius:18px;padding:18px;color:#fff;background:linear-gradient(140deg,color-mix(in srgb,var(--tc) 55%,#16161a) 0%,var(--tc) 135%);box-shadow:var(--shadow-lg)}
 .fc-shine{position:absolute;top:-40%;right:-15%;width:110%;height:120%;background:radial-gradient(circle at 72% 28%,rgba(255,255,255,.28),transparent 46%);z-index:1;pointer-events:none}
 .fc-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;position:relative;z-index:2}
 .fc-brand{font-weight:700;opacity:.95}
@@ -335,7 +335,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .fc-name{font-size:23px;font-weight:800;letter-spacing:-.02em}
 .fc-since{font-size:11px;opacity:.85;margin-top:2px}
 .fc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.22);border-radius:12px;overflow:hidden;position:relative;z-index:2}
-.fc-stats>div{background:color-mix(in srgb,var(--tc) 45%,#1a1430);padding:10px 8px;text-align:center}
+.fc-stats>div{background:color-mix(in srgb,var(--tc) 45%,#16161a);padding:10px 8px;text-align:center}
 .fc-stats span{font-size:9.5px;opacity:.85;display:block}
 .fc-stats b{font-size:14px;font-weight:700;font-family:"IBM Plex Mono",monospace}
 .fc-foot{display:flex;justify-content:space-between;margin-top:14px;font-size:10.5px;font-family:"IBM Plex Mono",monospace;opacity:.9;position:relative;z-index:2}
@@ -500,9 +500,9 @@ function setFavicon(){try{const href="data:image/svg+xml,"+encodeURIComponent(br
 setFavicon();
 
 let TIERS=[
-  {key:"basic",name:"일반",emoji:"👤",color:"#9d97b5",min:0},
-  {key:"vip", name:"VIP", emoji:"👑",color:"#a78bfa",min:100000},
-  {key:"vvip",name:"VVIP",emoji:"👑",color:"#6d47d9",min:500000},
+  {key:"basic",name:"일반",emoji:"👤",color:"#9a9aa2",min:0},
+  {key:"vip", name:"VIP", emoji:"👑",color:"#68686f",min:100000},
+  {key:"vvip",name:"VVIP",emoji:"👑",color:"#2c2c34",min:500000},
   {key:"svip",name:"SVIP",emoji:"👑",color:"#a9832a",min:1000000},
 ];
 function tierOf(a){let t=TIERS[0];for(const x of TIERS)if(a>=x.min)t=x;return t;}
@@ -515,10 +515,10 @@ const SEND_ICON='<svg class="ic-send" viewBox="-20 -20 552 552" xmlns="http://ww
 const BLOCK_ICON='<svg class="ic-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="5.8" y1="5.8" x2="18.2" y2="18.2"/></svg>';
 const VERIFIED='<svg class="verified" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#4a9eff"/><path d="M6.8 12.4l3.3 3.3L17 9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const isVIP=a=>tierIdx(tierOf(a).key)>=1;
-const GRADE_COLORS=["#9d97b5","#a78bfa","#8b6ef0","#7c5ce6","#6d47d9","#5b34c4"];
+const GRADE_COLORS=["#9a9aa2","#7a7a82","#5a5a62","#42424a","#2c2c34","#1c1c22"];
 function readTierRows(){const rows=[...document.querySelectorAll("[data-tierrow]")];if(!rows.length)return;
   TIERS=rows.map(r=>{const old=TIERS.find(t=>t.key===r.dataset.tierrow)||{};
-    return {key:r.dataset.tierrow,name:(r.querySelector(".tn-name").value.trim()||"등급"),emoji:old.emoji||"👑",color:old.color||"#8b6ef0",min:parseInt((r.querySelector(".tn-min").value||"").replace(/\D/g,""))||0};});}
+    return {key:r.dataset.tierrow,name:(r.querySelector(".tn-name").value.trim()||"등급"),emoji:old.emoji||"👑",color:old.color||"#5a5a62",min:parseInt((r.querySelector(".tn-min").value||"").replace(/\D/g,""))||0};});}
 function normalizeTiers(){TIERS.sort((a,b)=>a.min-b.min);
   TIERS=TIERS.map((t,i)=>({key:"t"+i,name:t.name,emoji:i===0?"👤":"👑",color:i===TIERS.length-1?"#a9832a":GRADE_COLORS[Math.min(i,GRADE_COLORS.length-1)],min:i===0?0:t.min}));}
 
@@ -1359,7 +1359,7 @@ $("#phone").addEventListener("click",e=>{
     case"ach-metric":captureAch();state.achEdit.metric=v;achEditorSheet();break;
     case"ach-save":{captureAch();const e=state.achEdit;if(!e.name.trim())e.name="새 업적";if(!e.desc.trim())e.desc=achMetric(e.metric).label+" "+e.target;if(e.id){Object.assign(state.achievements.find(x=>x.id===e.id),{emoji:e.emoji,name:e.name,desc:e.desc,metric:e.metric,target:e.target});toast("업적을 저장했어요");}else{state.achievements.push({id:"a"+Date.now(),emoji:e.emoji,name:e.name,desc:e.desc,metric:e.metric,target:e.target});toast("새 업적을 만들었어요 ✨");}state.achEdit=null;closeSheet();renderView();break;}
     case"ach-del":state.achievements=state.achievements.filter(x=>x.id!==state.achEdit.id);state.achEdit=null;closeSheet();renderView();toast("업적을 삭제했어요");break;
-    case"addtier":readTierRows();{const mx=Math.max(0,...TIERS.map(t=>t.min));TIERS.push({key:"t"+Date.now(),name:"새 등급",emoji:"👑",color:"#8b6ef0",min:mx+100000});}renderView();break;
+    case"addtier":readTierRows();{const mx=Math.max(0,...TIERS.map(t=>t.min));TIERS.push({key:"t"+Date.now(),name:"새 등급",emoji:"👑",color:"#5a5a62",min:mx+100000});}renderView();break;
     case"deltier":readTierRows();if(TIERS.length<=2){toast("등급은 최소 2개가 필요해요");break;}TIERS=TIERS.filter(t=>t.key!==v);renderView();break;
     case"savetiers":readTierRows();normalizeTiers();render();toast("등급 저장 · 전체 재산정 완료");break;
     case"rule":state.alertRules[v]=!state.alertRules[v];renderView();break;
