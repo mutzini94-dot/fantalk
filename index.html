@@ -84,6 +84,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .appbar .sub{font-size:11.5px;color:var(--ink-3);font-weight:400;display:flex;align-items:center;gap:5px}
 .appbar .sp{margin-left:auto}
 .appbar .act{width:34px;height:34px;border-radius:10px;background:var(--surface-2);display:grid;place-items:center;font-size:16px;color:var(--ink-2)}
+.appbar.compact{min-height:0;padding:6px 14px}
+.appbar.compact h1{font-size:17px}
+.hicon{font-size:19px;color:var(--ink-2);padding:2px 5px;line-height:1;flex:0 0 auto;background:none}
+.searchbar{flex:1;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:6px 12px;font-size:14px;font-family:inherit;color:var(--ink);min-width:0}
 .appbar .act.on{background:var(--accent-soft);color:var(--accent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 35%,transparent)}
 .appbar .act.on-crit{background:var(--crit-soft);color:var(--crit);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--crit) 35%,transparent)}
 .view{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:var(--bg)}
@@ -496,7 +500,7 @@ function mkFan(i,cum,seen,on,temp,cnt,unread,memo,tags,thread){return{id:"f"+(u+
   hist:[{d:"2025.09.09",a:Math.round(cum*.16)},{d:"2025.09.02",a:Math.round(cum*.12)},{d:"2025.08.20",a:Math.round(cum*.1)}]};}
 let state={
   role:"creator",live:false,screen:"login",slide:0,theme:"system",lastBackup:null,autoBackup:false,backups:[],schedEdit:null,
-  ctab:"msg",msgtab:"chat",msgFilter:"all",settab:"general",fantab:"list",hofCriteria:"cum",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,fanReturn:null,autoEdit:null,achEdit:null,drafts:{},
+  ctab:"msg",msgtab:"chat",msgFilter:"all",searchOpen:false,searchQuery:"",settab:"general",fantab:"list",hofCriteria:"cum",dtfilter:"all",dtab:"following",dfilter:"all",sub:null,param:null,filter:"all",donPreset:50000,donImg:null,replyTo:null,fanReturn:null,autoEdit:null,achEdit:null,drafts:{},
   fans:[
     mkFan(0,620000,2,true,92,48,0,"엑셀방송 초창기부터 함께한 최고참. 생일 3/14.",["초창기멤버","생일3월"],[{t:"day",text:"오늘"},{from:"in",text:"오늘 방송도 최고였어요!! 🔥",tm:"18:05"},{from:"dono",amt:50000,text:"크루 1주년 축하해요! 앞으로도 쭉 갈게요 💜",tm:"18:07"},{from:"out",text:"헉 별하늘님 감사합니다!! 오늘 지목 콘텐츠 갈게요 🎉",tm:"18:08"}]),
     mkFan(1,1150000,25,false,95,52,2,"조용하지만 최고 큰손. 밤 시간대 접속.",["SVIP","큰손"],[{t:"day",text:"오늘"},{from:"in",text:"다음 콘텐츠 언제 하시나요?",tm:"22:14"},{from:"in",text:"기다리고 있어요 ㅎㅎ",tm:"22:15"}]),
@@ -644,7 +648,7 @@ function renderTabbar(){
   }).join("");
 }
 function renderAppbar(){
-  let h="";const back=`<button class="back" data-act="back">‹</button>`;
+  let h="",cls="appbar";const back=`<button class="back" data-act="back">‹</button>`;
   if(state.sub==="thread"){
     const p=state.role==="creator"?fanById(state.param):creById(state.param);
     const grade=state.role==="creator"?tierOf(p.cum):tierOf(p.myCum);
@@ -661,15 +665,22 @@ function renderAppbar(){
   else if(state.sub==="schedule"){h=`${back}<div><h1>방송 스케줄</h1><div class="sub">일정 관리</div></div>`;}
   else if(state.sub==="notif"){h=`${back}<div><h1>알림</h1><div class="sub">접속 · 후원 · 등급</div></div>`;}
   else if(state.sub==="halloffame"){h=`${back}<div><h1>명예의 전당</h1><div class="sub">최고의 후원자</div></div>`;}
+  else if(state.role==="creator"&&state.ctab==="msg"){
+    cls="appbar compact";
+    if(state.searchOpen)h=`<button class="hicon" data-act="chatsearchclose" title="닫기">‹</button><input id="chatSearch" class="searchbar" placeholder="도네이터·대화내용 검색" value="${esc(state.searchQuery||"")}" autocomplete="off"><button class="hicon" data-act="chatsearchclear" title="지우기">✕</button>`;
+    else h=`<h1 style="font-size:17px;line-height:1.1">채팅</h1><div class="sp"></div><button class="hicon" data-act="chatsearch" title="검색">🔍</button>`;
+  }
   else{
-    const map={msg:["채팅","팬과의 1:1 대화"],dono:["후원톡","받은 후원 관리"],fans:["팬 관리","등급별 CRM"],schedule:["방송 스케줄","일정 관리"],insights:["인사이트","크루 대시보드"],
+    const map={dono:["후원톡","받은 후원 관리"],fans:["팬 관리","등급별 CRM"],schedule:["방송 스케줄","일정 관리"],insights:["인사이트","크루 대시보드"],
       following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
-    const cur=state.role==="creator"?state.ctab:state.dtab,m=map[cur];let act="";
+    const cur=state.role==="creator"?state.ctab:state.dtab,m=map[cur]||["",""];let act="";
     if(cur==="fans"&&(state.fantab||"list")==="list")act+=`<button class="act" data-act="segsheet" title="세그먼트 발송">${SEND_ICON}</button>`;
     h=`<div><h1>${m[0]}</h1><div class="sub">${m[1]}</div></div><div class="sp"></div>${act}`;
   }
-  $("#appbar").className="appbar";$("#appbar").innerHTML=h;
+  $("#appbar").className=cls;$("#appbar").innerHTML=h;
+  if(state.role==="creator"&&state.ctab==="msg"&&state.searchOpen)bindChatSearch();
 }
+function bindChatSearch(){const i=$("#chatSearch");if(i)i.oninput=e=>{state.searchQuery=e.target.value;renderView();};}
 function renderView(){
   const v=$("#view");
   if(state.sub==="thread"){v.innerHTML=viewThread(state.param);v.scrollTop=v.scrollHeight;bindComposer();return;}
@@ -733,15 +744,19 @@ function viewChat(){return `<div class="pad">${msgInbox()}</div>`;}
 function viewDono(){return `<div class="pad">${donoFeed()}</div>`;}
 function msgInbox(){
   const all=state.fans.filter(f=>!f.blocked),totalUnread=all.reduce((a,f)=>a+f.unread,0),mf=state.msgFilter||"all";
-  let list=all.slice().sort((a,b)=>(b.unread-a.unread)||(a.seenMin-b.seenMin));
-  if(mf==="unread")list=list.filter(f=>f.unread>0);
-  const chips=`<div class="chips" style="padding:2px 0 12px"><button class="chip ${mf==="all"?"on":""}" data-act="msgfilter" data-v="all">전체</button><button class="chip ${mf==="unread"?"on":""}" data-act="msgfilter" data-v="unread">안읽음${totalUnread?` <span class="chip-badge">${totalUnread}</span>`:""}</button></div>`;
-  const rows=list.map(f=>`<button class="row" data-act="thread" data-v="${f.id}">
+  const q=(state.searchQuery||"").trim().toLowerCase(),searching=state.searchOpen&&q;
+  let list;
+  if(searching)list=all.filter(f=>f.name.toLowerCase().includes(q)||(f.thread||[]).some(m=>(m.text||"").toLowerCase().includes(q)));
+  else{list=all.slice().sort((a,b)=>(b.unread-a.unread)||(a.seenMin-b.seenMin));if(mf==="unread")list=list.filter(f=>f.unread>0);}
+  const chips=searching?"":`<div class="chips" style="padding:2px 0 12px"><button class="chip ${mf==="all"?"on":""}" data-act="msgfilter" data-v="all">전체</button><button class="chip ${mf==="unread"?"on":""}" data-act="msgfilter" data-v="unread">안읽음${totalUnread?` <span class="chip-badge">${totalUnread}</span>`:""}</button></div>`;
+  const rows=list.map(f=>{let pv=esc(threadPreview(f.thread,true));
+    if(searching&&!f.name.toLowerCase().includes(q)){const mm=[...(f.thread||[])].reverse().find(m=>(m.text||"").toLowerCase().includes(q));if(mm)pv=`💬 ${esc(mm.text)}`;}
+    return `<button class="row" data-act="thread" data-v="${f.id}">
     <div class="av">${f.emoji}${f.online?'<span class="on-dot"></span>':""}</div>
-    <div class="main"><div class="tt">${fanLink(f)} ${gpill(f.cum)}</div><div class="pv">${esc(threadPreview(f.thread,true))}</div></div>
-    <div class="meta"><div class="tm">${threadTime(f.thread)||ago(f.seenMin)}</div>${f.unread?`<span class="cnt">${f.unread}</span>`:""}</div></button>`).join("")||`<div class="empty">${mf==="unread"?"안읽은 채팅이 없어요.":"채팅이 없어요."}</div>`;
-  return `${chips}<div class="rows">${rows}</div>
-    <div class="hint">💡 팬 한 명 한 명과 1:1 채팅으로 소통해요. 상단 <b>LIVE</b>를 켜면 실시간으로 채팅·후원톡이 들어옵니다.</div>`;
+    <div class="main"><div class="tt">${fanLink(f)} ${gpill(f.cum)}</div><div class="pv">${pv}</div></div>
+    <div class="meta"><div class="tm">${threadTime(f.thread)||ago(f.seenMin)}</div>${f.unread?`<span class="cnt">${f.unread}</span>`:""}</div></button>`;}).join("")||`<div class="empty">${searching?"검색 결과가 없어요.":(mf==="unread"?"안읽은 채팅이 없어요.":"채팅이 없어요.")}</div>`;
+  return `${chips}${searching?`<div class="sechd">검색 결과 <span class="r">${list.length}건</span></div>`:""}<div class="rows">${rows}</div>
+    ${searching?"":`<div class="hint">💡 팬 한 명 한 명과 1:1 채팅으로 소통해요. 상단 <b>LIVE</b>를 켜면 실시간으로 채팅·후원톡이 들어옵니다.</div>`}`;
 }
 function donoFeed(){
   let list=state.dtalks.filter(d=>{const f=fanById(d.fid);return f&&!f.blocked;});
@@ -1218,7 +1233,7 @@ $("#phone").addEventListener("click",e=>{
     case"logout":if(state.live){clearInterval(liveTimer);state.live=false;}clearSession();state.screen="login";state.sub=null;render();break;
     case"role":state.role=v;state.sub=null;state.param=null;if(v==="donator")state.dtab="following";else state.ctab="msg";render();break;
     case"live":toggleLive();break;
-    case"tab":if(state.role==="creator")state.ctab=v;else state.dtab=v;state.sub=null;state.param=null;render();break;
+    case"tab":if(state.role==="creator")state.ctab=v;else state.dtab=v;state.sub=null;state.param=null;state.searchOpen=false;state.searchQuery="";render();break;
     case"opensettings":state.sub="settings";state.param=null;render();break;
     case"dtfilter":state.dtfilter=v;renderView();break;
     case"dtreply":{const d=state.dtalks.find(x=>x.id===v);if(d){d.answered=true;state.replyTo={fid:d.fid,amt:d.amt,text:d.text};state.sub="thread";state.param=d.fid;}render();break;}
@@ -1281,6 +1296,9 @@ $("#phone").addEventListener("click",e=>{
     case"settab":state.settab=v;renderView();break;
     case"fantab":state.fantab=v;renderView();break;
     case"msgfilter":state.msgFilter=v;renderView();break;
+    case"chatsearch":state.searchOpen=true;state.searchQuery="";render();{const i=$("#chatSearch");if(i)i.focus();}break;
+    case"chatsearchclose":state.searchOpen=false;state.searchQuery="";render();break;
+    case"chatsearchclear":state.searchQuery="";render();{const i=$("#chatSearch");if(i)i.focus();}break;
     case"opennotif":state.role="creator";state.sub="notif";state.param=null;render();break;
     case"openhof":state.sub="halloffame";state.param=null;render();break;
     case"hofcrit":state.hofCriteria=v;renderView();break;
