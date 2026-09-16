@@ -647,7 +647,7 @@ function renderAppbar(){
     const grade=state.role==="creator"?tierOf(p.cum):tierOf(p.myCum);
     const status=p.online?'<span style="color:var(--keep)">● 온라인</span>':ago(p.seenMin||60)+" 전 접속";
     const isFan=state.role==="creator";const nameH=isFan?`<span class="fanlink" data-act="fan" data-v="${p.id}">${esc(p.name)}</span>`:esc(p.name);const havA=isFan?`data-act="fan" data-v="${p.id}" style="cursor:pointer"`:"";
-    const tacts=isFan?`<div class="sp"></div><button class="act ${p.watch?"on":""}" data-act="watchtgl" data-v="${p.id}" title="${p.watch?"접속 알림 끄기":"접속 알림 켜기"}">🔔</button><button class="act ${p.blocked?"on-crit":""}" data-act="blocktgl" data-v="${p.id}" title="${p.blocked?"차단 해제":"차단하기"}">🚫</button>`:"";
+    const tacts=isFan?`<div class="sp"></div><button class="act ${p.watch?"on":""}" data-act="watchtgl" data-v="${p.id}" title="${p.watch?"접속 알림 끄기":"접속 알림 켜기"}">${p.watch?"🔔":"🔕"}</button><button class="act ${p.blocked?"on-crit":""}" data-act="blocktgl" data-v="${p.id}" title="${p.blocked?"차단 해제":"차단하기"}">${p.blocked?"🔒":"🔓"}</button>`:"";
     h=`${back}<div class="hav" ${havA}>${p.emoji}${p.online?'<span class="on-dot"></span>':""}</div><div><h1 style="font-size:17px">${nameH}</h1><div class="sub"><span class="gp" style="--gc:${grade.color}">${grade.emoji} ${grade.name}</span> ${status}</div></div>${tacts}`;
   }else if(state.sub==="fan"){h=`${back}<div><h1>VIP 후원자 정보</h1><div class="sub">${esc(fanById(state.param).name)}</div></div>`;}
   else if(state.sub==="settings"){h=`${back}<div><h1>설정</h1><div class="sub">등급 · 자동화 · 연동</div></div>`;}
