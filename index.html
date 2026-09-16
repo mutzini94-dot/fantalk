@@ -817,7 +817,7 @@ function donoRail(){
   const fans=state.fans.filter(f=>!f.blocked).slice().sort((a,b)=>(a.seenMin-b.seenMin)||(b.unread-a.unread));
   if(!fans.length)return "";
   const items=fans.map(f=>`<button class="dr-item" data-act="fan" data-v="${f.id}"><div class="dr-av">${AV(f)}${f.online?'<span class="dr-on"></span>':""}${f.unread?`<span class="dr-unread">${f.unread>9?"9+":f.unread}</span>`:""}</div><div class="dr-nm">${esc(f.name)}</div></button>`).join("");
-  return `<div class="dono-rail"><button class="dr-item" data-act="railall"><div class="dr-av all">${ALL_ICON}</div><div class="dr-nm">전체</div></button>${items}</div>`;
+  return `<div class="dono-rail">${items}</div>`;
 }
 function viewChat(){return `<div class="pad">${donoRail()}${roomsSection()}${msgInbox()}</div>`;}
 function roomMembers(r){return state.fans.filter(f=>!f.blocked&&tierIdx(tierOf(f.cum).key)>=tierIdx(r.minTier)).length;}
