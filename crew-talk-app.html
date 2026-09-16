@@ -377,12 +377,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .cprof-hero{margin:-20px -18px 0;height:132px;border-radius:22px 22px 0 0;background:linear-gradient(135deg,var(--hero-a) 0%,var(--hero-b) 55%,var(--hero-c) 120%);display:grid;place-items:center;position:relative;overflow:hidden}
 .cprof-emoji{font-size:64px;opacity:.92;filter:drop-shadow(0 6px 14px rgba(0,0,0,.3))}
 .cprof-x{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.35);color:#fff;font-size:14px;display:grid;place-items:center}
-.cprof-head{display:flex;align-items:flex-end;gap:14px;margin-top:-34px;padding:0 2px;position:relative}
+.cprof-head{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-top:-40px;padding:0 2px;position:relative}
 .cprof-av{width:74px;height:74px;border-radius:20px;background:var(--surface);border:3px solid var(--surface);display:grid;place-items:center;font-size:36px;box-shadow:var(--shadow);flex:0 0 auto}
 .cprof-name{font-size:20px;font-weight:800;display:flex;align-items:center;gap:6px;letter-spacing:-.02em}
 .cprof-cat{font-size:12.5px;color:var(--ink-3);margin-top:3px}
 .cprof-desc{font-size:13.5px;color:var(--ink-2);margin:14px 2px 0;line-height:1.55}
-.cprof-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:16px}
+.cprof-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:16px}
 .cprof-stats>div{background:var(--surface);padding:13px 6px;text-align:center}
 .cprof-stats span{font-size:10.5px;color:var(--ink-3);display:block}
 .cprof-stats b{font-size:17px;font-weight:800;margin-top:4px;display:block;letter-spacing:-.02em}
@@ -653,15 +653,14 @@ function creatorProfileSheet(id){const c=creById(id);if(!c)return;state.cprofPar
     <div class="sechd" style="margin:16px 2px 8px">주요 콘텐츠</div><div class="cprof-chips">${(cats.length?cats:["토크"]).map(x=>`<span>${esc(x)}</span>`).join("")}</div>
     ${c.id==="c1"&&state.rooms.length?`<div class="sechd" style="margin:16px 2px 8px">등급 전용 채팅방</div><div class="rows">${state.rooms.map(r=>{const ti=tinfo(r.minTier),myTier=tierOf(c.myCum),ok=tierIdx(myTier.key)>=tierIdx(r.minTier);return `<button class="row" data-act="room" data-v="${r.id}"><div class="av">${r.emoji}</div><div class="main"><div class="tt">${esc(r.name)} <span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+</span></div><div class="pv">${ok?"<span style='color:var(--keep)'>● 입장 가능</span>":"🔒 "+ti.name+" 이상 입장"}</div></div><div class="meta"><div class="tm">${ok?"›":"🔒"}</div></div></button>`;}).join("")}</div>`:""}`;
   else if(tab==="sched")content=`<div class="sechd" style="margin:14px 2px 8px">방송 일정</div><div class="rows">${state.schedule.slice(0,4).map(s=>`<div class="schrow"><div class="sch-date"><div class="d">${mmdd(s.date)}</div><div class="dd" style="color:var(--accent)">${ddText(s.date)}</div></div><div class="sch-main"><b>${esc(s.title)}</b><div class="t">${s.time} · ${s.type}</div></div></div>`).join("")}</div>`;
-  else if(tab==="goods")content=`<div class="sechd" style="margin:14px 2px 8px">굿즈</div><div class="goods-grid">${[["🧢","로고 캡","25,000원"],["👕","시그니처 티","32,000원"],["🎧","헤드셋 스티커","8,000원"],["📓","팬 다이어리","15,000원"]].map(g=>`<div class="goods-card"><div class="goods-ic">${g[0]}</div><div class="goods-nm">${g[1]}</div><div class="goods-price">${g[2]}</div></div>`).join("")}</div>`;
-  else content=`<div class="sechd" style="margin:14px 2px 8px">후원 랭킹</div><div class="rows">${[["🌙","별하늘","1,240,000원"],["⭐","밤톨","980,000원"],["🐻","해피","540,000원"],["🦊","라온","320,000원"],["🐰","두부왕","210,000원"]].map((r,i)=>`<div class="rk-row"><div class="rk-n">${["🥇","🥈","🥉"][i]||"<span class='mono'>"+(i+1)+"</span>"}</div><div class="av" style="width:36px;height:36px;font-size:18px;border-radius:11px">${r[0]}</div><div style="flex:1;font-weight:600;font-size:13.5px">${r[1]}</div><div class="mono" style="font-weight:700;font-size:12.5px">${r[2]}</div></div>`).join("")}</div>`;
+  else content=`<div class="sechd" style="margin:14px 2px 8px">후원 랭킹</div><div class="rows">${[["🌙","별하늘"],["⭐","밤톨"],["🐻","해피"],["🦊","라온"],["🐰","두부왕"]].map((r,i)=>`<div class="rk-row"><div class="rk-n">${["🥇","🥈","🥉"][i]||"<span class='mono'>"+(i+1)+"</span>"}</div><div class="av" style="width:36px;height:36px;font-size:18px;border-radius:11px">${r[0]}</div><div style="flex:1;font-weight:600;font-size:13.5px">${r[1]}</div></div>`).join("")}</div>`;
   openSheet(`<div class="cprof">
     <div class="cprof-hero"${c.img?` style="background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.5)),url('${c.img}') center/cover"`:""}>${c.img?"":`<span class="cprof-emoji">${c.emoji}</span>`}<button class="cprof-x" data-act="closesheet" title="닫기">✕</button></div>
     <div class="cprof-head"><div class="cprof-av">${AV(c)}</div><div style="padding-bottom:2px"><div class="cprof-name">${esc(c.name)} ${VERIFIED}</div><div class="cprof-cat">${esc(c.cat)}</div></div></div>
     <p class="cprof-desc">${desc}</p>
-    <div class="cprof-stats"><div><span>팔로워</span><b>${fmtCnt(c.followers)}</b></div><div><span>구독자</span><b>${fmtCnt(Math.round(c.followers*0.72))}</b></div><div><span>누적 후원금</span><b>${fmtWonBig(c.followers*24000)}</b></div></div>
+    <div class="cprof-stats"><div><span>팔로워</span><b>${fmtCnt(c.followers)}</b></div><div><span>구독자</span><b>${fmtCnt(Math.round(c.followers*0.72))}</b></div></div>
     <div class="cprof-btns"><button class="btn" style="margin-top:0" data-act="cprofchat" data-v="${id}">💬 채팅하기</button><button class="btn ghost" style="margin-top:0" data-act="donsheet" data-v="${id}">🎁 후원하기</button></div>
-    <div class="cprof-tabs"><button class="${tab==="intro"?"on":""}" data-act="cproftab" data-v="intro">소개</button><button class="${tab==="sched"?"on":""}" data-act="cproftab" data-v="sched">방송 일정</button><button class="${tab==="goods"?"on":""}" data-act="cproftab" data-v="goods">굿즈</button><button class="${tab==="rank"?"on":""}" data-act="cproftab" data-v="rank">후원 랭킹</button></div>
+    <div class="cprof-tabs"><button class="${tab==="intro"?"on":""}" data-act="cproftab" data-v="intro">소개</button><button class="${tab==="sched"?"on":""}" data-act="cproftab" data-v="sched">방송 일정</button><button class="${tab==="rank"?"on":""}" data-act="cproftab" data-v="rank">후원 랭킹</button></div>
     ${content}</div>`,true);
 }
 function closeSheet(){$("#sheet").classList.remove("on");$("#sheetBg").classList.remove("on");}
