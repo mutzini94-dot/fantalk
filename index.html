@@ -5,45 +5,45 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
-  --bg:#f4f2fb; --surface:#ffffff; --surface-2:#f1eefb; --surface-3:#e7e2f6;
-  --ink:#1e1a2e; --ink-2:#6a6486; --ink-3:#9d97b5;
-  --line:#eae6f6; --line-2:#f3f0fb;
-  --accent:#6d47d9; --accent-2:#8b6ef0; --accent-soft:#efeafd; --on-accent:#ffffff;
+  --bg:#f4f4f8; --surface:#ffffff; --surface-2:#f2f2f7; --surface-3:#e8e8ef;
+  --ink:#1b1b28; --ink-2:#6b6b7e; --ink-3:#9c9caf;
+  --line:#ececf2; --line-2:#f5f5f9;
+  --accent:#7b6ef5; --accent-2:#9a8ff8; --accent-soft:#eeecfd; --on-accent:#ffffff;
   --crit:#e04b57; --crit-soft:#fdeaec;
   --warn:#b57e12; --warn-soft:#fbf1dc;
   --keep:#1f9e6a; --keep-soft:#e2f5ec;
-  --info:#4b6ad0; --info-soft:#eaeefb;
-  --grid:#ece7f8;
-  --hero-a:#2b2450; --hero-b:#4a32a6; --hero-c:#6d47d9;
-  --shadow:0 1px 2px rgba(40,25,80,.05),0 8px 22px rgba(40,25,80,.07);
-  --shadow-lg:0 2px 8px rgba(40,25,80,.09),0 24px 50px rgba(40,25,80,.16);
+  --info:#4a9eff; --info-soft:#e9f2ff;
+  --grid:#eeedf5;
+  --hero-a:#201d3a; --hero-b:#3a3178; --hero-c:#7b6ef5;
+  --shadow:0 1px 2px rgba(30,25,70,.05),0 8px 22px rgba(30,25,70,.07);
+  --shadow-lg:0 2px 8px rgba(30,25,70,.08),0 24px 50px rgba(30,25,70,.14);
   --radius:16px; --radius-sm:11px;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#100d1c; --surface:#1a1730; --surface-2:#221d3b; --surface-3:#2b2548;
-  --ink:#efeafc; --ink-2:#a9a2c8; --ink-3:#6f688c;
-  --line:#2b2548; --line-2:#211c3a;
-  --accent:#9d84f5; --accent-2:#b6a3ff; --accent-soft:#241d45; --on-accent:#161228;
-  --crit:#ff7a86; --crit-soft:#33161c;
+  --bg:#14141f; --surface:#1e1e2c; --surface-2:#262636; --surface-3:#313144;
+  --ink:#eeeef6; --ink-2:#a6a6bc; --ink-3:#6f6f86;
+  --line:#2c2c3e; --line-2:#232331;
+  --accent:#8f83f7; --accent-2:#a99ffb; --accent-soft:#272248; --on-accent:#151520;
+  --crit:#ff7a86; --crit-soft:#331820;
   --warn:#e6b34a; --warn-soft:#2c2410;
   --keep:#48d69a; --keep-soft:#0f2a1f;
-  --info:#8aa2ff; --info-soft:#1a2144;
-  --grid:#2a2448;
-  --hero-a:#241d45; --hero-b:#3b2a86; --hero-c:#6d47d9;
+  --info:#6bb2ff; --info-soft:#152438;
+  --grid:#2b2b40;
+  --hero-a:#201d3a; --hero-b:#37307a; --hero-c:#7b6ef5;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 26px rgba(0,0,0,.45);
   --shadow-lg:0 2px 10px rgba(0,0,0,.5),0 28px 60px rgba(0,0,0,.6);
 }}
 :root[data-theme="dark"]{
-  --bg:#100d1c; --surface:#1a1730; --surface-2:#221d3b; --surface-3:#2b2548;
-  --ink:#efeafc; --ink-2:#a9a2c8; --ink-3:#6f688c;
-  --line:#2b2548; --line-2:#211c3a;
-  --accent:#9d84f5; --accent-2:#b6a3ff; --accent-soft:#241d45; --on-accent:#161228;
-  --crit:#ff7a86; --crit-soft:#33161c;
+  --bg:#14141f; --surface:#1e1e2c; --surface-2:#262636; --surface-3:#313144;
+  --ink:#eeeef6; --ink-2:#a6a6bc; --ink-3:#6f6f86;
+  --line:#2c2c3e; --line-2:#232331;
+  --accent:#8f83f7; --accent-2:#a99ffb; --accent-soft:#272248; --on-accent:#151520;
+  --crit:#ff7a86; --crit-soft:#331820;
   --warn:#e6b34a; --warn-soft:#2c2410;
   --keep:#48d69a; --keep-soft:#0f2a1f;
-  --info:#8aa2ff; --info-soft:#1a2144;
-  --grid:#2a2448;
-  --hero-a:#241d45; --hero-b:#3b2a86; --hero-c:#6d47d9;
+  --info:#6bb2ff; --info-soft:#152438;
+  --grid:#2b2b40;
+  --hero-a:#201d3a; --hero-b:#37307a; --hero-c:#7b6ef5;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 26px rgba(0,0,0,.45);
   --shadow-lg:0 2px 10px rgba(0,0,0,.5),0 28px 60px rgba(0,0,0,.6);
 }
@@ -56,8 +56,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .stage{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px}
+.verified{width:15px;height:15px;display:inline-block;vertical-align:-2px;flex:0 0 auto}
 .phone{width:100%;max-width:412px;height:min(884px,calc(100vh - 36px));background:var(--surface);border-radius:44px;
-  box-shadow:var(--shadow-lg),0 0 0 10px #14101f,0 0 0 12px #2a2340;display:flex;flex-direction:column;overflow:hidden;position:relative}
+  box-shadow:var(--shadow-lg),0 0 0 10px #14141f,0 0 0 12px #2c2c3c;display:flex;flex-direction:column;overflow:hidden;position:relative}
 .stage .cap{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);letter-spacing:.04em;text-align:center;max-width:412px}
 @media (max-width:480px){.stage{padding:0;gap:0}.phone{max-width:none;height:100vh;height:100dvh;border-radius:0;box-shadow:none}.stage .cap{display:none}}
 .ios{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:9px 24px 3px;font-size:13px;font-weight:600;background:var(--surface);color:var(--ink)}
@@ -483,6 +484,7 @@ function gpill(a){const t=tierOf(a);return `<span class="gp" style="--gc:${t.col
 function fanLink(f){return `<span class="fanlink" data-act="fan" data-v="${f.id}">${esc(f.name)}</span>`;}
 const SEND_ICON='<svg class="ic-send" viewBox="-20 -20 552 552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M476 3.2 12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 429l124.6 52.2c14.2 6 30.4-2.9 32.8-18.1l72-432C544.1 15.3 522.7-11.4 476 3.2z"/></svg>';
 const BLOCK_ICON='<svg class="ic-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="5.8" y1="5.8" x2="18.2" y2="18.2"/></svg>';
+const VERIFIED='<svg class="verified" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#4a9eff"/><path d="M6.8 12.4l3.3 3.3L17 9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const isVIP=a=>tierIdx(tierOf(a).key)>=1;
 const GRADE_COLORS=["#9d97b5","#a78bfa","#8b6ef0","#7c5ce6","#6d47d9","#5b34c4"];
 function readTierRows(){const rows=[...document.querySelectorAll("[data-tierrow]")];if(!rows.length)return;
@@ -653,7 +655,7 @@ function renderAppbar(){
     const p=state.role==="creator"?fanById(state.param):creById(state.param);
     const grade=state.role==="creator"?tierOf(p.cum):tierOf(p.myCum);
     const status=p.online?'<span style="color:var(--keep)">● 온라인</span>':ago(p.seenMin||60)+" 전 접속";
-    const isFan=state.role==="creator";const nameH=isFan?`<span class="fanlink" data-act="fan" data-v="${p.id}">${esc(p.name)}</span>`:esc(p.name);const havA=isFan?`data-act="fan" data-v="${p.id}" style="cursor:pointer"`:"";
+    const isFan=state.role==="creator";const nameH=isFan?`<span class="fanlink" data-act="fan" data-v="${p.id}">${esc(p.name)}</span>`:`${esc(p.name)} ${VERIFIED}`;const havA=isFan?`data-act="fan" data-v="${p.id}" style="cursor:pointer"`:"";
     const tacts=isFan?`<div class="sp"></div><button class="act ${p.watch?"on":""}" data-act="watchtgl" data-v="${p.id}" title="${p.watch?"접속 알림 끄기":"접속 알림 켜기"}">${p.watch?"🔔":"🔕"}</button><button class="act ${p.blocked?"on-crit":""}" data-act="blocktgl" data-v="${p.id}" title="${p.blocked?"차단 해제":"차단하기"}">${BLOCK_ICON}</button>`:"";
     h=`${back}<div class="hav" ${havA}>${p.emoji}${p.online?'<span class="on-dot"></span>':""}</div><div><h1 style="font-size:17px">${nameH}</h1><div class="sub"><span class="gp" style="--gc:${grade.color}">${grade.emoji} ${grade.name}</span> ${status}</div></div>${tacts}`;
   }else if(state.sub==="fan"){h=`${back}<div><h1>VIP 후원자 정보</h1><div class="sub">${esc(fanById(state.param).name)}</div></div>`;}
@@ -1090,7 +1092,7 @@ function viewFollowing(){
   if(!list.length)return `<div class="empty">아직 팔로우한 크리에이터가 없어요.<br><br><button class="btn" style="max-width:200px;margin:0 auto" data-act="dtab" data-v="discover">🔍 크리에이터 탐색하기</button></div>`;
   const rows=list.map(c=>`<button class="row" data-act="thread" data-v="${c.id}">
     <div class="av">${c.emoji}${c.online?'<span class="on-dot"></span>':""}</div>
-    <div class="main"><div class="tt">${esc(c.name)} ${gpill(c.myCum)}</div><div class="pv">${c.online?"<span style='color:var(--keep)'>● 방송중 · </span>":""}${esc(threadPreview(c.thread))}</div></div>
+    <div class="main"><div class="tt">${esc(c.name)} ${VERIFIED} ${gpill(c.myCum)}</div><div class="pv">${c.online?"<span style='color:var(--keep)'>● 방송중 · </span>":""}${esc(threadPreview(c.thread))}</div></div>
     <div class="meta"><div class="tm">${threadTime(c.thread)}</div>${c.unread?`<span class="cnt">${c.unread}</span>`:""}</div></button>`).join("");
   return `<div class="pad">
     <div class="sechd">응원하는 크리에이터 ${list.length}<span class="r" data-act="dtab" data-v="discover">더 찾기 🔍</span></div>
@@ -1104,7 +1106,7 @@ function viewDiscover(){
   if(state.dfilter!=="all")list=list.filter(c=>c.cat.includes(state.dfilter));
   const rows=list.map(c=>`<div class="row">
     <div class="av">${c.emoji}${c.online?'<span class="on-dot"></span>':""}</div>
-    <div class="main"><div class="tt">${esc(c.name)}${c.online?' <span class="gp" style="--gc:var(--keep)">LIVE</span>':""}</div><div class="pv"><span class="cat">${esc(c.cat)} · 팔로워 ${wonK(c.followers)}</span></div></div>
+    <div class="main"><div class="tt">${esc(c.name)} ${VERIFIED}${c.online?' <span class="gp" style="--gc:var(--keep)">LIVE</span>':""}</div><div class="pv"><span class="cat">${esc(c.cat)} · 팔로워 ${wonK(c.followers)}</span></div></div>
     <button class="follow ${c.followed?"on":""}" data-act="follow" data-v="${c.id}">${c.followed?"팔로잉":"+ 팔로우"}</button></div>`).join("")||`<div class="empty">해당 카테고리 크리에이터가 없어요.</div>`;
   return `<div class="pad"><div class="chips">${chips}</div>
     <div class="sechd">크리에이터 탐색</div><div class="rows">${rows}</div>
@@ -1123,7 +1125,7 @@ function viewMe(){
   const achs=fanAchievements({cum:totalCum,count:state.myDonHist.length,temp:maxTemp});const achDone=achs.filter(a=>a.done).length;
   const rows=followed.sort((a,b)=>b.myCum-a.myCum).map(c=>{const t=tierOf(c.myCum),nt=nextTier(c.myCum),prog=nt?Math.min(100,Math.round((c.myCum-t.min)/(nt.min-t.min)*100)):100;
     return `<button class="row" data-act="thread" data-v="${c.id}"><div class="av">${c.emoji}</div>
-      <div class="main"><div class="tt">${esc(c.name)} ${gpill(c.myCum)}</div>
+      <div class="main"><div class="tt">${esc(c.name)} ${VERIFIED} ${gpill(c.myCum)}</div>
         <div class="pv">누적 ${won(c.myCum)}${nt?` · ${nt.name}까지 ${prog}%`:" · 최고 등급"}</div>
         <div class="ptrack" style="margin-top:7px"><div class="pfill" style="width:${prog}%;background:${(nt||t).color}"></div></div></div></button>`;}).join("");
   return `<div class="pad">
