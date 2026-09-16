@@ -1202,6 +1202,11 @@ function autoEditorSheet(){
 }
 
 /* ---------- donator ---------- */
+function creatorRail(list){
+  if(!list.length)return "";
+  const items=list.map(c=>`<button class="dr-item" data-act="thread" data-v="${c.id}"><div class="dr-av">${AV(c)}${c.online?'<span class="dr-on"></span>':""}${c.unread?`<span class="dr-unread">${c.unread>9?"9+":c.unread}</span>`:""}</div><div class="dr-nm">${esc(c.name)}</div></button>`).join("");
+  return `<div class="dono-rail">${items}</div>`;
+}
 function viewFollowing(){
   const list=state.creators.filter(c=>c.followed).sort((a,b)=>(b.unread-a.unread)||(b.online-a.online));
   if(!list.length)return `<div class="empty">아직 팔로우한 크리에이터가 없어요.<br><br><button class="btn" style="max-width:200px;margin:0 auto" data-act="dtab" data-v="discover">🔍 크리에이터 탐색하기</button></div>`;
@@ -1210,6 +1215,7 @@ function viewFollowing(){
     <div class="main"><div class="tt">${esc(c.name)} ${VERIFIED} ${gpill(c.myCum)}</div><div class="pv">${c.online?"<span style='color:var(--keep)'>● 방송중 · </span>":""}${esc(threadPreview(c.thread))}</div></div>
     <div class="meta"><div class="tm">${threadTime(c.thread)}</div>${c.unread?`<span class="cnt">${c.unread}</span>`:""}</div></button>`).join("");
   return `<div class="pad">
+    ${creatorRail(list)}
     <div class="sechd">응원하는 크리에이터 ${list.length}<span class="r" data-act="dtab" data-v="discover">더 찾기 🔍</span></div>
     <div class="rows">${rows}</div>
     <div class="hint">💡 크리에이터를 선택하면 1:1 채팅으로 소통하고, 🎁 후원톡을 보낼 수 있어요.</div></div>`;
