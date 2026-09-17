@@ -181,6 +181,27 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .composer .send{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-size:17px;flex:0 0 auto}
 .composer .dbtn{width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:19px;flex:0 0 auto;border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
 .composer .attach{width:36px;height:36px;border-radius:50%;background:var(--surface-2);color:var(--ink-2);font-size:16px;flex:0 0 auto;display:grid;place-items:center;border:1px solid var(--line);cursor:pointer}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:14px;margin-bottom:12px}
+.post-hd{display:flex;align-items:center;gap:10px}
+.post-av{width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--surface-2);flex:0 0 auto;cursor:pointer;display:grid;place-items:center;font-size:20px;border:1px solid var(--line)}
+.post-hi{flex:1;min-width:0}
+.post-nm{font-size:14px;font-weight:600;display:flex;align-items:center;gap:4px}
+.post-tm{font-size:11px;color:var(--ink-3);margin-top:1px}
+.post-del{color:var(--ink-3);font-size:18px;padding:0 6px;flex:0 0 auto}
+.post-tx{font-size:14px;line-height:1.55;margin:11px 2px 0;white-space:pre-wrap;word-break:break-word}
+.post-img{width:100%;border-radius:12px;margin-top:11px;display:block}
+.post-act{display:flex;gap:8px;margin-top:12px}
+.post-act .pa{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-2);padding:6px 13px;border-radius:20px;background:var(--surface-2);border:1px solid var(--line)}
+.post-act .pa.on{color:var(--crit);background:var(--crit-soft);border-color:transparent}
+.post-more{font-size:12.5px;color:var(--ink-3);margin-top:9px;padding:2px;font-weight:500}
+.cf-compose{display:flex;gap:10px;align-items:flex-start}
+.cf-compose .av{width:40px;height:40px;border-radius:50%;overflow:hidden}
+.post-ta{flex:1;border:none;background:none;resize:none;font-family:inherit;font-size:14px;color:var(--ink);padding:9px 0;min-height:44px;outline:none;line-height:1.5}
+.cmt{padding:11px 2px;border-bottom:1px solid var(--line-2)}
+.cmt:last-child{border-bottom:none}
+.cmt-nm{font-size:13px;font-weight:600;display:flex;align-items:center;gap:4px}
+.cmt-tx{font-size:13.5px;color:var(--ink);margin-top:2px;word-break:break-word}
+.cmt-tm{font-size:11px;color:var(--ink-3);margin-top:3px}
 .msg-img{display:block;max-width:190px;max-height:220px;border-radius:11px;margin-bottom:3px;object-fit:cover}
 .b.out .msg-img{border:1px solid rgba(255,255,255,.25)}
 .sticker{font-size:56px;line-height:1;padding:2px 4px}
@@ -655,6 +676,13 @@ let state={
     {type:"grade",title:"<b>🍳 미미</b>님과 👑 VVIP 등급 유지 중",sub:"누적 ₩720,000",min:300,unread:false},
   ],
   myDonHist:[{d:"오늘",a:50000,c:"열혈크루"},{d:"2025.09.09",a:186000,c:"미미"},{d:"2025.09.02",a:155000,c:"열혈크루"},{d:"2025.08.20",a:124000,c:"소이"}],
+  posts:[
+    {id:"p1",cid:"c1",text:"오늘 방송 정말 감사했어요! 🔥 다음 콘텐츠도 알차게 준비할게요. 다들 뭐 보고 싶은지 댓글로 알려주세요 👀",img:null,min:95,likes:342,liked:false,comments:[{by:"f",name:"별하늘",text:"오늘도 최고였어요!! 지목 콘텐츠 또 해주세요 💜",tm:"1시간 전"},{by:"f",name:"해피",text:"다음 방송 언제예요?? 기다릴게요",tm:"40분 전"}]},
+    {id:"p2",cid:"c4",text:"이번 주말 신메뉴 먹방 예고 🍜 매운맛 도전합니다… 응원 부탁해요!",img:null,min:280,likes:521,liked:true,comments:[{by:"f",name:"두부왕",text:"기대됩니다 🤤",tm:"2시간 전"}]},
+    {id:"p3",cid:"c2",text:"새 일러스트 작업 중 ✏️ 이번엔 팬분들 닉네임으로 캐릭터를 만들어볼까 해요. 신청 받아요!",img:null,min:540,likes:210,liked:false,comments:[]},
+    {id:"p4",cid:"c1",text:"열혈크루 1주년 기념 이벤트 준비 중이에요 🎉 곧 공지 올릴 테니 알림 켜두세요!",img:null,min:1500,likes:288,liked:false,comments:[{by:"f",name:"라온",text:"벌써 1주년이라니 축하해요 🎊",tm:"어제"},{by:"f",name:"밤톨",text:"이벤트 참여할래요!",tm:"어제"}]},
+    {id:"p5",cid:"c3",text:"오늘 밤 8시 랭겜 스트리밍 갑니다 🎮 같이 달릴 사람 구해요!",img:null,min:160,likes:154,liked:false,comments:[]},
+  ],
   wallet:{balance:82000,hist:[
     {type:"use",amt:50000,label:"열혈크루 후원톡",date:"오늘 18:07"},
     {type:"charge",amt:100000,label:"신용카드 충전",date:"오늘 18:00"},
@@ -724,9 +752,9 @@ function exportSheet(){const json=JSON.stringify(snapshotData(),null,2);
   const t=$("#expjson");if(t)t.onclick=()=>t.select();}
 function importSheet(){openSheet(`<h3 class="sh">데이터 가져오기</h3><p class="sd">백업 JSON을 붙여넣어 복원합니다. 현재 데이터를 덮어써요.</p><textarea id="impjson" rows="8" placeholder="여기에 JSON 붙여넣기"></textarea><button class="btn" data-act="doimport">복원하기</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 
-const CTABS=[["msg","💬","채팅"],["dono","🎁","후원톡"],["fans","👥","팬 관리"],["schedule","📅","스케줄"],["insights","📊","인사이트"]];
+const CTABS=[["msg","💬","채팅"],["dono","🎁","후원톡"],["feed","📷","피드"],["fans","👥","팬 관리"],["schedule","📅","스케줄"],["insights","📊","인사이트"]];
 const FOLLOW_ICON='<svg class="ti-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="152" y="208" width="352" height="272" rx="116" fill="#b9c6cd"/><path d="M470 455l42 55-104-34z" fill="#b9c6cd"/><rect x="10" y="28" width="398" height="300" rx="128" fill="#29a3ea"/><path d="M92 300 30 424l156-72z" fill="#29a3ea"/><circle cx="114" cy="178" r="31" fill="#fff"/><circle cx="214" cy="178" r="31" fill="#fff"/><circle cx="314" cy="178" r="31" fill="#fff"/></svg>';
-const DTABS=[["following",FOLLOW_ICON,"팔로잉"],["discover","🔍","탐색"],["dnotif","🔔","알림"],["me","🏅","내 정보"]];
+const DTABS=[["following",FOLLOW_ICON,"팔로잉"],["feed","📷","피드"],["discover","🔍","탐색"],["dnotif","🔔","알림"],["me","🏅","내 정보"]];
 
 function render(){
   const chrome=state.screen==="app";
@@ -774,6 +802,7 @@ function renderAppbar(){
   else if(state.sub==="schedule"){h=`${back}<div><h1>방송 스케줄</h1><div class="sub">일정 관리</div></div>`;}
   else if(state.sub==="notif"){h=`${back}<div><h1>알림</h1><div class="sub">접속 · 후원 · 등급</div></div>`;}
   else if(state.sub==="halloffame"){h=`${back}<div><h1>명예의 전당</h1><div class="sub">최고의 후원자</div></div>`;}
+  else if(state.sub==="post"){h=`${back}<div><h1>게시글</h1><div class="sub">${state.role==="donator"?"댓글 남기기":"댓글 보기"}</div></div>`;}
   else if(state.sub==="room"){const r=state.rooms.find(x=>x.id===state.param);const ti=r?tinfo(r.minTier):null;h=`${back}<div><h1 style="font-size:17px">${r?esc(r.name):"채팅방"}</h1><div class="sub">${ti?`<span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+ 전용</span> · ${r?roomMembers(r):0}명`:""}</div></div>`;}
   else if(state.role==="creator"&&state.ctab==="msg"){
     cls="appbar compact";
@@ -781,7 +810,7 @@ function renderAppbar(){
     else h=`<h1 style="font-size:17px;line-height:1.1">채팅</h1><div class="sp"></div><button class="hicon" data-act="chatsearch" title="검색">🔍</button>`;
   }
   else{
-    const map={dono:["후원톡","받은 후원 관리"],fans:["팬 관리","등급별 CRM"],schedule:["방송 스케줄","일정 관리"],insights:["인사이트","크루 대시보드"],
+    const map={dono:["후원톡","받은 후원 관리"],feed:[state.role==="creator"?"피드":"피드","새 소식 & 댓글"],fans:["팬 관리","등급별 CRM"],schedule:["방송 스케줄","일정 관리"],insights:["인사이트","크루 대시보드"],
       following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
     const cur=state.role==="creator"?state.ctab:state.dtab,m=map[cur]||["",""];let act="";
     if(cur==="fans"&&(state.fantab||"list")==="list")act+=`<button class="act" data-act="segsheet" title="세그먼트 발송">${SEND_ICON}</button>`;
@@ -807,8 +836,9 @@ function renderView(){
   if(state.sub==="schedule"){v.innerHTML=viewSchedule();return;}
   if(state.sub==="notif"){v.innerHTML=viewNotif();return;}
   if(state.sub==="halloffame"){v.innerHTML=viewHallOfFame();return;}
-  if(state.role==="creator")v.innerHTML={msg:viewChat,dono:viewDono,fans:viewFansTab,schedule:viewSchedule,insights:viewInsights}[state.ctab]();
-  else{v.innerHTML={following:viewFollowing,discover:viewDiscover,dnotif:viewDNotif,me:viewMe}[state.dtab]();if(state.dtab==="discover")bindDiscoverSearch();}
+  if(state.sub==="post"){v.innerHTML=viewPost(state.param);const ci=$("#ci");if(ci){ci.oninput=e=>{state.drafts["post:"+state.param]=e.target.value;};ci.onkeydown=e=>{if(e.key==="Enter")postComment(state.param);};}return;}
+  if(state.role==="creator")v.innerHTML={msg:viewChat,dono:viewDono,feed:viewCFeed,fans:viewFansTab,schedule:viewSchedule,insights:viewInsights}[state.ctab]();
+  else{v.innerHTML={following:viewFollowing,feed:viewDFeed,discover:viewDiscover,dnotif:viewDNotif,me:viewMe}[state.dtab]();if(state.dtab==="discover")bindDiscoverSearch();}
 }
 
 /* ---------- shared thread ---------- */
@@ -1122,6 +1152,43 @@ function viewWallet(){
     <div class="card pad" style="padding:4px 14px">${rows}</div>
     <div class="hint">충전 캐시는 후원톡·후원 시 사용됩니다.</div></div>`;
 }
+/* ---------- 피드 (인스타형 게시글) ---------- */
+function postCard(p,mine){
+  const c=creById(p.cid)||{id:"",name:"크리에이터",emoji:"👤"};
+  const liked=!!p.liked;
+  const likeBtn=mine?`<div class="pa">❤️ ${p.likes}</div>`:`<button class="pa ${liked?"on":""}" data-act="postlike" data-v="${p.id}">${liked?"❤️":"🤍"} ${p.likes}</button>`;
+  return `<div class="post">
+    <div class="post-hd"><div class="post-av" data-act="creatorprofile" data-v="${c.id}">${AV(c)}</div><div class="post-hi"><div class="post-nm">${esc(c.name)} ${VERIFIED}</div><div class="post-tm">${ago(p.min)}</div></div>${mine?`<button class="post-del" data-act="postdel" data-v="${p.id}" title="삭제">🗑️</button>`:""}</div>
+    <div class="post-tx">${esc(p.text)}</div>
+    ${p.img?`<img class="post-img" src="${p.img}" alt="">`:""}
+    <div class="post-act">${likeBtn}<button class="pa" data-act="openpost" data-v="${p.id}">💬 ${p.comments.length}</button></div>
+    ${p.comments.length?`<button class="post-more" data-act="openpost" data-v="${p.id}">댓글 ${p.comments.length}개 모두 보기</button>`:""}
+  </div>`;
+}
+function viewCFeed(){
+  const me=creById("c1");
+  const mine=state.posts.filter(p=>p.cid==="c1").sort((a,b)=>a.min-b.min);
+  const compose=`<div class="card pad"><div class="cf-compose"><div class="av">${AV(me)}</div><textarea id="postInput" class="post-ta" placeholder="팬들에게 새 소식을 전해보세요…" rows="2"></textarea></div><div style="display:flex;justify-content:flex-end;margin-top:6px"><button class="btn" style="max-width:110px;margin:0" data-act="postnew">게시</button></div></div>`;
+  const rows=mine.map(p=>postCard(p,true)).join("")||`<div class="empty">아직 게시글이 없어요.<br>첫 소식을 남겨보세요!</div>`;
+  return `<div class="pad">${compose}<div class="sechd" style="margin-top:18px">내 게시글 ${mine.length}</div>${rows}</div>`;
+}
+function viewDFeed(){
+  const fset={};state.creators.filter(c=>c.followed).forEach(c=>fset[c.id]=1);
+  const feed=state.posts.filter(p=>fset[p.cid]).sort((a,b)=>a.min-b.min);
+  if(!feed.length)return `<div class="empty">팔로우한 크리에이터의 게시글이 여기에 표시돼요.<br><br><button class="btn" style="max-width:200px;margin:0 auto" data-act="dtab" data-v="discover">🔍 크리에이터 탐색</button></div>`;
+  return `<div class="pad">${feed.map(p=>postCard(p,false)).join("")}</div>`;
+}
+function viewPost(id){
+  const p=state.posts.find(x=>x.id===id);if(!p)return `<div class="empty">게시글을 찾을 수 없어요.</div>`;
+  const cmts=p.comments.map(m=>`<div class="cmt"><div class="cmt-nm">${esc(m.name)}${m.by==="me"?' <span class="gp" style="--gc:var(--accent)">나</span>':""}</div><div class="cmt-tx">${esc(m.text)}</div><div class="cmt-tm">${m.tm}</div></div>`).join("")||`<div class="empty" style="padding:22px">아직 댓글이 없어요.${state.role==="donator"?"<br>첫 댓글을 남겨보세요!":""}</div>`;
+  const canComment=state.role==="donator";
+  const draft=state.drafts["post:"+id]||"";
+  return `<div class="chatwrap"><div class="msgs"><div class="pad">${postCard(p,state.role==="creator")}
+    <div class="sechd" style="margin-top:4px">댓글 ${p.comments.length}</div>
+    <div class="card pad" style="padding:4px 14px">${cmts}</div></div></div>
+    ${canComment?`<div class="footwrap"><div class="composer"><input id="ci" placeholder="댓글 달기…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="postcomment" data-v="${id}">➤</button></div></div>`:""}</div>`;
+}
+function postComment(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if(!tx)return;const p=state.posts.find(x=>x.id===id);if(!p)return;state.drafts["post:"+id]="";p.comments.push({by:"me",name:state.me.name,text:tx,tm:"방금"});renderView();{const c2=$("#ci");if(c2)c2.focus();}}
 
 /* ---------- creator: 업적 (크루 도전과제) ---------- */
 const ACH_METRICS=[
@@ -1448,6 +1515,11 @@ $("#phone").addEventListener("click",e=>{
     case"drule":state.dAlerts[v]=!state.dAlerts[v];renderView();break;
     case"openwallet":state.sub="wallet";state.param=null;render();break;
     case"walletcharge":toast("💰 충전 페이지로 이동해요 (프로토타입)");break;
+    case"postnew":{const t=$("#postInput");const tx=t?t.value.trim():"";if(!tx){toast("내용을 입력해주세요");break;}state.posts.unshift({id:"p"+Date.now(),cid:"c1",text:tx,img:null,min:0,likes:0,liked:false,comments:[]});renderView();toast("게시글을 올렸어요 📷");break;}
+    case"postlike":{const p=state.posts.find(x=>x.id===v);if(p){p.liked=!p.liked;p.likes+=p.liked?1:-1;}renderView();break;}
+    case"openpost":state.sub="post";state.param=v;render();break;
+    case"postcomment":postComment(v);break;
+    case"postdel":{state.posts=state.posts.filter(x=>x.id!==v);if(state.sub==="post")state.sub=null;render();toast("게시글을 삭제했어요");break;}
     case"dtfilter":state.dtfilter=v;renderView();break;
     case"dtreply":{const d=state.dtalks.find(x=>x.id===v);if(d){d.answered=true;state.replyTo={fid:d.fid,amt:d.amt,text:d.text};state.sub="thread";state.param=d.fid;}render();break;}
     case"clearreply":state.replyTo=null;renderView();break;
