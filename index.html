@@ -185,6 +185,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .composer .send{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-size:17px;flex:0 0 auto}
 .composer .dbtn{width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:19px;flex:0 0 auto;border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
 .composer .attach{width:36px;height:36px;border-radius:50%;background:var(--surface-2);color:var(--ink-2);font-size:16px;flex:0 0 auto;display:grid;place-items:center;border:1px solid var(--line);cursor:pointer}
+.room-banner{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 22%,var(--line));border-radius:12px;padding:10px 13px;margin:2px 0 8px}
+.room-banner .rb-emo{font-size:18px;flex:0 0 auto}
+.room-banner .rb-t{flex:1;min-width:0}
+.room-banner .rb-t b{font-size:13px;display:block;color:var(--accent)}
+.room-banner .rb-t span{font-size:11px;color:var(--ink-2)}
+.room-banner .rb-go{color:var(--accent);font-size:16px;flex:0 0 auto}
 .post{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:14px;margin-bottom:12px}
 .post-hd{display:flex;align-items:center;gap:10px}
 .post-av{width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--surface-2);flex:0 0 auto;cursor:pointer;display:grid;place-items:center;font-size:20px;border:1px solid var(--line)}
@@ -712,13 +718,14 @@ function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clea
 function openSheet(h,noGrip){$("#sheet").innerHTML=(noGrip?'':'<div class="grip"></div>')+h;$("#sheet").classList.add("on");$("#sheetBg").classList.add("on");}
 function fmtCnt(n){return n>=10000?(n/10000).toFixed(1).replace(/\.0$/,"")+"만":n.toLocaleString("ko-KR");}
 function fmtWonBig(n){if(n>=1e8)return (n/1e8).toFixed(1).replace(/\.0$/,"")+"억";if(n>=1e4)return Math.round(n/1e4).toLocaleString("ko-KR")+"만";return won(n);}
-function creatorProfileSheet(id){const c=creById(id);if(!c)return;state.cprofParam=id;const tab=state.cprofTab||"intro";
+function creatorProfileSheet(id){const c=creById(id);if(!c)return;state.cprofParam=id;let tab=state.cprofTab||"intro";
+  const rooms=creatorRooms(id);if(tab==="rooms"&&!rooms.length)tab="intro";
   const desc=c.desc||`${esc(c.cat)}(으)로 함께하는 크리에이터 ${esc(c.name)}입니다. 언제나 좋은 모습으로 찾아올게요!`;
   const cats=(c.cat||"").split(/[·,]/).map(s=>s.trim()).filter(Boolean);
   let content="";
   if(tab==="intro")content=`<div class="sechd" style="margin:14px 2px 6px">소개</div><p class="cprof-intro">${desc}</p>
-    <div class="sechd" style="margin:16px 2px 8px">주요 콘텐츠</div><div class="cprof-chips">${(cats.length?cats:["토크"]).map(x=>`<span>${esc(x)}</span>`).join("")}</div>
-    ${c.id==="c1"&&state.rooms.length?`<div class="sechd" style="margin:16px 2px 8px">등급 전용 채팅방</div><div class="rows">${state.rooms.map(r=>{const ti=tinfo(r.minTier),myTier=tierOf(c.myCum),ok=tierIdx(myTier.key)>=tierIdx(r.minTier);return `<button class="row" data-act="room" data-v="${r.id}"><div class="av">${r.emoji}</div><div class="main"><div class="tt">${esc(r.name)} <span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+</span></div><div class="pv">${ok?"<span style='color:var(--keep)'>● 입장 가능</span>":"🔒 "+ti.name+" 이상 입장"}</div></div><div class="meta"><div class="tm">${ok?"›":"🔒"}</div></div></button>`;}).join("")}</div>`:""}`;
+    <div class="sechd" style="margin:16px 2px 8px">주요 콘텐츠</div><div class="cprof-chips">${(cats.length?cats:["토크"]).map(x=>`<span>${esc(x)}</span>`).join("")}</div>`;
+  else if(tab==="rooms")content=`<div class="sechd" style="margin:14px 2px 8px">등급 전용 채팅방</div><div class="rows">${rooms.map(r=>{const ti=tinfo(r.minTier),myTier=tierOf(c.myCum),ok=tierIdx(myTier.key)>=tierIdx(r.minTier);return `<button class="row" data-act="room" data-v="${r.id}"><div class="av">${r.emoji}</div><div class="main"><div class="tt">${esc(r.name)} <span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+</span></div><div class="pv">${ok?"<span style='color:var(--keep)'>● 입장 가능</span>":"🔒 "+ti.name+" 이상 입장"}</div></div><div class="meta"><div class="tm">${ok?"›":"🔒"}</div></div></button>`;}).join("")}</div><p class="hint" style="text-align:left;padding:8px 2px">등급 조건을 충족하면 바로 입장할 수 있어요.</p>`;
   else if(tab==="sched")content=`<div class="sechd" style="margin:14px 2px 8px">방송 일정</div><div class="rows">${state.schedule.slice(0,4).map(s=>`<div class="schrow"><div class="sch-date"><div class="d">${mmdd(s.date)}</div><div class="dd" style="color:var(--accent)">${ddText(s.date)}</div></div><div class="sch-main"><b>${esc(s.title)}</b><div class="t">${s.time} · ${s.type}</div></div></div>`).join("")}</div>`;
   else{const RKPOOL=[["🌙","별하늘"],["⭐","밤톨"],["🐻","해피"],["🦊","라온"],["🐰","두부왕"],["🐱","코코"],["🐺","도현"],["🌶️","핫식스"],["🐬","소라"],["🧸","달toon"]];const off=(parseInt((c.id||"c1").replace(/\D/g,""))||1)%RKPOOL.length;const rk=RKPOOL.slice(off).concat(RKPOOL.slice(0,off)).slice(0,5);
     content=`<div class="sechd" style="margin:14px 2px 8px">후원 랭킹</div><div class="rows">${rk.map((r,i)=>`<div class="rk-row"><div class="rk-n">${["🥇","🥈","🥉"][i]||"<span class='mono'>"+(i+1)+"</span>"}</div><div class="av" style="width:36px;height:36px;font-size:18px;border-radius:11px">${r[0]}</div><div style="flex:1;font-weight:600;font-size:13.5px">${r[1]}</div></div>`).join("")}</div>`;}
@@ -728,7 +735,7 @@ function creatorProfileSheet(id){const c=creById(id);if(!c)return;state.cprofPar
     <p class="cprof-desc">${desc}</p>
     <div class="cprof-stats"><div><span>팔로워</span><b>${fmtCnt(c.followers)}</b></div><div><span>구독자</span><b>${fmtCnt(Math.round(c.followers*0.72))}</b></div></div>
     <div class="cprof-btns"><button class="btn" style="margin-top:0" data-act="cprofchat" data-v="${id}">💬 채팅하기</button><button class="btn ghost" style="margin-top:0" data-act="donsheet" data-v="${id}">🎁 후원하기</button></div>
-    <div class="cprof-tabs"><button class="${tab==="intro"?"on":""}" data-act="cproftab" data-v="intro">소개</button><button class="${tab==="sched"?"on":""}" data-act="cproftab" data-v="sched">방송 일정</button><button class="${tab==="rank"?"on":""}" data-act="cproftab" data-v="rank">후원 랭킹</button></div>
+    <div class="cprof-tabs"><button class="${tab==="intro"?"on":""}" data-act="cproftab" data-v="intro">소개</button>${rooms.length?`<button class="${tab==="rooms"?"on":""}" data-act="cproftab" data-v="rooms">🔒 채팅방</button>`:""}<button class="${tab==="sched"?"on":""}" data-act="cproftab" data-v="sched">방송 일정</button><button class="${tab==="rank"?"on":""}" data-act="cproftab" data-v="rank">후원 랭킹</button></div>
     ${content}</div>`,true);
 }
 function closeSheet(){$("#sheet").classList.remove("on");$("#sheetBg").classList.remove("on");}
@@ -826,7 +833,7 @@ function renderAppbar(){
     else h=`<h1 style="font-size:17px;line-height:1.1">채팅</h1><div class="sp"></div><button class="hicon" data-act="chatsearch" title="검색">🔍</button>`;
   }
   else{
-    const map={dono:["후원톡","받은 후원 관리"],feed:[state.role==="creator"?"피드":"피드","새 소식 & 댓글"],fans:["팬 관리","등급별 CRM"],schedule:["방송 스케줄","일정 관리"],insights:["인사이트","크루 대시보드"],
+    const map={dono:["후원톡","받은 후원 관리"],feed:["피드",state.role==="creator"?"게시글 작성 · 관리":"팔로우한 크리에이터 소식"],fans:["팬 관리","등급별 CRM"],schedule:["방송 스케줄","일정 관리"],insights:["인사이트","크루 대시보드"],
       following:["팔로잉","응원하는 크리에이터"],discover:["탐색","크리에이터 발견"],dnotif:["알림","크리에이터 소식"],me:["내 정보","등급 & 후원"]};
     const cur=state.role==="creator"?state.ctab:state.dtab,m=map[cur]||["",""];let act="";
     if(cur==="fans"&&(state.fantab||"list")==="list")act+=`<button class="act" data-act="segsheet" title="세그먼트 발송">${SEND_ICON}</button>`;
@@ -886,7 +893,8 @@ function viewThread(id){
   const attach=`<button class="attach" data-act="emoji" data-v="${id}" title="스티커">😊</button><label class="attach" for="imgfile" title="이미지 첨부">🖼️</label><input type="file" id="imgfile" accept="image/*" hidden>`;
   const rt=state.replyTo;
   const replybar=(state.role==="creator"&&rt&&rt.fid===id)?`<div class="replybar"><span class="rb-ic">🎁</span><div class="rb-txt"><b>후원톡에 답장</b> · <span class="mono">${won(rt.amt)}</span><div class="rb-msg">“${esc(rt.text)}”</div></div><button class="rb-x" data-act="clearreply">×</button></div>`:"";
-  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="footwrap">${replybar}<div class="composer">${attach}${dbtn}<input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="send" data-v="${id}">➤</button></div></div></div>`;
+  const roomsBanner=(state.role==="donator"&&creatorRooms(id).length)?`<button class="room-banner" data-act="creatorrooms" data-v="${id}"><span class="rb-emo">🔒</span><div class="rb-t"><b>등급 전용 채팅방 ${creatorRooms(id).length}개</b><span>${esc(p.name)}님의 등급 전용 공간 · 입장하기</span></div><span class="rb-go">›</span></button>`:"";
+  return `<div class="chatwrap"><div class="msgs">${roomsBanner}${body}</div><div class="footwrap">${replybar}<div class="composer">${attach}${dbtn}<input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="send" data-v="${id}">➤</button></div></div></div>`;
 }
 function bindComposer(){const ci=$("#ci");if(ci){ci.oninput=e=>{state.drafts[state.param]=e.target.value;};ci.onkeydown=e=>{if(e.key==="Enter")sendMsg(state.param);};}
   const im=$("#imgfile");if(im)im.onchange=e=>handleImg(e,state.param,false);}
@@ -913,6 +921,7 @@ function viewChat(){return `<div class="pad">${donoRail()}${roomsSection()}${msg
 function roomEligible(r){return state.fans.filter(f=>!f.blocked&&tierIdx(tierOf(f.cum).key)>=tierIdx(r.minTier));}
 function roomMembers(r){return roomEligible(r).filter(f=>!(r.kicked||[]).includes(f.id)).length;}
 const MEFID="f1";
+function creatorRooms(cid){return cid==="c1"?state.rooms:[];}
 function roomsSection(){
   if(state.searchOpen&&(state.searchQuery||"").trim())return "";
   const rows=state.rooms.map(r=>{const ti=tinfo(r.minTier);return `<button class="row" data-act="room" data-v="${r.id}"><div class="av">${r.emoji}</div><div class="main"><div class="tt">${esc(r.name)} <span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+</span></div><div class="pv">최소 ${ti.name} 이상 · ${roomMembers(r)}명 입장 가능</div></div><div class="meta"><div class="tm">${threadTime(r.thread)}</div></div></button>`;}).join("")||'<div class="empty" style="padding:18px">개설된 방이 없어요.</div>';
@@ -1227,15 +1236,15 @@ function viewDFeed(){
 }
 function viewPost(id){
   const p=state.posts.find(x=>x.id===id);if(!p)return `<div class="empty">게시글을 찾을 수 없어요.</div>`;
-  const cmts=p.comments.map(m=>`<div class="cmt"><div class="cmt-nm">${esc(m.name)}${m.by==="me"?' <span class="gp" style="--gc:var(--accent)">나</span>':""}</div><div class="cmt-tx">${esc(m.text)}</div><div class="cmt-tm">${m.tm}</div></div>`).join("")||`<div class="empty" style="padding:22px">아직 댓글이 없어요.${state.role==="donator"?"<br>첫 댓글을 남겨보세요!":""}</div>`;
-  const canComment=state.role==="donator";
+  const cmts=p.comments.map(m=>`<div class="cmt"><div class="cmt-nm">${esc(m.name)}${m.cre?` ${VERIFIED} <span class="gp" style="--gc:var(--accent)">크리에이터</span>`:(m.by==="me"?' <span class="gp" style="--gc:var(--accent)">나</span>':"")}</div><div class="cmt-tx">${esc(m.text)}</div><div class="cmt-tm">${m.tm}</div></div>`).join("")||`<div class="empty" style="padding:22px">아직 댓글이 없어요.<br>첫 댓글을 남겨보세요!</div>`;
+  const canComment=true;
   const draft=state.drafts["post:"+id]||"";
   return `<div class="chatwrap"><div class="msgs"><div class="pad">${postCard(p,state.role==="creator")}
     <div class="sechd" style="margin-top:4px">댓글 ${p.comments.length}</div>
     <div class="card pad" style="padding:4px 14px">${cmts}</div></div></div>
     ${canComment?`<div class="footwrap"><div class="composer"><input id="ci" placeholder="댓글 달기…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="postcomment" data-v="${id}">➤</button></div></div>`:""}</div>`;
 }
-function postComment(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if(!tx)return;const p=state.posts.find(x=>x.id===id);if(!p)return;state.drafts["post:"+id]="";p.comments.push({by:"me",name:state.me.name,text:tx,tm:"방금"});renderView();{const c2=$("#ci");if(c2)c2.focus();}}
+function postComment(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if(!tx)return;const p=state.posts.find(x=>x.id===id);if(!p)return;state.drafts["post:"+id]="";const isCre=state.role==="creator";p.comments.push({by:"me",name:isCre?(creById("c1")||{name:"크리에이터"}).name:state.me.name,cre:isCre,text:tx,tm:"방금"});renderView();{const c2=$("#ci");if(c2)c2.focus();}}
 function viewDonHist(){
   const total=state.myDonHist.reduce((a,h)=>a+h.a,0);
   const rows=state.myDonHist.map(h=>`<div class="histrow"><span>${esc(h.c)} · ${h.d}</span><span class="a">+${won(h.a)}</span></div>`).join("");
@@ -1664,6 +1673,7 @@ $("#phone").addEventListener("click",e=>{
     case"roomunkick":{const [rid,fid]=v.split("|");const r=state.rooms.find(x=>x.id===rid);if(r)r.kicked=(r.kicked||[]).filter(x=>x!==fid);roomManageSheet(rid);renderAppbar();toast("다시 초대했어요");break;}
     case"roomdel":{state.rooms=state.rooms.filter(x=>x.id!==v);closeSheet();state.ctab="msg";state.sub=null;render();toast("채팅방을 삭제했어요");break;}
     case"creatorprofile":state.cprofTab="intro";creatorProfileSheet(v);break;
+    case"creatorrooms":state.cprofTab="rooms";creatorProfileSheet(v);break;
     case"cproftab":state.cprofTab=v;creatorProfileSheet(state.cprofParam);break;
     case"cprofchat":closeSheet();state.role="donator";state.sub="thread";state.param=v;render();break;
     case"openbackup":state.sub="backup";state.param=null;render();break;
