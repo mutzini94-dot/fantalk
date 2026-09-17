@@ -684,7 +684,7 @@ let state={
     {type:"dono",title:"<b>🎨 소이</b>님이 메시지를 보냈어요",sub:"오늘 그림 방송 보러 오실거죠?",min:20,unread:true},
     {type:"grade",title:"<b>🍳 미미</b>님과 👑 VVIP 등급 유지 중",sub:"누적 ₩720,000",min:300,unread:false},
   ],
-  myDonHist:[{d:"오늘",a:50000,c:"열혈크루"},{d:"2025.09.09",a:186000,c:"미미"},{d:"2025.09.02",a:155000,c:"열혈크루"},{d:"2025.08.20",a:124000,c:"소이"},{d:"2025.08.14",a:30000,c:"지노"},{d:"2025.08.07",a:80000,c:"미미"},{d:"2025.07.30",a:50000,c:"열혈크루"},{d:"2025.07.21",a:20000,c:"소이"},{d:"2025.07.12",a:100000,c:"미미"},{d:"2025.06.28",a:45000,c:"지노"},{d:"2025.06.15",a:60000,c:"열혈크루"}],
+  myDonHist:[{d:"오늘",a:50000,c:"열혈크루"},{d:"2025.09.09",a:186000,c:"미미"},{d:"2025.09.02",a:155000,c:"열혈크루"},{d:"2025.08.20",a:124000,c:"소이"},{d:"2025.08.14",a:30000,c:"지노"},{d:"2025.08.07",a:120000,c:"미미"},{d:"2025.07.30",a:90000,c:"열혈크루"},{d:"2025.07.21",a:20000,c:"소이"},{d:"2025.07.12",a:100000,c:"미미"},{d:"2025.06.28",a:15000,c:"지노"},{d:"2025.06.15",a:125000,c:"열혈크루"},{d:"2025.06.05",a:160000,c:"미미"},{d:"2025.05.20",a:200000,c:"열혈크루"},{d:"2025.05.15",a:36000,c:"소이"},{d:"2025.05.02",a:154000,c:"미미"}],
   posts:[
     {id:"p1",cid:"c1",text:"오늘 방송 정말 감사했어요! 🔥 다음 콘텐츠도 알차게 준비할게요. 다들 뭐 보고 싶은지 댓글로 알려주세요 👀",img:null,min:95,likes:342,liked:false,comments:[{by:"f",name:"별하늘",text:"오늘도 최고였어요!! 지목 콘텐츠 또 해주세요 💜",tm:"1시간 전"},{by:"f",name:"해피",text:"다음 방송 언제예요?? 기다릴게요",tm:"40분 전"}]},
     {id:"p2",cid:"c4",text:"이번 주말 신메뉴 먹방 예고 🍜 매운맛 도전합니다… 응원 부탁해요!",img:null,min:280,likes:521,liked:true,comments:[{by:"f",name:"두부왕",text:"기대됩니다 🤤",tm:"2시간 전"}]},
@@ -719,7 +719,8 @@ function creatorProfileSheet(id){const c=creById(id);if(!c)return;state.cprofPar
     <div class="sechd" style="margin:16px 2px 8px">주요 콘텐츠</div><div class="cprof-chips">${(cats.length?cats:["토크"]).map(x=>`<span>${esc(x)}</span>`).join("")}</div>
     ${c.id==="c1"&&state.rooms.length?`<div class="sechd" style="margin:16px 2px 8px">등급 전용 채팅방</div><div class="rows">${state.rooms.map(r=>{const ti=tinfo(r.minTier),myTier=tierOf(c.myCum),ok=tierIdx(myTier.key)>=tierIdx(r.minTier);return `<button class="row" data-act="room" data-v="${r.id}"><div class="av">${r.emoji}</div><div class="main"><div class="tt">${esc(r.name)} <span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+</span></div><div class="pv">${ok?"<span style='color:var(--keep)'>● 입장 가능</span>":"🔒 "+ti.name+" 이상 입장"}</div></div><div class="meta"><div class="tm">${ok?"›":"🔒"}</div></div></button>`;}).join("")}</div>`:""}`;
   else if(tab==="sched")content=`<div class="sechd" style="margin:14px 2px 8px">방송 일정</div><div class="rows">${state.schedule.slice(0,4).map(s=>`<div class="schrow"><div class="sch-date"><div class="d">${mmdd(s.date)}</div><div class="dd" style="color:var(--accent)">${ddText(s.date)}</div></div><div class="sch-main"><b>${esc(s.title)}</b><div class="t">${s.time} · ${s.type}</div></div></div>`).join("")}</div>`;
-  else content=`<div class="sechd" style="margin:14px 2px 8px">후원 랭킹</div><div class="rows">${[["🌙","별하늘"],["⭐","밤톨"],["🐻","해피"],["🦊","라온"],["🐰","두부왕"]].map((r,i)=>`<div class="rk-row"><div class="rk-n">${["🥇","🥈","🥉"][i]||"<span class='mono'>"+(i+1)+"</span>"}</div><div class="av" style="width:36px;height:36px;font-size:18px;border-radius:11px">${r[0]}</div><div style="flex:1;font-weight:600;font-size:13.5px">${r[1]}</div></div>`).join("")}</div>`;
+  else{const RKPOOL=[["🌙","별하늘"],["⭐","밤톨"],["🐻","해피"],["🦊","라온"],["🐰","두부왕"],["🐱","코코"],["🐺","도현"],["🌶️","핫식스"],["🐬","소라"],["🧸","달toon"]];const off=(parseInt((c.id||"c1").replace(/\D/g,""))||1)%RKPOOL.length;const rk=RKPOOL.slice(off).concat(RKPOOL.slice(0,off)).slice(0,5);
+    content=`<div class="sechd" style="margin:14px 2px 8px">후원 랭킹</div><div class="rows">${rk.map((r,i)=>`<div class="rk-row"><div class="rk-n">${["🥇","🥈","🥉"][i]||"<span class='mono'>"+(i+1)+"</span>"}</div><div class="av" style="width:36px;height:36px;font-size:18px;border-radius:11px">${r[0]}</div><div style="flex:1;font-weight:600;font-size:13.5px">${r[1]}</div></div>`).join("")}</div>`;}
   openSheet(`<div class="cprof">
     <div class="cprof-hero"${c.img?` style="background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.5)),url('${c.img}') center/cover"`:""}>${c.img?"":`<span class="cprof-emoji">${c.emoji}</span>`}<button class="cprof-x" data-act="closesheet" title="닫기">✕</button></div>
     <div class="cprof-head"><div class="cprof-av">${AV(c)}</div><div style="padding-bottom:2px"><div class="cprof-name">${esc(c.name)} ${VERIFIED}</div><div class="cprof-cat">${esc(c.cat)}</div></div></div>
@@ -765,7 +766,7 @@ const FEED_ICON='<svg class="ti-svg" viewBox="0 0 512 512" xmlns="http://www.w3.
 const FOLLOW_ICON='<svg class="ti-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="152" y="208" width="352" height="272" rx="116" fill="#b9c6cd"/><path d="M470 455l42 55-104-34z" fill="#b9c6cd"/><rect x="10" y="28" width="398" height="300" rx="128" fill="#29a3ea"/><path d="M92 300 30 424l156-72z" fill="#29a3ea"/><circle cx="114" cy="178" r="31" fill="#fff"/><circle cx="214" cy="178" r="31" fill="#fff"/><circle cx="314" cy="178" r="31" fill="#fff"/></svg>';
 const FAN_ICON='<svg class="ti-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="fanpin" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4b8ff2"/><stop offset="1" stop-color="#3550b8"/></linearGradient></defs><path d="M110 32h292a70 70 0 0 1 70 70v230a70 70 0 0 1-70 70h-96l-50 62-50-62h-96a70 70 0 0 1-70-70V102a70 70 0 0 1 70-70z" fill="url(#fanpin)"/><circle cx="256" cy="170" r="56" fill="none" stroke="#fff" stroke-width="33"/><path d="M156 356a100 100 0 0 1 200 0" fill="none" stroke="#fff" stroke-width="33" stroke-linecap="round"/></svg>';
 const INSIGHT_ICON='<svg class="ti-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><line x1="20" y1="366" x2="408" y2="366" stroke="#d7dde2" stroke-width="10" stroke-linecap="round"/><rect x="44" y="206" width="66" height="156" rx="8" fill="#ef9a9a"/><rect x="130" y="120" width="66" height="242" rx="8" fill="#f6e08c"/><rect x="216" y="244" width="66" height="118" rx="8" fill="#a5d6a7"/><rect x="302" y="92" width="66" height="270" rx="8" fill="#8fd6df"/><path d="M352 360 456 464" stroke="#8b9aa5" stroke-width="36" stroke-linecap="round"/><circle cx="282" cy="300" r="98" fill="#daf0f6" stroke="#aebfc7" stroke-width="16"/><path d="M282 250a34 34 0 0 0-20 61v14h40v-14a34 34 0 0 0-20-61z" fill="#f6e08c"/><rect x="266" y="322" width="32" height="16" rx="5" fill="#c9a24a"/></svg>';
-const CTABS=[["msg","💬","채팅"],["dono","🎁","후원톡"],["feed",FEED_ICON,"피드"],["fans",FAN_ICON,"팬 관리"],["schedule","📅","스케줄"],["insights",INSIGHT_ICON,"인사이트"]];
+const CTABS=[["msg","💬","채팅"],["dono","🎁","후원톡"],["feed",FEED_ICON,"피드"],["fans",FAN_ICON,"팬 관리"],["insights",INSIGHT_ICON,"인사이트"]];
 const DTABS=[["following",FOLLOW_ICON,"팔로잉"],["feed",FEED_ICON,"피드"],["discover","🔍","탐색"],["dnotif","🔔","알림"],["me","🏅","내 정보"]];
 
 function render(){
@@ -1108,8 +1109,12 @@ function viewInsights(){
   const dist={};TIERS.forEach(t=>dist[t.key]=0);state.fans.forEach(f=>dist[tierOf(f.cum).key]++);const maxD=Math.max(...Object.values(dist))||1;
   const distBars=[...TIERS].reverse().map(t=>`<div class="tierbar"><div class="lb">${t.emoji} ${t.name}</div><div class="track"><div class="fill" style="width:${dist[t.key]/maxD*100}%;background:${t.color}"></div></div><div class="vv">${dist[t.key]}</div></div>`).join("");
   const gp=Math.round(state.goal.cur/state.goal.target*100),vipCnt=state.fans.filter(f=>isVIP(f.cum)).length,avgTemp=Math.round(state.fans.reduce((a,f)=>a+f.temp,0)/state.fans.length),risk=atRisk().length,total7=state.don.trend.reduce((a,b)=>a+b,0)*1000;
+  const nextSched=(state.schedule||[]).slice().sort((a,b)=>a.date.localeCompare(b.date))[0];
   return `<div class="pad">
-    <button class="card pad" data-act="openhof" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;margin-bottom:12px"><div class="ac-ic" style="background:linear-gradient(135deg,#d4a017,#f0c040);color:#fff">🏆</div><div style="flex:1"><b style="font-size:15px">명예의 전당</b><p style="font-size:12px;color:var(--ink-3);margin:2px 0 0">최고의 후원자 순위 보기</p></div><span class="sv">›</span></button>
+    <div class="grid g2" style="margin-bottom:12px;gap:12px">
+    <button class="card pad" data-act="openhof" style="text-align:left;display:flex;align-items:center;gap:10px"><div class="ac-ic" style="background:linear-gradient(135deg,#d4a017,#f0c040);color:#fff">🏆</div><div style="flex:1;min-width:0"><b style="font-size:14px">명예의 전당</b><p style="font-size:11px;color:var(--ink-3);margin:2px 0 0">후원자 순위</p></div></button>
+    <button class="card pad" data-act="opensched" style="text-align:left;display:flex;align-items:center;gap:10px"><div class="ac-ic" style="background:var(--accent-soft)">📅</div><div style="flex:1;min-width:0"><b style="font-size:14px">방송 스케줄</b><p style="font-size:11px;color:var(--ink-3);margin:2px 0 0">${nextSched?esc(mmdd(nextSched.date))+" "+esc(nextSched.title):"일정 관리"}</p></div></button>
+    </div>
     <div class="dhero" data-act="gotovip" style="cursor:pointer"><div class="dh-k">VIP 후원자 수 (VIP 이상)</div><div class="dh-v">${vipCnt}명 <span style="font-size:13px;opacity:.7;font-weight:600">목록 보기 ›</span></div><div class="dh-d">▲ 2명 (전주 대비)</div><span class="cw">👑</span></div>
     <div class="metgrid"><div class="metcard"><div class="k">🌡️ 팬 관계 온도 ${infoDot("temp")}</div><div class="v">${avgTemp}<small>점</small></div><div class="mbar"><div class="f" style="width:${avgTemp}%;background:linear-gradient(90deg,var(--accent-2),var(--accent))"></div></div></div>
       <div class="metcard"><div class="k">⚠️ 이탈 위험 VIP</div><div class="v">${risk}<small>명</small></div><div class="mbar"><div class="f" style="width:${Math.min(100,risk/Math.max(vipCnt,1)*100)}%;background:linear-gradient(90deg,#ff9b6b,var(--crit))"></div></div></div></div>
@@ -1143,7 +1148,7 @@ function viewSettings(){
   else if(tab==="backup"){body=`
     <div class="sechd">데이터 백업</div><div class="rows"><button class="setrow" data-act="openbackup" style="width:100%;text-align:left">${ic("💾")}<div class="sl"><b>데이터 백업 · 복원</b><p>${state.lastBackup?"마지막 백업 "+fmtTime(state.lastBackup):"백업 없음"}</p></div><span class="sv">›</span></button></div>`;}
   return `<div class="pad">${tabbar}${body}
-    <div class="hint">열혈톡 v0.8 프로토타입 · 설정 탭</div></div>`;
+    <div class="hint">열혈톡 v0.9 프로토타입 · 설정 탭</div></div>`;
 }
 function viewDSettings(){
   const rules=[["broadcast","방송 시작 알림","팔로우한 크리에이터 방송 시작 시"],["reply","답장 · 후원톡 알림","크리에이터 답장·후원톡 도착"],["grade","등급 변동 알림","등급 상승·다음 등급 임박"],["event","이벤트 · 공지","전용 이벤트·공지 소식"],["dnd","방해금지 (00–08시)","야간 푸시 묶음"]].map(([k,l,d])=>`<div class="setrow"><div class="sl"><b>${l}</b><p>${d}</p></div><div class="tgl ${state.dAlerts[k]?"on":""}" data-act="drule" data-v="${k}"></div></div>`).join("");
@@ -1162,7 +1167,7 @@ function viewDSettings(){
       <div class="setrow"><div class="sl"><b>투네이션 계정 연동</b><p>SSO 연결됨</p></div><span class="sv" style="color:var(--keep)">● 연결됨</span></div>
     </div>
     <button class="btn ghost" data-act="logout" style="color:var(--crit);margin-top:18px">로그아웃</button>
-    <div class="hint">열혈톡 v0.8 프로토타입 · 도네이터 설정</div></div>`;
+    <div class="hint">열혈톡 v0.9 프로토타입 · 도네이터 설정</div></div>`;
 }
 function viewWallet(){
   const w=state.wallet;
@@ -1451,14 +1456,13 @@ function viewMe(){
     <div class="dhero"><div style="display:flex;align-items:center;gap:13px;position:relative"><div class="dcav">${state.me.emoji}</div>
       <div><div style="font-size:19px;font-weight:700">${esc(state.me.name)}</div><div style="font-size:12px;opacity:.88;margin-top:2px">${followed.length}명의 크리에이터를 응원 중</div></div></div>
       <div class="dstats"><div><div class="k">💜 팔로잉</div><div class="v">${followed.length}명</div></div><div><div class="k">💰 총 후원</div><div class="v">${won(totalCum)}</div></div><div><div class="k">🎁 후원 횟수</div><div class="v">${state.myDonHist.length}회</div></div></div><span class="cw">👑</span></div>
-    <button class="card pad" data-act="openwallet" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;margin-top:14px"><div class="ac-ic" style="width:38px;height:38px;font-size:18px;background:var(--accent-soft)">💰</div><div style="flex:1"><b style="font-size:15px">내 충전지갑</b><p style="font-size:12px;color:var(--ink-3);margin:2px 0 0">잔액 ${won(state.wallet.balance)} · 충전/사용 내역</p></div><span class="sv">›</span></button>
     <div class="sechd" style="margin-top:18px">🏆 내 업적 <span class="r">${achDone}/${achs.length} 획득</span></div>
     <div class="card pad"><div class="badgerow">${achs.filter(a=>a.done).map(a=>`<div class="badge-ic" title="${esc(a.name)}">${a.emoji}</div>`).join("")||'<span style="font-size:12px;color:var(--ink-3)">아직 획득한 업적이 없어요</span>'}</div>
       <div class="achlist">${achs.map(a=>`<div class="ach ${a.done?"done":""}"><div class="ach-ic">${a.emoji}</div><div class="ach-main"><div class="ach-nm">${esc(a.name)}${a.done?' <span class="ach-chk">✓</span>':""}</div><div class="ach-ds">${esc(a.desc)}</div>${a.done?"":`<div class="ptrack" style="margin-top:6px"><div class="pfill" style="width:${a.prog}%;background:var(--accent)"></div></div>`}</div></div>`).join("")}</div></div>
     <div class="sechd" style="margin-top:18px">크리에이터별 내 등급</div><div class="rows">${rows}</div>
     <div class="sechd" style="margin-top:18px">최근 후원 이력</div><div class="card pad">${state.myDonHist.slice(0,5).map(h=>`<div class="histrow"><span>${esc(h.c)} · ${h.d}</span><span class="a">+${won(h.a)}</span></div>`).join("")}${state.myDonHist.length>5?`<button class="btn ghost" data-act="opendonhist" style="margin-top:12px">전체 보기 (${state.myDonHist.length}건)</button>`:""}</div>
     <button class="btn ghost" data-act="logout" style="color:var(--crit)">로그아웃</button>
-    <div class="hint">열혈톡 v0.4 · 도네이터</div></div>`;
+    <div class="hint">열혈톡 v0.9 프로토타입 · 도네이터</div></div>`;
 }
 
 /* ---------- onboarding & login ---------- */
