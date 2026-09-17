@@ -748,10 +748,11 @@ function showPresenceAlert(f){const el=$("#alertbar");if(!el)return;const t=tier
   el.innerHTML=`<div class="ab-av" data-act="fan" data-v="${f.id}" style="cursor:pointer">${AV(f)}<span class="on-dot"></span></div><div class="ab-tx" data-act="fan" data-v="${f.id}" style="cursor:pointer"><b>${f.watch?"🔔 열혈팬":"🟢"} ${esc(f.name)} 접속</b><div class="ab-sub"><span class="gp" style="--gc:${t.color}">${t.emoji} ${t.name}</span> · 지금 온라인 · 누적 ${won(f.cum)}</div></div><button class="ab-go" data-act="alertopen" data-v="${f.id}">채팅 열기</button>`;
   el.classList.add("on");clearTimeout(alertT);alertT=setTimeout(()=>el.classList.remove("on"),4600);}
 /* ---------- 데이터 백업 ---------- */
-function snapshotData(){const raw={v:1,at:Date.now(),
+function snapshotData(){const raw={v:2,at:Date.now(),
   tiers:TIERS,
-  fans:state.fans.map(f=>({id:f.id,name:f.name,emoji:f.emoji,img:f.img,cum:f.cum,seenMin:f.seenMin,online:f.online,temp:f.temp,count:f.count,memo:f.memo,tags:f.tags})),
-  automation:state.automation,alertRules:state.alertRules,goal:state.goal,theme:state.theme};
+  fans:state.fans.map(f=>({id:f.id,name:f.name,emoji:f.emoji,img:f.img,cum:f.cum,seenMin:f.seenMin,online:f.online,temp:f.temp,count:f.count,memo:f.memo,tags:f.tags,watch:f.watch,blocked:f.blocked})),
+  automation:state.automation,alertRules:state.alertRules,goal:state.goal,theme:state.theme,
+  posts:state.posts,rooms:state.rooms,wallet:state.wallet,myDonHist:state.myDonHist,schedule:state.schedule,dAlerts:state.dAlerts,achievements:state.achievements};
   return JSON.parse(JSON.stringify(raw));}
 function restoreData(d){if(!d||!Array.isArray(d.tiers))throw new Error("형식 오류");
   TIERS=d.tiers;
@@ -759,6 +760,13 @@ function restoreData(d){if(!d||!Array.isArray(d.tiers))throw new Error("형식 �
   if(d.automation)state.automation=d.automation;
   if(d.alertRules)state.alertRules=d.alertRules;
   if(d.goal)state.goal=d.goal;
+  if(Array.isArray(d.posts))state.posts=d.posts;
+  if(Array.isArray(d.rooms))state.rooms=d.rooms;
+  if(d.wallet)state.wallet=d.wallet;
+  if(Array.isArray(d.myDonHist))state.myDonHist=d.myDonHist;
+  if(Array.isArray(d.schedule))state.schedule=d.schedule;
+  if(d.dAlerts)state.dAlerts=d.dAlerts;
+  if(Array.isArray(d.achievements))state.achievements=d.achievements;
   if(d.theme)applyTheme(d.theme);}
 function saveBackups(){try{localStorage.setItem("heyeol-backups",JSON.stringify(state.backups));}catch(e){}}
 function doBackup(){const snap=snapshotData();const s=JSON.stringify(snap);const entry={at:snap.at,size:s.length,fans:snap.fans.length,autos:snap.automation.rules.length,data:snap};state.backups.unshift(entry);if(state.backups.length>10)state.backups.length=10;state.lastBackup=entry.at;saveBackups();toast("✅ 백업 완료");renderView();}
@@ -893,7 +901,8 @@ function viewThread(id){
   const attach=`<button class="attach" data-act="emoji" data-v="${id}" title="스티커">😊</button><label class="attach" for="imgfile" title="이미지 첨부">🖼️</label><input type="file" id="imgfile" accept="image/*" hidden>`;
   const rt=state.replyTo;
   const replybar=(state.role==="creator"&&rt&&rt.fid===id)?`<div class="replybar"><span class="rb-ic">🎁</span><div class="rb-txt"><b>후원톡에 답장</b> · <span class="mono">${won(rt.amt)}</span><div class="rb-msg">“${esc(rt.text)}”</div></div><button class="rb-x" data-act="clearreply">×</button></div>`:"";
-  const roomsBanner=(state.role==="donator"&&creatorRooms(id).length)?`<button class="room-banner" data-act="creatorrooms" data-v="${id}"><span class="rb-emo">🔒</span><div class="rb-t"><b>등급 전용 채팅방 ${creatorRooms(id).length}개</b><span>${esc(p.name)}님의 등급 전용 공간 · 입장하기</span></div><span class="rb-go">›</span></button>`:"";
+  const myRooms=state.role==="donator"?creatorRooms(id).filter(r=>!(r.kicked||[]).includes(MEFID)):[];
+  const roomsBanner=myRooms.length?`<button class="room-banner" data-act="creatorrooms" data-v="${id}"><span class="rb-emo">🔒</span><div class="rb-t"><b>등급 전용 채팅방 ${myRooms.length}개</b><span>${esc(p.name)}님의 등급 전용 공간 · 입장하기</span></div><span class="rb-go">›</span></button>`:"";
   return `<div class="chatwrap"><div class="msgs">${roomsBanner}${body}</div><div class="footwrap">${replybar}<div class="composer">${attach}${dbtn}<input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="send" data-v="${id}">➤</button></div></div></div>`;
 }
 function bindComposer(){const ci=$("#ci");if(ci){ci.oninput=e=>{state.drafts[state.param]=e.target.value;};ci.onkeydown=e=>{if(e.key==="Enter")sendMsg(state.param);};}
@@ -955,7 +964,7 @@ function roomNewSheet(){const e=state.roomEdit;
     <label class="ae-lb">최소 입장 등급</label><div class="chips wrap">${chips}</div>
     <button class="btn" data-act="roomsave">개설하기</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
 function roomManageSheet(id){const r=state.rooms.find(x=>x.id===id);if(!r)return;const ti=tinfo(r.minTier);const wm=r.writeMode||"all";
-  const mlist=roomEligible(r).map(f=>{const kicked=(r.kicked||[]).includes(f.id);return `<div class="setrow"><div class="av" style="width:34px;height:34px;font-size:16px;border-radius:11px">${AV(f)}</div><div class="sl" style="flex:1"><b>${esc(f.name)}${f.id===MEFID?' <span class="gp" style="--gc:var(--accent)">본인</span>':""}</b><p>${tierOf(f.cum).name} · 누적 ${won(f.cum)}${kicked?" · 🚪 내보냄":""}</p></div>${kicked?`<button class="chip" data-act="roomunkick" data-v="${id}|${f.id}">다시 초대</button>`:`<button class="chip" style="color:var(--crit)" data-act="roomkick" data-v="${id}|${f.id}">내보내기</button>`}</div>`;}).join("")||`<div class="empty" style="padding:16px">입장 가능한 멤버가 없어요.</div>`;
+  const mlist=roomEligible(r).map(f=>{const kicked=(r.kicked||[]).includes(f.id);return `<div class="setrow"><div class="av" style="width:34px;height:34px;font-size:16px;border-radius:11px">${AV(f)}</div><div class="sl" style="flex:1"><b>${esc(f.name)}</b><p>${tierOf(f.cum).name} · 누적 ${won(f.cum)}${kicked?" · 🚪 내보냄":""}</p></div>${kicked?`<button class="chip" data-act="roomunkick" data-v="${id}|${f.id}">다시 초대</button>`:`<button class="chip" style="color:var(--crit)" data-act="roomkick" data-v="${id}|${f.id}">내보내기</button>`}</div>`;}).join("")||`<div class="empty" style="padding:16px">입장 가능한 멤버가 없어요.</div>`;
   openSheet(`<h3 class="sh">${r.emoji} ${esc(r.name)} 관리</h3><p class="sd"><span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+ 전용</span> · ${roomMembers(r)}명</p>
     <label class="ae-lb">글쓰기 권한</label><div class="chips wrap"><button class="chip ${wm==="all"?"on":""}" data-act="roomwrite" data-v="${id}|all">💬 전체 멤버</button><button class="chip ${wm==="creator"?"on":""}" data-act="roomwrite" data-v="${id}|creator">🔒 크리에이터만 (공지방)</button></div>
     <label class="ae-lb" style="margin-top:14px">멤버 · 내보내기</label><div class="rows">${mlist}</div>
@@ -1236,7 +1245,7 @@ function viewDFeed(){
 }
 function viewPost(id){
   const p=state.posts.find(x=>x.id===id);if(!p)return `<div class="empty">게시글을 찾을 수 없어요.</div>`;
-  const cmts=p.comments.map(m=>`<div class="cmt"><div class="cmt-nm">${esc(m.name)}${m.cre?` ${VERIFIED} <span class="gp" style="--gc:var(--accent)">크리에이터</span>`:(m.by==="me"?' <span class="gp" style="--gc:var(--accent)">나</span>':"")}</div><div class="cmt-tx">${esc(m.text)}</div><div class="cmt-tm">${m.tm}</div></div>`).join("")||`<div class="empty" style="padding:22px">아직 댓글이 없어요.<br>첫 댓글을 남겨보세요!</div>`;
+  const cmts=p.comments.map(m=>`<div class="cmt"><div class="cmt-nm">${esc(m.name)}${m.cre?` ${VERIFIED} <span class="gp" style="--gc:var(--accent)">크리에이터</span>`:(m.by==="me"&&state.role==="donator"?' <span class="gp" style="--gc:var(--accent)">나</span>':"")}</div><div class="cmt-tx">${esc(m.text)}</div><div class="cmt-tm">${m.tm}</div></div>`).join("")||`<div class="empty" style="padding:22px">아직 댓글이 없어요.<br>첫 댓글을 남겨보세요!</div>`;
   const canComment=true;
   const draft=state.drafts["post:"+id]||"";
   return `<div class="chatwrap"><div class="msgs"><div class="pad">${postCard(p,state.role==="creator")}
