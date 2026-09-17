@@ -661,8 +661,8 @@ let state={
   ],
   roomEdit:{name:"",minTier:"vvip"},
   rooms:[
-    {id:"r1",name:"VVIP 라운지",minTier:"vvip",emoji:"💜",thread:[{t:"day",text:"오늘"},{from:"out",text:"VVIP 여러분만의 공간이에요 💜 편하게 얘기해요!",tm:"18:00"},{from:"f1",text:"오 전용방 좋다!!",tm:"18:02"},{from:"f5",text:"여기서만 보는 소식 기대할게요 🙌",tm:"18:05"}]},
-    {id:"r2",name:"SVIP 전용방",minTier:"svip",emoji:"👑",thread:[{t:"day",text:"오늘"},{from:"out",text:"최상위 SVIP 전용방입니다 👑 특별한 혜택 여기서 먼저 공개할게요!",tm:"15:00"},{from:"f2",text:"기대됩니다 ㅎㅎ",tm:"15:10"}]},
+    {id:"r1",name:"VVIP 라운지",minTier:"vvip",emoji:"💜",writeMode:"all",kicked:[],thread:[{t:"day",text:"오늘"},{from:"out",text:"VVIP 여러분만의 공간이에요 💜 편하게 얘기해요!",tm:"18:00"},{from:"f1",text:"오 전용방 좋다!!",tm:"18:02"},{from:"f5",text:"여기서만 보는 소식 기대할게요 🙌",tm:"18:05"}]},
+    {id:"r2",name:"SVIP 전용방",minTier:"svip",emoji:"👑",writeMode:"all",kicked:[],thread:[{t:"day",text:"오늘"},{from:"out",text:"최상위 SVIP 전용방입니다 👑 특별한 혜택 여기서 먼저 공개할게요!",tm:"15:00"},{from:"f2",text:"기대됩니다 ㅎㅎ",tm:"15:10"}]},
   ],
   /* ---------- donator side (내가 팔로우한 크리에이터들과의 1:1) ---------- */
   me:{name:"별하늘",emoji:"🌙"},
@@ -816,7 +816,7 @@ function renderAppbar(){
   else if(state.sub==="halloffame"){h=`${back}<div><h1>명예의 전당</h1><div class="sub">최고의 후원자</div></div>`;}
   else if(state.sub==="post"){h=`${back}<div><h1>게시글</h1><div class="sub">${state.role==="donator"?"댓글 남기기":"댓글 보기"}</div></div>`;}
   else if(state.sub==="donhist"){h=`${back}<div><h1>후원 이력</h1><div class="sub">내 전체 후원 내역</div></div>`;}
-  else if(state.sub==="room"){const r=state.rooms.find(x=>x.id===state.param);const ti=r?tinfo(r.minTier):null;h=`${back}<div><h1 style="font-size:17px">${r?esc(r.name):"채팅방"}</h1><div class="sub">${ti?`<span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+ 전용</span> · ${r?roomMembers(r):0}명`:""}</div></div>`;}
+  else if(state.sub==="room"){const r=state.rooms.find(x=>x.id===state.param);const ti=r?tinfo(r.minTier):null;const mng=(r&&state.role==="creator")?`<div class="sp"></div><button class="act" data-act="roommanage" data-v="${r.id}" title="방 관리">⚙️</button>`:"";h=`${back}<div><h1 style="font-size:17px">${r?esc(r.name):"채팅방"}</h1><div class="sub">${ti?`<span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+ 전용</span> · ${r?roomMembers(r):0}명${r&&(r.writeMode||"all")==="creator"?" · 🔒 공지방":""}`:""}</div></div>${mng}`;}
   else if(state.role==="creator"&&state.ctab==="msg"){
     cls="appbar compact";
     if(state.searchOpen)h=`<button class="hicon" data-act="chatsearchclose" title="닫기">‹</button><input id="chatSearch" class="searchbar" placeholder="도네이터·대화내용 검색" value="${esc(state.searchQuery||"")}" autocomplete="off"><button class="hicon" data-act="chatsearchclear" title="지우기">✕</button>`;
@@ -907,7 +907,9 @@ function donoRail(){
   return `<div class="dono-rail">${items}</div>`;
 }
 function viewChat(){return `<div class="pad">${donoRail()}${roomsSection()}${msgInbox()}</div>`;}
-function roomMembers(r){return state.fans.filter(f=>!f.blocked&&tierIdx(tierOf(f.cum).key)>=tierIdx(r.minTier)).length;}
+function roomEligible(r){return state.fans.filter(f=>!f.blocked&&tierIdx(tierOf(f.cum).key)>=tierIdx(r.minTier));}
+function roomMembers(r){return roomEligible(r).filter(f=>!(r.kicked||[]).includes(f.id)).length;}
+const MEFID="f1";
 function roomsSection(){
   if(state.searchOpen&&(state.searchQuery||"").trim())return "";
   const rows=state.rooms.map(r=>{const ti=tinfo(r.minTier);return `<button class="row" data-act="room" data-v="${r.id}"><div class="av">${r.emoji}</div><div class="main"><div class="tt">${esc(r.name)} <span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+</span></div><div class="pv">최소 ${ti.name} 이상 · ${roomMembers(r)}명 입장 가능</div></div><div class="meta"><div class="tm">${threadTime(r.thread)}</div></div></button>`;}).join("")||'<div class="empty" style="padding:18px">개설된 방이 없어요.</div>';
@@ -916,6 +918,7 @@ function roomsSection(){
 function viewRoom(id){
   const r=state.rooms.find(x=>x.id===id);if(!r)return `<div class="empty">방을 찾을 수 없어요.</div>`;const ti=tinfo(r.minTier);
   if(state.role==="donator"){const myTier=tierOf((creById("c1")||{myCum:0}).myCum);
+    if((r.kicked||[]).includes(MEFID))return `<div class="chatwrap"><div class="msgs"><div class="empty">🚪 이 방에서 내보내졌어요.<br><br>크리에이터에게 문의해 주세요.</div></div></div>`;
     if(tierIdx(myTier.key)<tierIdx(r.minTier))return `<div class="chatwrap"><div class="msgs"><div class="empty">🔒 ${ti.emoji} <b>${ti.name}</b> 등급부터 입장할 수 있어요.<br><br>지금 내 등급: ${myTier.emoji} ${myTier.name}<br><br>더 응원해서 등급을 올려보세요!</div></div></div>`;}
   const body=(r.thread||[]).map(m=>{
     if(m.t==="day")return `<div class="day">${esc(m.text)}</div>`;
@@ -927,7 +930,9 @@ function viewRoom(id){
     return side==="out"?`<div class="b out">${esc(m.text)}<div class="tm">${m.tm||nowT()}</div></div>`:`<div class="b in"><div class="who">${who}</div>${esc(m.text)}<div class="tm">${m.tm||nowT()}</div></div>`;
   }).join("");
   const draft=state.drafts["room:"+id]||"";
-  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="footwrap"><div class="composer"><input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="roomsend" data-v="${id}">➤</button></div></div></div>`;
+  const canWrite=state.role==="creator"||(r.writeMode||"all")==="all";
+  const composer=canWrite?`<div class="composer"><input id="ci" placeholder="메시지 입력…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="roomsend" data-v="${id}">➤</button></div>`:`<div class="composer" style="justify-content:center;color:var(--ink-3);font-size:12.5px;gap:6px">🔒 크리에이터만 글을 쓸 수 있는 공지방이에요</div>`;
+  return `<div class="chatwrap"><div class="msgs">${body}</div><div class="footwrap">${composer}</div></div>`;
 }
 function roomSend(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if(!tx)return;state.drafts["room:"+id]="";const r=state.rooms.find(x=>x.id===id);if(!r)return;
   r.thread.push({from:state.role==="creator"?"out":"me",text:tx,tm:nowT()});renderView();{const ci2=$("#ci");if(ci2)ci2.focus();}}
@@ -937,6 +942,13 @@ function roomNewSheet(){const e=state.roomEdit;
     <label class="ae-lb">방 이름</label><input id="roomName" value="${esc(e.name)}" placeholder="예: VVIP 라운지" autocomplete="off" maxlength="16">
     <label class="ae-lb">최소 입장 등급</label><div class="chips wrap">${chips}</div>
     <button class="btn" data-act="roomsave">개설하기</button><button class="btn ghost" data-act="closesheet">취소</button>`);}
+function roomManageSheet(id){const r=state.rooms.find(x=>x.id===id);if(!r)return;const ti=tinfo(r.minTier);const wm=r.writeMode||"all";
+  const mlist=roomEligible(r).map(f=>{const kicked=(r.kicked||[]).includes(f.id);return `<div class="setrow"><div class="av" style="width:34px;height:34px;font-size:16px;border-radius:11px">${AV(f)}</div><div class="sl" style="flex:1"><b>${esc(f.name)}${f.id===MEFID?' <span class="gp" style="--gc:var(--accent)">본인</span>':""}</b><p>${tierOf(f.cum).name} · 누적 ${won(f.cum)}${kicked?" · 🚪 내보냄":""}</p></div>${kicked?`<button class="chip" data-act="roomunkick" data-v="${id}|${f.id}">다시 초대</button>`:`<button class="chip" style="color:var(--crit)" data-act="roomkick" data-v="${id}|${f.id}">내보내기</button>`}</div>`;}).join("")||`<div class="empty" style="padding:16px">입장 가능한 멤버가 없어요.</div>`;
+  openSheet(`<h3 class="sh">${r.emoji} ${esc(r.name)} 관리</h3><p class="sd"><span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+ 전용</span> · ${roomMembers(r)}명</p>
+    <label class="ae-lb">글쓰기 권한</label><div class="chips wrap"><button class="chip ${wm==="all"?"on":""}" data-act="roomwrite" data-v="${id}|all">💬 전체 멤버</button><button class="chip ${wm==="creator"?"on":""}" data-act="roomwrite" data-v="${id}|creator">🔒 크리에이터만 (공지방)</button></div>
+    <label class="ae-lb" style="margin-top:14px">멤버 · 내보내기</label><div class="rows">${mlist}</div>
+    <button class="btn ghost" data-act="roomdel" data-v="${id}" style="color:var(--crit);margin-top:16px">🗑️ 이 채팅방 삭제</button>
+    <button class="btn ghost" data-act="closesheet">닫기</button>`);}
 function viewDono(){return `<div class="pad">${donoFeed()}</div>`;}
 function msgInbox(){
   const all=state.fans.filter(f=>!f.blocked),totalUnread=all.reduce((a,f)=>a+f.unread,0),mf=state.msgFilter||"all";
@@ -1642,8 +1654,13 @@ $("#phone").addEventListener("click",e=>{
     case"room":closeSheet();state.sub="room";state.param=v;render();break;
     case"roomnew":state.roomEdit={name:"",minTier:"vvip"};roomNewSheet();break;
     case"roomtier":{const n=$("#roomName");if(n)state.roomEdit.name=n.value;state.roomEdit.minTier=v;roomNewSheet();break;}
-    case"roomsave":{const n=$("#roomName");const nm=(n?n.value:"").trim()||(tinfo(state.roomEdit.minTier).name+" 전용방");const t=tinfo(state.roomEdit.minTier);state.rooms.push({id:"rm"+Date.now(),name:nm,minTier:state.roomEdit.minTier,emoji:t.emoji,thread:[{t:"day",text:"오늘"},{from:"out",text:`${nm} 방을 개설했어요! ${t.emoji} ${t.name} 이상 팬만의 공간이에요.`,tm:nowT()}]});closeSheet();state.ctab="msg";state.sub=null;render();toast("등급 전용 채팅방을 개설했어요 🎉");break;}
+    case"roomsave":{const n=$("#roomName");const nm=(n?n.value:"").trim()||(tinfo(state.roomEdit.minTier).name+" 전용방");const t=tinfo(state.roomEdit.minTier);state.rooms.push({id:"rm"+Date.now(),name:nm,minTier:state.roomEdit.minTier,emoji:t.emoji,writeMode:"all",kicked:[],thread:[{t:"day",text:"오늘"},{from:"out",text:`${nm} 방을 개설했어요! ${t.emoji} ${t.name} 이상 팬만의 공간이에요.`,tm:nowT()}]});closeSheet();state.ctab="msg";state.sub=null;render();toast("등급 전용 채팅방을 개설했어요 🎉");break;}
     case"roomsend":roomSend(v);break;
+    case"roommanage":roomManageSheet(v);break;
+    case"roomwrite":{const [rid,mode]=v.split("|");const r=state.rooms.find(x=>x.id===rid);if(r)r.writeMode=mode;roomManageSheet(rid);renderAppbar();toast(mode==="creator"?"크리에이터만 글쓰기로 변경했어요":"전체 멤버 글쓰기로 변경했어요");break;}
+    case"roomkick":{const [rid,fid]=v.split("|");const r=state.rooms.find(x=>x.id===rid);if(r){r.kicked=r.kicked||[];if(!r.kicked.includes(fid))r.kicked.push(fid);}roomManageSheet(rid);renderAppbar();toast("멤버를 내보냈어요");break;}
+    case"roomunkick":{const [rid,fid]=v.split("|");const r=state.rooms.find(x=>x.id===rid);if(r)r.kicked=(r.kicked||[]).filter(x=>x!==fid);roomManageSheet(rid);renderAppbar();toast("다시 초대했어요");break;}
+    case"roomdel":{state.rooms=state.rooms.filter(x=>x.id!==v);closeSheet();state.ctab="msg";state.sub=null;render();toast("채팅방을 삭제했어요");break;}
     case"creatorprofile":state.cprofTab="intro";creatorProfileSheet(v);break;
     case"cproftab":state.cprofTab=v;creatorProfileSheet(state.cprofParam);break;
     case"cprofchat":closeSheet();state.role="donator";state.sub="thread";state.param=v;render();break;
