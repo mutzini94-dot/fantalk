@@ -532,6 +532,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       <div class="roleseg" id="roleseg" style="margin-left:0"><button data-act="role" data-v="creator">크리에이터</button><button data-act="role" data-v="donator">도네이터</button></div>
       <button class="livebtn" data-act="live" style="margin-left:auto"><span class="d"></span><span id="liveLabel">LIVE</span></button>
       <button class="iconbtn" id="notifbtn" data-act="opennotif" title="알림" style="position:relative">🔔<span class="ntb-badge" id="notifBadge"></span></button>
+      <button class="iconbtn" id="schedbtn" data-act="opensched" title="방송 스케줄">📅</button>
       <button class="walletbtn" id="walletbtn" data-act="openwallet" title="내 충전지갑" style="margin-left:auto"><span class="wb-ic">💰</span><span id="walletBal">₩0</span></button>
       <button class="iconbtn" id="gearbtn" data-act="opensettings" title="설정"><svg class="set-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="setg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8ed2ff"/><stop offset="1" stop-color="#5b9bf5"/></linearGradient></defs><rect x="16" y="16" width="480" height="480" rx="112" fill="url(#setg)"/><rect x="178" y="152" width="230" height="48" rx="24" fill="#fff"/><circle cx="178" cy="176" r="54" fill="#fff"/><circle cx="178" cy="176" r="22" fill="#63a0f2"/><rect x="104" y="320" width="230" height="48" rx="24" fill="#fff"/><circle cx="334" cy="344" r="54" fill="#fff"/><circle cx="334" cy="344" r="22" fill="#63a0f2"/></svg></button>
     </div>
@@ -777,6 +778,7 @@ function render(){
   $("#liveLabel").textContent=state.live?"LIVE ●":"LIVE";const lb=document.querySelector(".livebtn");lb.classList.toggle("on",state.live);lb.style.display=state.role==="creator"?"":"none";
   $("#gearbtn").style.display="";
   $("#notifbtn").style.display=state.role==="creator"?"":"none";
+  $("#schedbtn").style.display=state.role==="creator"?"":"none";
   {const wb=$("#walletbtn");if(wb){wb.style.display=state.role==="donator"?"":"none";const wbal=$("#walletBal");if(wbal)wbal.textContent=won(state.wallet.balance);}}
   const un=state.notifs.filter(n=>n.unread).length,nb=$("#notifBadge");if(nb){nb.textContent=un||"";nb.classList.toggle("on",un>0&&state.role==="creator");}
   renderTabbar();renderAppbar();renderView();
@@ -1109,12 +1111,8 @@ function viewInsights(){
   const dist={};TIERS.forEach(t=>dist[t.key]=0);state.fans.forEach(f=>dist[tierOf(f.cum).key]++);const maxD=Math.max(...Object.values(dist))||1;
   const distBars=[...TIERS].reverse().map(t=>`<div class="tierbar"><div class="lb">${t.emoji} ${t.name}</div><div class="track"><div class="fill" style="width:${dist[t.key]/maxD*100}%;background:${t.color}"></div></div><div class="vv">${dist[t.key]}</div></div>`).join("");
   const gp=Math.round(state.goal.cur/state.goal.target*100),vipCnt=state.fans.filter(f=>isVIP(f.cum)).length,avgTemp=Math.round(state.fans.reduce((a,f)=>a+f.temp,0)/state.fans.length),risk=atRisk().length,total7=state.don.trend.reduce((a,b)=>a+b,0)*1000;
-  const nextSched=(state.schedule||[]).slice().sort((a,b)=>a.date.localeCompare(b.date))[0];
   return `<div class="pad">
-    <div class="grid g2" style="margin-bottom:12px;gap:12px">
-    <button class="card pad" data-act="openhof" style="text-align:left;display:flex;align-items:center;gap:10px"><div class="ac-ic" style="background:linear-gradient(135deg,#d4a017,#f0c040);color:#fff">🏆</div><div style="flex:1;min-width:0"><b style="font-size:14px">명예의 전당</b><p style="font-size:11px;color:var(--ink-3);margin:2px 0 0">후원자 순위</p></div></button>
-    <button class="card pad" data-act="opensched" style="text-align:left;display:flex;align-items:center;gap:10px"><div class="ac-ic" style="background:var(--accent-soft)">📅</div><div style="flex:1;min-width:0"><b style="font-size:14px">방송 스케줄</b><p style="font-size:11px;color:var(--ink-3);margin:2px 0 0">${nextSched?esc(mmdd(nextSched.date))+" "+esc(nextSched.title):"일정 관리"}</p></div></button>
-    </div>
+    <button class="card pad" data-act="openhof" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;margin-bottom:12px"><div class="ac-ic" style="background:linear-gradient(135deg,#d4a017,#f0c040);color:#fff">🏆</div><div style="flex:1"><b style="font-size:15px">명예의 전당</b><p style="font-size:12px;color:var(--ink-3);margin:2px 0 0">최고의 후원자 순위 보기</p></div><span class="sv">›</span></button>
     <div class="dhero" data-act="gotovip" style="cursor:pointer"><div class="dh-k">VIP 후원자 수 (VIP 이상)</div><div class="dh-v">${vipCnt}명 <span style="font-size:13px;opacity:.7;font-weight:600">목록 보기 ›</span></div><div class="dh-d">▲ 2명 (전주 대비)</div><span class="cw">👑</span></div>
     <div class="metgrid"><div class="metcard"><div class="k">🌡️ 팬 관계 온도 ${infoDot("temp")}</div><div class="v">${avgTemp}<small>점</small></div><div class="mbar"><div class="f" style="width:${avgTemp}%;background:linear-gradient(90deg,var(--accent-2),var(--accent))"></div></div></div>
       <div class="metcard"><div class="k">⚠️ 이탈 위험 VIP</div><div class="v">${risk}<small>명</small></div><div class="mbar"><div class="f" style="width:${Math.min(100,risk/Math.max(vipCnt,1)*100)}%;background:linear-gradient(90deg,#ff9b6b,var(--crit))"></div></div></div></div>
@@ -1480,7 +1478,7 @@ function viewOnboarding(){
 const LOGO_MARK='<svg class="login-mark" viewBox="0 0 268 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TooNation"><rect x="8" y="49" width="72" height="22" rx="11" fill="#4a8cf5"/><rect x="33" y="24" width="22" height="72" rx="11" fill="#4a8cf5"/><circle cx="146" cy="60" r="30" fill="none" stroke="#a6c8f7" stroke-width="17"/><circle cx="224" cy="60" r="30" fill="none" stroke="#4a8cf5" stroke-width="17"/></svg>';
 function viewLogin(){
   return `<div class="login"><div class="lh">${LOGO_MARK}<h1 style="margin-top:20px">열혈톡 시작하기</h1><div class="sub">투네이션 계정으로 로그인하세요</div></div>
-    <div class="fields" style="margin-top:26px"><input type="text" id="luser" placeholder="투네이션 아이디" autocomplete="username" autocapitalize="off" spellcheck="false"><input type="password" id="lpw" placeholder="비밀번호" autocomplete="current-password"><button class="cta" data-act="dologin" style="margin-top:2px">로그인</button></div>
+    <div class="fields" style="margin-top:26px"><input type="text" id="luser" value="toonation" placeholder="투네이션 아이디" autocomplete="username" autocapitalize="off" spellcheck="false"><input type="password" id="lpw" placeholder="비밀번호" autocomplete="current-password"><button class="cta" data-act="dologin" style="margin-top:2px">로그인</button></div>
     <div class="foot">데모 계정 · 아이디 <b style="color:var(--ink-2)">toonation</b> / 비밀번호 <b style="color:var(--ink-2)">1234</b></div></div>`;
 }
 function doLogin(){const u=($("#luser")?$("#luser").value:"").trim(),p=$("#lpw")?$("#lpw").value:"";
