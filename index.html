@@ -684,7 +684,7 @@ let state={
     {type:"dono",title:"<b>🎨 소이</b>님이 메시지를 보냈어요",sub:"오늘 그림 방송 보러 오실거죠?",min:20,unread:true},
     {type:"grade",title:"<b>🍳 미미</b>님과 👑 VVIP 등급 유지 중",sub:"누적 ₩720,000",min:300,unread:false},
   ],
-  myDonHist:[{d:"오늘",a:50000,c:"열혈크루"},{d:"2025.09.09",a:186000,c:"미미"},{d:"2025.09.02",a:155000,c:"열혈크루"},{d:"2025.08.20",a:124000,c:"소이"}],
+  myDonHist:[{d:"오늘",a:50000,c:"열혈크루"},{d:"2025.09.09",a:186000,c:"미미"},{d:"2025.09.02",a:155000,c:"열혈크루"},{d:"2025.08.20",a:124000,c:"소이"},{d:"2025.08.14",a:30000,c:"지노"},{d:"2025.08.07",a:80000,c:"미미"},{d:"2025.07.30",a:50000,c:"열혈크루"},{d:"2025.07.21",a:20000,c:"소이"},{d:"2025.07.12",a:100000,c:"미미"},{d:"2025.06.28",a:45000,c:"지노"},{d:"2025.06.15",a:60000,c:"열혈크루"}],
   posts:[
     {id:"p1",cid:"c1",text:"오늘 방송 정말 감사했어요! 🔥 다음 콘텐츠도 알차게 준비할게요. 다들 뭐 보고 싶은지 댓글로 알려주세요 👀",img:null,min:95,likes:342,liked:false,comments:[{by:"f",name:"별하늘",text:"오늘도 최고였어요!! 지목 콘텐츠 또 해주세요 💜",tm:"1시간 전"},{by:"f",name:"해피",text:"다음 방송 언제예요?? 기다릴게요",tm:"40분 전"}]},
     {id:"p2",cid:"c4",text:"이번 주말 신메뉴 먹방 예고 🍜 매운맛 도전합니다… 응원 부탁해요!",img:null,min:280,likes:521,liked:true,comments:[{by:"f",name:"두부왕",text:"기대됩니다 🤤",tm:"2시간 전"}]},
@@ -815,6 +815,7 @@ function renderAppbar(){
   else if(state.sub==="notif"){h=`${back}<div><h1>알림</h1><div class="sub">접속 · 후원 · 등급</div></div>`;}
   else if(state.sub==="halloffame"){h=`${back}<div><h1>명예의 전당</h1><div class="sub">최고의 후원자</div></div>`;}
   else if(state.sub==="post"){h=`${back}<div><h1>게시글</h1><div class="sub">${state.role==="donator"?"댓글 남기기":"댓글 보기"}</div></div>`;}
+  else if(state.sub==="donhist"){h=`${back}<div><h1>후원 이력</h1><div class="sub">내 전체 후원 내역</div></div>`;}
   else if(state.sub==="room"){const r=state.rooms.find(x=>x.id===state.param);const ti=r?tinfo(r.minTier):null;h=`${back}<div><h1 style="font-size:17px">${r?esc(r.name):"채팅방"}</h1><div class="sub">${ti?`<span class="gp" style="--gc:${ti.color}">${ti.emoji} ${ti.name}+ 전용</span> · ${r?roomMembers(r):0}명`:""}</div></div>`;}
   else if(state.role==="creator"&&state.ctab==="msg"){
     cls="appbar compact";
@@ -841,6 +842,7 @@ function renderView(){
   if(state.sub==="settings"){v.innerHTML=viewSettings();return;}
   if(state.sub==="dsettings"){v.innerHTML=viewDSettings();return;}
   if(state.sub==="wallet"){v.innerHTML=viewWallet();return;}
+  if(state.sub==="donhist"){v.innerHTML=viewDonHist();return;}
   if(state.sub==="automation"){v.innerHTML=viewAutomation();return;}
   if(state.sub==="autostat"){v.innerHTML=viewAutoStat(state.param);return;}
   if(state.sub==="backup"){v.innerHTML=viewBackup();return;}
@@ -1219,6 +1221,15 @@ function viewPost(id){
     ${canComment?`<div class="footwrap"><div class="composer"><input id="ci" placeholder="댓글 달기…" value="${esc(draft)}" autocomplete="off"><button class="send" data-act="postcomment" data-v="${id}">➤</button></div></div>`:""}</div>`;
 }
 function postComment(id){const ci=$("#ci");if(!ci)return;const tx=ci.value.trim();if(!tx)return;const p=state.posts.find(x=>x.id===id);if(!p)return;state.drafts["post:"+id]="";p.comments.push({by:"me",name:state.me.name,text:tx,tm:"방금"});renderView();{const c2=$("#ci");if(c2)c2.focus();}}
+function viewDonHist(){
+  const total=state.myDonHist.reduce((a,h)=>a+h.a,0);
+  const rows=state.myDonHist.map(h=>`<div class="histrow"><span>${esc(h.c)} · ${h.d}</span><span class="a">+${won(h.a)}</span></div>`).join("");
+  return `<div class="pad">
+    <div class="dhero"><div class="dh-k">🎁 총 후원 금액</div><div class="dh-v">${won(total)}</div><div class="dh-d">${state.myDonHist.length}건 · 전체</div><span class="cw">💰</span></div>
+    <div class="sechd" style="margin-top:16px">후원 이력 전체</div>
+    <div class="card pad">${rows}</div>
+    <div class="hint">후원 이력은 최신순으로 표시됩니다.</div></div>`;
+}
 
 /* ---------- creator: 업적 (크루 도전과제) ---------- */
 const ACH_METRICS=[
@@ -1433,7 +1444,7 @@ function viewMe(){
     <div class="card pad"><div class="badgerow">${achs.filter(a=>a.done).map(a=>`<div class="badge-ic" title="${esc(a.name)}">${a.emoji}</div>`).join("")||'<span style="font-size:12px;color:var(--ink-3)">아직 획득한 업적이 없어요</span>'}</div>
       <div class="achlist">${achs.map(a=>`<div class="ach ${a.done?"done":""}"><div class="ach-ic">${a.emoji}</div><div class="ach-main"><div class="ach-nm">${esc(a.name)}${a.done?' <span class="ach-chk">✓</span>':""}</div><div class="ach-ds">${esc(a.desc)}</div>${a.done?"":`<div class="ptrack" style="margin-top:6px"><div class="pfill" style="width:${a.prog}%;background:var(--accent)"></div></div>`}</div></div>`).join("")}</div></div>
     <div class="sechd" style="margin-top:18px">크리에이터별 내 등급</div><div class="rows">${rows}</div>
-    <div class="sechd" style="margin-top:18px">최근 후원 이력</div><div class="card pad">${state.myDonHist.map(h=>`<div class="histrow"><span>${esc(h.c)} · ${h.d}</span><span class="a">+${won(h.a)}</span></div>`).join("")}</div>
+    <div class="sechd" style="margin-top:18px">최근 후원 이력</div><div class="card pad">${state.myDonHist.slice(0,5).map(h=>`<div class="histrow"><span>${esc(h.c)} · ${h.d}</span><span class="a">+${won(h.a)}</span></div>`).join("")}${state.myDonHist.length>5?`<button class="btn ghost" data-act="opendonhist" style="margin-top:12px">전체 보기 (${state.myDonHist.length}건)</button>`:""}</div>
     <button class="btn ghost" data-act="logout" style="color:var(--crit)">로그아웃</button>
     <div class="hint">열혈톡 v0.4 · 도네이터</div></div>`;
 }
@@ -1544,6 +1555,7 @@ $("#phone").addEventListener("click",e=>{
     case"opensettings":state.sub=state.role==="creator"?"settings":"dsettings";state.param=null;render();break;
     case"drule":state.dAlerts[v]=!state.dAlerts[v];renderView();break;
     case"openwallet":state.sub="wallet";state.param=null;render();break;
+    case"opendonhist":state.sub="donhist";state.param=null;render();break;
     case"walletcharge":toast("💰 충전 페이지로 이동해요 (프로토타입)");break;
     case"postnew":{const t=$("#postInput");const tx=(t?t.value:state.postDraft||"").trim();if(!tx&&!state.postImg){toast("내용을 입력해주세요");break;}state.posts.unshift({id:"p"+Date.now(),cid:"c1",text:tx,img:state.postImg||null,min:0,likes:0,liked:false,comments:[]});state.postDraft="";state.postImg=null;renderView();toast("게시글을 올렸어요 📷");break;}
     case"postemoji":{const t=$("#postInput");if(t)state.postDraft=t.value;postEmojiSheet();break;}
